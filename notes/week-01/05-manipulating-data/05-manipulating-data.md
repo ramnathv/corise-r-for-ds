@@ -508,9 +508,9 @@ select(starwars, !(mass:skin_color))
 
 #### `select`: Keep or drop columns (2 / 2)
 
-The `dplyr` package also provides a handy set of modifiers (`contains`,
-`ends_with`, `where` etc) that let you select columns based on a pattern
-of names. This is very handy especially when you want to pick multiple
+The `dplyr` package also provides a handy set of selectors (`contains`,
+`ends_with`, `where` etc) that let you select columns based on a
+pattern. This is very handy especially when you want to pick multiple
 columns, but don’t want to type each column name separately.
 
 To get the most out of this, please run each example separately. Also,
@@ -602,6 +602,9 @@ select(starwars, where(is.list))
 
 #### `mutate`: Create, modify, and delete columns
 
+The `mutate()` function can be used to create, modify, or remove
+columns.
+
 ``` r
 # Create column mass_lbs
 mutate(starwars, mass_lbs = mass * 2.2)
@@ -692,6 +695,10 @@ mutate(starwars, mass_lbs = mass * 2.2, mass = NULL)
 
 #### `rename`: Rename columns
 
+The `rename()` function can be used to rename one or more columns. It
+can be combined with the selector functions like `ends_with()` to
+operate on multiple columns based on patterns.
+
 ``` r
 # Rename
 rename(starwars, mass_kgs = mass)
@@ -759,6 +766,9 @@ rename_with(starwars, toupper, ends_with("color"))
     #> #   vehicles <list>, starships <list>
 
 #### `relocate`: Relocate columns
+
+The `relocate()` function can be used to relocate a column before or
+after another column in the table.
 
 ``` r
 # Relocate column AFTER a column
@@ -847,3 +857,71 @@ relocate(starwars, where(is.numeric), .after = where(is.character))
     #> # ℹ 77 more rows
     #> # ℹ 5 more variables: mass <dbl>, birth_year <dbl>, films <list>,
     #> #   vehicles <list>, starships <list>
+
+#### `unite`: Unite multiple columns into one
+
+The `unite()` function can be used to combine multiple columns into a
+single column. For example, we can combine the `mass` and `height`
+columns into a single new column.
+
+``` r
+unite(starwars, height_mass, height, mass, sep = "_|_")
+```
+
+    #> # A tibble: 87 × 13
+    #>    name      height_mass hair_color skin_color eye_color birth_year sex   gender
+    #>    <chr>     <chr>       <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
+    #>  1 Luke Sky… 172_|_77    blond      fair       blue            19   male  mascu…
+    #>  2 C-3PO     167_|_75    <NA>       gold       yellow         112   none  mascu…
+    #>  3 R2-D2     96_|_32     <NA>       white, bl… red             33   none  mascu…
+    #>  4 Darth Va… 202_|_136   none       white      yellow          41.9 male  mascu…
+    #>  5 Leia Org… 150_|_49    brown      light      brown           19   fema… femin…
+    #>  6 Owen Lars 178_|_120   brown, gr… light      blue            52   male  mascu…
+    #>  7 Beru Whi… 165_|_75    brown      light      blue            47   fema… femin…
+    #>  8 R5-D4     97_|_32     <NA>       white, red red             NA   none  mascu…
+    #>  9 Biggs Da… 183_|_84    black      light      brown           24   male  mascu…
+    #> 10 Obi-Wan … 182_|_77    auburn, w… fair       blue-gray       57   male  mascu…
+    #> # ℹ 77 more rows
+    #> # ℹ 5 more variables: homeworld <chr>, species <chr>, films <list>,
+    #> #   vehicles <list>, starships <list>
+
+#### `separate`: Separate one column into multiple columns
+
+The `separate()` function does the exact opposite of the `unite()`
+function and separates a single column into multiple columns based on a
+separator. Look at the help documents by typing `? separate` to get a
+comprehensive look at the various argumetns and use cases it supports.
+
+``` r
+separate(starwars, name, c('first_name', 'last_name'), sep = "\\s")
+```
+
+    #> Warning: Expected 2 pieces. Additional pieces discarded in 7 rows [7, 16, 18, 29, 34,
+    #> 60, 65].
+
+    #> Warning: Expected 2 pieces. Missing pieces filled with `NA` in 24 rows [2, 3, 8, 13, 15,
+    #> 19, 20, 22, 23, 25, 26, 38, 39, 46, 49, 58, 63, 64, 73, 77, ...].
+
+    #> # A tibble: 87 × 15
+    #>    first_name last_name  height  mass hair_color skin_color eye_color birth_year
+    #>    <chr>      <chr>       <int> <dbl> <chr>      <chr>      <chr>          <dbl>
+    #>  1 Luke       Skywalker     172    77 blond      fair       blue            19  
+    #>  2 C-3PO      <NA>          167    75 <NA>       gold       yellow         112  
+    #>  3 R2-D2      <NA>           96    32 <NA>       white, bl… red             33  
+    #>  4 Darth      Vader         202   136 none       white      yellow          41.9
+    #>  5 Leia       Organa        150    49 brown      light      brown           19  
+    #>  6 Owen       Lars          178   120 brown, gr… light      blue            52  
+    #>  7 Beru       Whitesun      165    75 brown      light      blue            47  
+    #>  8 R5-D4      <NA>           97    32 <NA>       white, red red             NA  
+    #>  9 Biggs      Darklight…    183    84 black      light      brown           24  
+    #> 10 Obi-Wan    Kenobi        182    77 auburn, w… fair       blue-gray       57  
+    #> # ℹ 77 more rows
+    #> # ℹ 7 more variables: sex <chr>, gender <chr>, homeworld <chr>, species <chr>,
+    #> #   films <list>, vehicles <list>, starships <list>
+
+In this lesson, you learnt the most fundamental verbs of data
+manipulation that let you operate on the rows and columns of a table,
+while keeping the underlying unit of observation the same. The full
+power of the `tidyverse` stems from the fact that you can combine these
+verbs together into a pipeline to achieve even the most complex data
+transformations.

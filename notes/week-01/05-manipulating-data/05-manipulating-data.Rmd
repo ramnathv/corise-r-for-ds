@@ -125,7 +125,7 @@ select(starwars, !(mass:skin_color))
 
 #### `select`: Keep or drop columns (2 / 2)
 
-The `dplyr` package also provides a handy set of modifiers (`contains`, `ends_with`, `where` etc) that let you select columns based on a pattern of names. This is very handy especially when you want to pick multiple columns, but don't want to type each column name separately.
+The `dplyr` package also provides a handy set of selectors (`contains`, `ends_with`, `where` etc) that let you select columns based on a pattern. This is very handy especially when you want to pick multiple columns, but don't want to type each column name separately.
 
 To get the most out of this, please run each example separately. Also, look up the examples in the package by typing `? dplyr::select` in your R console. These functions are the basic building blocks of data manipulation and provide you with a very wide toolkit. The more you are able to hold these in your muscle memory, the more adept you will become with data manipulation.
 
@@ -146,6 +146,8 @@ select(starwars, where(is.list))
 
 #### `mutate`: Create, modify, and delete columns
 
+The `mutate()` function can be used to create, modify, or remove columns.
+
 ```{r}
 # Create column mass_lbs
 mutate(starwars, mass_lbs = mass * 2.2)
@@ -162,6 +164,10 @@ mutate(starwars, mass_lbs = mass * 2.2, mass = NULL)
 
 #### `rename`: Rename columns
 
+The `rename()` function can be used to rename one or more columns. It can
+be combined with the selector functions like `ends_with()` to operate on
+multiple columns based on patterns.
+
 ```{r}
 # Rename
 rename(starwars, mass_kgs = mass)
@@ -174,6 +180,9 @@ rename_with(starwars, toupper, ends_with("color"))
 ```
 
 #### `relocate`: Relocate columns
+
+The `relocate()` function can be used to relocate a column before or
+after another column in the table.
 
 ```{r}
 # Relocate column AFTER a column
@@ -188,3 +197,23 @@ relocate(starwars, where(is.character))
 # Relocate all NUMERIC columns AFTER all CHARACTER columns
 relocate(starwars, where(is.numeric), .after = where(is.character))
 ```
+
+#### `unite`: Unite multiple columns into one
+
+The `unite()` function can be used to combine multiple columns into a single column. For example, we can combine the `mass` and `height` columns into a single new column.
+
+```{r}
+unite(starwars, height_mass, height, mass, sep = "_|_")
+```
+
+
+#### `separate`: Separate one column into multiple columns
+
+The `separate()` function does the exact opposite of the `unite()` function and separates a single column into multiple columns based on a separator. Look at the help documents by typing `? separate` to get a comprehensive look at the various argumetns and use cases it supports.
+
+```{r}
+separate(starwars, name, c('first_name', 'last_name'), sep = "\\s")
+```
+
+In this lesson, you learnt the most fundamental verbs of data manipulation that let you operate on the rows and columns of a table, while keeping the underlying unit of observation the same. The full power of the `tidyverse` stems from the fact that you can combine these verbs together into a pipeline to achieve even the most complex data transformations.
+
