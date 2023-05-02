@@ -43,10 +43,7 @@ babynames
 
 We can categorize data transformation operations into FOUR groups.
 
-1.  Manipulate
-2.  Aggregate
-3.  Reshape
-4.  Combine
+![transform-data](https://i.imgur.com/6NUKqpe.png)
 
 In this lesson, we will touch upon the basics of this grammar.
 
