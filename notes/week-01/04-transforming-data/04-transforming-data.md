@@ -262,4 +262,6 @@ combine datasets either by joining them or stacking them. The
 `tidyverse` provides several functions to accomplish this in a
 consistent manner.
 
+![types-of-joins](https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png)
+
 We will learn more about this in Week 2.

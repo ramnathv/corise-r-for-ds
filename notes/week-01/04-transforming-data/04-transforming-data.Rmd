@@ -131,7 +131,9 @@ The `tidyverse` provides several functions to reshape data and we will learn all
 
 ### Combining Data
 
-Finally, the last set of data transformation operations, we will learn about are those that involve more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner. 
+Finally, the last set of data transformation operations, we will learn about are those that involve more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner.
+
+![types-of-joins](https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png)
 
 We will learn more about this in Week 2.
 
