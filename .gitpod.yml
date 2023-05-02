@@ -1,0 +1,13 @@
+image: rocker/verse:4.3.0
+tasks:
+  - command: |
+      echo "R_LIBS_USER=/home/gitpod/libs" >> /home/gitpod/.Renviron && \
+      echo "session-default-working-dir=/workspace/corise-r-for-ds" | sudo tee -a /etc/rstudio/rsession.conf && \
+      echo "gitpod:gitpod" | sudo chpasswd &&\
+      sudo rstudio-server start --server-user gitpod
+  
+ports:
+  - name: RStudio
+    description: The RStudio Web Server
+    port: 8787
+    onOpen: open-preview
