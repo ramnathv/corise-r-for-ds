@@ -30,7 +30,7 @@ In this lesson, we will touch upon the basics of this grammar.
 
 ### Manipulating Data
 
-The first set of operations involve manipulating rows and columns of a table while leaving its shape, and interpretation of a cell, largely intact. For example, suppose we want to display the `carat`, `price` and `price_per_carat` columns for the top 5 diamonds by `price_per_carat`. We can accomplish this using the grammar provided by the `dplyr` package, which is a part of the `tidyverse`.
+The first set of operations involve __manipulating rows and columns__ of a table while leaving its shape, and interpretation of a cell, largely intact. For example, suppose we want to display the `carat`, `price` and `price_per_carat` columns for the top 5 diamonds by `price_per_carat`. We can accomplish this using the grammar provided by the `dplyr` package, which is a part of the `tidyverse`.
 
 Note how the pipe operator (`|>`) allows us to pass the dataset through a series of transformations, that together accomplish what we want. Also note how each row in the dataset still corresponds to an `observation`, and each cell is a `value` of a `variable`.
 
@@ -62,11 +62,12 @@ babynames |>
   # Slice the first five rows
   slice_head(n = 5)
 ```
+
 A large part of transforming data will involve data manipulation operations. This is just a trailer of what is to come, and we will learn more about data manipulation in the next lesson.
 
 ### Aggregating Data
 
-The second set of data manipulation operations that are extremely useful are data aggregation operations. Unlike data manipulation operations, aggregation operations change the underlying shape of the data. Moreover, they change the unit of observation from individual observations to groups.
+The second set of data manipulation operations that are extremely useful are __data aggregation operations__. Unlike data manipulation operations, aggregation operations change the underlying shape of the data. Moreover, they change the unit of observation from individual observations to groups.
 
 For example, suppose we want to summarize diamonds by combination of `cut` and `clarity`. We can group them by `cut` and `clarity` and summarize each group by computing the `avg_price`, `avg_carat` and `avg_price_per_carat`. The `dplyr` package provides us with the useful functions `group_by()` and `summarize()` to accomplish what we want.  
 
@@ -124,14 +125,18 @@ diamonds_by_cut_clarity |>
   )
 ```
 
-The `tidyverse` provides several functions to reshape data and we will learn all about it in Week 2.
+The `tidyverse` provides several functions to reshape data and we will learn all about it in later lessons.
 
 ### Combining Data
 
-Finally, the last set of data transformation operations, we will learn about are those that involve more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner.
+Finally, the last set of data transformation operations, we will learn about are those that involve __combining__ more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner.
 
 ![types-of-joins](https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png)
 
-We will learn more about this in Week 2.
+We will learn more about this in a later lesson.
 
+----
+[SIDEBAR]
+The `tidyverse` follows the unix philosophy of providing simple building blocks that do ONE thing and only ONE thing really well. The power of the `tidyverse` stems from the consistency of these building blocks and the ability to string them together into a pipeline. While this might at times lead to more lines of code, the fact that it gives you enormous flexibility makes it worthwhile. Note that it is possible to combine these building blocks into bigger sub-assemblies to abstract any repetitive patterns at play. This is beyond the scope of this course, but is what makes the `tidyverse` truly powerful in the real world!
+----
 
