@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 ## Visualizing Data
 
-```{r message = FALSE}
+```{r load-tidyverse, message = FALSE}
 library(tidyverse)
 ```
 
@@ -42,21 +42,21 @@ __Lattice:__ Lattice is another popular data visualization package that provides
 __ggplot2:__ ggplot2 is a popular data visualization package that provides a more powerful and flexible approach to data visualization than base graphics. ggplot2 uses a "grammar of graphics" approach, allowing users to build plots by adding layers of graphical elements, such as points, lines, and labels. This makes it easy to create complex visualizations.
 
 
-In this course, we will focus on `ggplot2`, as it provides us with a highly systematic grammar to create complex visualizations in a flexible
-manner.
+In this course, we will focus on `ggplot2`, as it provides us with a highly systematic grammar to create complex visualizations in a flexible manner.
 
 
 ### Diamonds
 
-The journey of every visualization begins with the data. We will use
-the `diamonds` dataset that ships with the `ggplot2` package to explore the amazing world of data visualization!
+The journey of every visualization begins with the data. We will use the `diamonds` dataset that ships with the `ggplot2` package to explore the amazing world of data visualization!
 
 ![diamonds](https://longs.nyc3.digitaloceanspaces.com/DiamondClarity-1.jpg?width=1024&name=DiamondClarity-1.jpg)
 
 Let us start by printing the data to take a look at what it holds.
 
-```{r}
+```{r data-diamonds}
 library(tidyverse)
+# We filter out large diamonds so the plots look nicer!
+diamonds <- diamonds |> filter(carat <= 3)
 diamonds
 ```
 
@@ -71,12 +71,140 @@ Note that a large part of the data science workflow is focused on transforming r
 
 Instead of printing some rows of the table, you can also use the `glimpse()` function to get a quick peek at the values in different columns along with their data types.
 
-```{r}
+```{r glimpse-diamonds}
 glimpse(diamonds)
 ```
 
-For more information about the `diamonds` dataset, please run `? diamonds` in your
-R console.
+For more information about the `diamonds` dataset, please run `? diamonds` in your R console.
+
+### Composing a Visualization
+
+Unlike most other visualization packages, the `ggplot2` package does NOT provide a prebuilt set of chart types. Instead, it provides the basic building blocks and the tools to compose these elements together into a visualization. Let us take a tour of how to compose a visualization using `ggplot2` by replicating the visualization shown below.
+
+```{r plot-diamonds-compose, echo = FALSE, message = FALSE}
+diamonds |> 
+  filter(carat <= 3) |> 
+  ggplot(aes(x = carat, y = price, color = clarity)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(
+    x = "Carat",
+    y = "Price (in USD)",
+    color = "Clarity",
+    title = "Diamonds: Price vs. Carat by Clarity",
+    subtitle = "Price per carat of diamonds increases with clarity",
+    caption = "Source: Diamonds Dataset"
+  ) +
+  theme(plot.title.position = "plot")
+```
+
+The core idea of visualizing data with `ggplot2` is to decompose your plot into its underlying layers. Accordingly, we can start with the raw canvas for the plot by calling the `ggplot()` function on the dataset. This returns a not-so-interesting empty plot, but trust me when I say that this is the start of the magic!
+
+```{r plot-diamonds-compose-1}
+diamonds |> 
+  ggplot()
+```
+The next visual element in the plot we will recreate are the axes. The x axis is mapped to the variable `carat`, while the y axis is mapped to the variable `price`. We can add this to the plot using the aesthetic function `aes()` and providing it with a mapping of the relevant axis to the variable in the dataset. While, we can pass multiple mappings to a single `aes()` call, we will keep it separate for now. 
+
+Note how we use the `+` operator rather than the pipe operator (`|>`) to build our plot. This is because the `ggplot2` package was released way before the pipe made its way into R. It is one of the few inconsistencies that exist in the `tidyverse` which otherwise prides itself on its amazing ability to be consistent all the way!
+
+```{r plot-diamonds-compose-2}
+diamonds |> 
+  ggplot() +
+  aes(x = carat) +
+  aes(y = price)
+```
+
+Now that we have mapped the axis, it is time to add more visual elements to the plot. The first element we see are the points on the plot. We can add visual elements to the plot using __geometries__. The `ggplot2()` package ships with several geometries out of the box. The one we need here is `geom_point()`.
+
+```{r plot-diamonds-compose-3}
+diamonds |> 
+  ggplot() +
+  aes(x = carat) +
+  aes(y = price) +
+  geom_point()
+```
+We are making good progress here! We can now see the points on the plot. However, it does not quite look like the plot we set out to create. The points in our original plot were colored based on the `clarity` of the diamond. How do we incorporate this into our plot? Well, you might have guessed it correctly already. We just need to add an additional aesthetic mapping that maps the `color` aesthetic to the `clarity` variable.
+
+```{r plot-diamonds-compose-4}
+diamonds |> 
+  ggplot() +
+  aes(x = carat) +
+  aes(y = price) +
+  aes(color = clarity) +
+  geom_point()
+```
+
+That looks much better now! We are almost there. The next visual element we need to add are the lines. Each line is the line of best fit for a specific value of `clarity`. If I did not know `ggplot2`, the way I would have gone about adding this line to the plot is by building a regression model of `price` vs. `carat` for each value of `clarity` and then using the predicted values to get the line. 
+
+However, `ggplot2` make this really easy and has a geometry that is perfect for this use case. We can add the lines without doing any additional computation by using the `geom_smooth()` function, which fits a curve to the points. We specify `method = "lm"` to force it to fit a line. Note that we did not have to ask `geom_smooth()` to fit a separate line for each value of `clarity`. This is because the aesthetic mappings we added are global and every geometric layer that we add along the way will respect this mapping. 
+
+```{r plot-diamonds-compose-5}
+diamonds |> 
+  ggplot() +
+  aes(x = carat) +
+  aes(y = price) +
+  aes(color = clarity) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+Finally, it is time to add labels to the plot. Labelling your plot correctly is very important to creating good visualizations. Once again, `ggplot2` makes it easy to add different labels using the `labs` function. Lo and behold, we have composed our first visualization using `ggplot2`.
+
+```{r plot-diamonds-compose-6}
+diamonds |> 
+  ggplot() +
+  aes(x = carat) +
+  aes(y = price) +
+  aes(color = clarity) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Carat") +
+  labs(y = "Price (in USD)") +
+  labs(color = "Clarity") +
+  labs(title = "Diamonds: Price vs. Carat by Clarity") +
+  labs(subtitle = "Price per carat of diamonds increases with clarity") +
+  labs(caption = "Source: Diamonds Dataset") +
+  theme(plot.title.position = "plot")
+```
+
+You might be thinking that this syntax is quite verbose to create plots on a regular basis. And you wont be alone to think this way. Fortunately, `ggplot2` does let you combine multiple lines of this code to write this more concisely. It is customary in idiomatic ggplot2 code to pull the aesthetic mappings into the `ggplot()` call.
+
+```{r plot-diamonds-compose-7, message = FALSE}
+diamonds |> 
+  ggplot(aes(x = carat, y = price, color = clarity)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    x = "Carat",
+    y = "Price (in USD)",
+    color = "Clarity",
+    title = "Diamonds: Price vs. Carat by Clarity",
+    subtitle = "Price per carat of diamonds increases with clarity",
+    caption = "Source: Diamonds Dataset"
+  ) +
+  theme(plot.title.position = "plot")
+```
+
+Suppose, you wanted to add only ONE line of best fit to the plot rather than the multiple lines. How would you modify the code above to accomplish it?
+The trick is to recognize that every geometric layer respects the aesthetic mappings that are global. If we want the points to be colored by `clarity`, but NOT the line, then all we need to do is to move the `color` mapping from the global layer into the geometry specific layer.
+
+```{r plot-diamonds-compose-variation}
+diamonds |> 
+  ggplot(aes(x = carat, y = price)) +
+  geom_point(aes(color = clarity)) +
+  geom_smooth(method = "lm") +
+  labs(
+    x = "Carat",
+    y = "Price (in USD)",
+    color = "Clarity",
+    title = "Diamonds: Price vs. Carat by Clarity",
+    subtitle = "Price per carat of diamonds increases with clarity",
+    caption = "Source: Diamonds Dataset"
+  ) +
+  theme(plot.title.position = "plot")
+```
+
 
 ### Visualizing Variables
 
@@ -103,8 +231,7 @@ diamonds |>
   geom_histogram(color = 'white')
 ```
 
-We can write the code for the plot above more concisely by moving the `aes` mapping
-inside the `ggplot()` call. This is the idiomatic way to write `ggplot2` code and we will use it going forward.
+We can write the code for the plot above more concisely by moving the `aes` mapping inside the `ggplot()` call. This is the idiomatic way to write `ggplot2` code and we will use it going forward.
 
 ```{r plot-diamonds-histogram}
 diamonds |> 
@@ -145,9 +272,9 @@ diamonds |>
 
 At times, it is advantageous to create horizontal bar plots, where the categorical variables are on the `y` axis. Once again, `ggplot2` makes this really easy and all you need to do is to swap out the mapping of the `color` variable from `x` to `y`.
 
-```{r}
+```{r plot-diamonds-bar-infreq-horizontal}
 diamonds |> 
-  ggplot(aes(x = fct_infreq(clarity))) +
+  ggplot(aes(y = fct_infreq(clarity))) +
   geom_bar()
 ```
 
@@ -276,7 +403,7 @@ We will learn more about the different `aesthetics` supported by `ggplot2()` in 
 
 Facets are a really powerful way to visualize the relationship between more than two variables. Rather than mapping the additional variables to `aesthetics`, we split the plot into small multiples or panels. For example, in the plot below, rather than mapping an additional aesthetic for `cut`, we use `facet_wrap()` to split the plot into different panels for each `cut`.
 
-```{r}
+```{r plot-diamonds-facet-wrap}
 diamonds |> 
   ggplot(aes(x = carat, y = price, color = clarity)) +
   geom_point() +
@@ -285,7 +412,7 @@ diamonds |>
 
 We are not restricted to splitting the panels based on a single variable. We can split it into a grid based on a combination of variables using the `facet_grid()` function.
 
-```{r}
+```{r plot-diamonds-facet-grid}
 diamonds |> 
   ggplot(aes(x = carat, y = price, color = clarity)) +
   geom_point() +
@@ -293,4 +420,7 @@ diamonds |>
   theme_gray(base_size = 7)
 ```
 
+The `ggplot2` package provides a really powerful abstraction of the grammar of graphics. We will dive deeper into this grammar in Week 2.
+
+![visualize-grammar](https://i.imgur.com/6fpIXUi.png)
 
