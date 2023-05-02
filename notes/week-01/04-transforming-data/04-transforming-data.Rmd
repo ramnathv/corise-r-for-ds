@@ -1,0 +1,138 @@
+---
+output: github_document
+---
+
+## Transforming Data
+
+```{r setup, message = FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(comment = "#>")
+```
+
+Visualizing data is a lot of fun. However, the key to visualizing data is getting it into a tidy format that makes it easy to visualize. Ask any practicing data scientist and they will tell you how data transformation is easily the most time consuming portion of their daily workflow.
+
+Fortunately for us, the `tidyverse` provides us with a grammar of data transformation as well, that makes it easy to make data bend to our will and wishes. Once you understand this grammar, you will be able to make any dataset dance to your tunes!
+
+Let us read in the `babynames` dataset, so we can use it in addition to the `diamonds` dataset.
+
+
+```{r read-babynames}
+FILE_NAMES <- here::here("data/names.csv.gz")
+babynames <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
+babynames
+```
+
+We can categorize data transformation operations into FOUR groups.
+
+1. Manipulate
+2. Aggregate
+3. Reshape
+4. Combine
+
+In this lesson, we will touch upon the basics of this grammar.
+
+### Manipulating Data
+
+The first set of operations involve manipulating rows and columns of a table while leaving its shape, and interpretation of a cell, largely intact. For example, suppose we want to display the `carat`, `price` and `price_per_carat` columns for the top 5 diamonds by `price_per_carat`. We can accomplish this using the grammar provided by the `dplyr` package, which is a part of the `tidyverse`.
+
+Note how the pipe operator (`|>`) allows us to pass the dataset through a series of transformations, that together accomplish what we want. Also note how each row in the dataset still corresponds to an `observation`, and each cell is a `value` of a `variable`.
+
+
+```{r}
+# Start with the diamonds data.
+diamonds |> 
+  # Select the columns carat and price
+  select(carat, price) |> 
+  # Add a new column for price_per_carat
+  mutate(price_per_carat = price / carat) |> 
+  # Arrange the rows in descending order of price_per_carat
+  arrange(desc(price_per_carat)) |> 
+  # Slice the first five rows
+  slice_head(n = 5)
+```
+
+Let us take another example of data manipulation, this time on the `babynames` data. Suppose, we want the most popular female names for babies born in the year 2021. We can accomplish this by stringing together a similar series of operations.
+
+```{r}
+# Start with the babynames data
+babynames |> 
+  # Filter the rows for year = 2021 and sex = "F"
+  filter(year == 2021, sex == "F") |> 
+  # Select the columns name, sex, and nb_births
+  select(name, sex, nb_births) |> 
+  # Arrange the rows in descending order of nb_births
+  arrange(desc(nb_births)) |> 
+  # Slice the first five rows
+  slice_head(n = 5)
+```
+A large part of transforming data will involve data manipulation operations. This is just a trailer of what is to come, and we will learn more about data manipulation in the next lesson.
+
+### Aggregating Data
+
+The second set of data manipulation operations that are extremely useful are data aggregation operations. Unlike data manipulation operations, aggregation operations change the underlying shape of the data. Moreover, they change the unit of observation from individual observations to groups.
+
+For example, suppose we want to summarize diamonds by combination of `cut` and `clarity`. We can group them by `cut` and `clarity` and summarize each group by computing the `avg_price`, `avg_carat` and `avg_price_per_carat`. The `dplyr` package provides us with the useful functions `group_by()` and `summarize()` to accomplish what we want.  
+
+```{r}
+diamonds_by_cut_clarity <- 
+  # Start with diamonds data
+  diamonds |> 
+    # Group by cut and clarity
+    group_by(cut, clarity) |> 
+    # Summarize each group
+    summarize(
+      avg_price = mean(price),
+      avg_carat = mean(carat),
+      avg_price_per_carat = sum(price) / sum(carat),
+      .groups = "drop"
+    )
+
+diamonds_by_cut_clarity
+```
+
+Suppose, we want to get the top 5 most popular Male and Female names of all time. Can we accomplish it with the grammar we have learnt so far? Well, the answer is ALMOST yes. We can summarize the total number of births by `sex` and `name`, and then use the `slice_max()` function to slice the rows to get the top 5 rows in terms of `nb_births` for each `sex`.
+
+```{r}
+babynames_top_5 <- 
+  # Start with the babynames table
+  babynames |> 
+    # Group by sex and name
+    group_by(sex, name) |> 
+    # Summarize total number of births by sex and name
+    summarize(
+      nb_births = sum(nb_births)
+    ) |> 
+    slice_max(nb_births, n = 5)
+
+babynames_top_5
+```
+
+You might have noticed a small difference between the `summarize` step in these two examples. In the first example with the `diamonds` data, we set `.groups = "drop"`. This was done to drop the grouping, since we wanted to get the top 5 rows overall. In the second example with the `babynames` data, we don't set `.groups = "drop"`. This results in the data still being grouped by the `sex` variable and that is perfect as the `slice_max()` function can then get us the top 5 names for each `sex`.
+
+Once again, this is just the trailer, and we will learn a lot more about data aggregation in later lessons. The major point I want to emphasize here once again is how a powerful consistent grammar allows you to handle complex transformations in a flexible manner!
+
+
+### Reshaping Data
+
+The first two operations we encountered before don't alter the fundamental shape of the data. The next set of operations we will learn about are the reshaping operations, which alter the fundamental shape of the data.
+
+For example, suppose we want to display the `avg_price_per_carat` for every combination of `cut` and `clarity`, where `cut` is laid out in rows and the `clarity` is laid out in columns. We can accomplish this by taking the `diamonds_by_cut_clarity` table and pivoting it wider, taking the column names from `clarity`, and the cell values from `avg_price_per_carat`.
+
+```{r}
+diamonds_by_cut_clarity |> 
+  pivot_wider(
+    id_cols = cut,
+    names_from = clarity,
+    values_from = avg_price_per_carat
+  )
+```
+
+The `tidyverse` provides several functions to reshape data and we will learn all about it in Week 2.
+
+### Combining Data
+
+Finally, the last set of data transformation operations, we will learn about are those that involve more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner. 
+
+We will learn more about this in Week 2.
+
+

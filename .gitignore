@@ -47,3 +47,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Mac OS
+.DS_Store
+
+# Custom
+scratch

@@ -1,0 +1,187 @@
+---
+output: github_document
+---
+
+## Manipulating Data
+
+
+```{r setup, message = FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(comment = "#>")
+```
+
+
+Recall how data manipulation operations work on rows and columns of a table, while leaving its shape largely intact. It is useful to group these operations based on whether they manipulate rows or columns. 
+
+We will use a handy dataset named `starwars` that ships with the `dplyr` package, to illustrate the basic idea behind these data manipulation operations. While the data is largely self explanatory, as always, you can type `? starwars` to get more details on the data.
+
+```{r}
+starwars
+```
+
+
+### Manipulating Rows
+
+These functions operate on the rows of a table and allow us to subset a table based on 
+
+#### `filter`: Keep rows that match a condition
+
+The `filter()` functions allows you to subset rows of a table based on a set of one or more matching conditions. You can combine one or more criteria to keep only the rows that you want to keep.
+
+Run these examples one at a time to understand what they accomplish. In order to get the most out of it, have a hypothesis in place before you run the line of code, so you can corroborate your understanding with the results. Finally, don't limit yourself to these examples. Come up with your own criteria and explore.
+
+
+```{r}
+# One criterion, One expression
+filter(starwars, species == "Human")
+filter(starwars, mass > 1000)
+
+# Multiple criterion, One expression
+filter(starwars, hair_color == "none" & eye_color == "black")
+filter(starwars, hair_color == "none" | eye_color == "black")
+
+# Multiple criterion, Multiple expressions
+filter(starwars, hair_color == "none", eye_color == "black")
+```
+
+#### `arrange`: Order rows using column values
+
+The `arrange()` function lets you sort a table based on the values of one or more columns. You can use the modifier function, `desc()`, to indicate that you want to sort a column in the descending order.
+
+```{r}
+# Single Column > Ascending
+arrange(starwars, name)
+arrange(starwars, mass)
+
+# Single Column > Descending
+arrange(starwars, desc(mass))
+
+# Multiple Columns
+arrange(starwars, name, desc(mass))
+```
+
+#### `distinct`: Keep distinct/unique rows
+
+The `distinct()` function allows you to keep rows with distinct combinations of column values.
+
+```{r}
+# Single Column
+distinct(starwars, sex)
+
+# Multiple Columns
+distinct(starwars, sex, skin_color)
+```
+
+#### `slice`: Subset rows using their positions
+
+The `slice_` family of functions let you subset rows based on their position. It ships with several variations that let you pick rows by their absolute position (`slice_head` and `slice_tail`), by their relative position based on a column value (`slice_min` and `slice_max`), or at random (`slice_sample`).
+
+```{r}
+# Rows 1-5
+slice(starwars, 1:5)
+
+# First 5 Rows
+slice_head(starwars, n = 5)
+
+# Last 5 Rows
+slice_tail(starwars, n = 5)
+
+# First 5 Rows arranged by height
+slice_min(starwars, height, n = 5)
+
+# First 5 Rows arranged by descending height
+slice_max(starwars, height, n = 5)
+
+# Random 5 Rows
+slice_sample(starwars, n = 5)
+
+# Random 20% Rows
+slice_sample(starwars, prop = 0.20)
+```
+
+
+### Manipulating Columns
+
+#### `select`: Keep or drop columns (1 / 2)
+
+The `select` function lets you keep or drop columns in a dataset. You can use unquoted column names, ranges, and even boolean operators to define your selection. 
+
+```{r}
+# Keep columns name and mass
+select(starwars, name, mass)
+
+# Keep columns from name to skin_color, and species
+select(starwars, name:skin_color, species)
+
+# Drop columns mass and height
+select(starwars, -mass, -height)
+
+# Drop columns from mass to skin_color
+select(starwars, !(mass:skin_color))
+```
+
+#### `select`: Keep or drop columns (2 / 2)
+
+The `dplyr` package also provides a handy set of modifiers (`contains`, `ends_with`, `where` etc) that let you select columns based on a pattern of names. This is very handy especially when you want to pick multiple columns, but don't want to type each column name separately.
+
+To get the most out of this, please run each example separately. Also, look up the examples in the package by typing `? dplyr::select` in your R console. These functions are the basic building blocks of data manipulation and provide you with a very wide toolkit. The more you are able to hold these in your muscle memory, the more adept you will become with data manipulation.
+
+```{r}
+# Keep columns containing the word "color"
+select(starwars, contains("color"))
+
+# Keep columns ending with the word "color"
+select(starwars, ends_with("color"))
+
+# Keep columns which are numeric
+select(starwars, where(is.numeric))
+
+# Keep columns which are lists
+select(starwars, where(is.list))
+```
+
+
+#### `mutate`: Create, modify, and delete columns
+
+```{r}
+# Create column mass_lbs
+mutate(starwars, mass_lbs = mass * 2.2)
+
+# Modify column height
+mutate(starwars, height = height * 0.0328084)
+
+# Remove column: 
+mutate(starwars, mass = NULL)
+
+# Do it all at once
+mutate(starwars, mass_lbs = mass * 2.2, mass = NULL)
+```
+
+#### `rename`: Rename columns
+
+```{r}
+# Rename
+rename(starwars, mass_kgs = mass)
+
+# Rename ALL columns to uppercase
+rename_with(starwars, toupper)
+
+# Rename “color” columns to uppercase
+rename_with(starwars, toupper, ends_with("color"))
+```
+
+#### `relocate`: Relocate columns
+
+```{r}
+# Relocate column AFTER a column
+relocate(starwars, sex, .after = name)
+
+# Relocate a column BEFORE a column
+relocate(starwars, sex, .before = mass)
+
+# Relocate ALL character columns to the front
+relocate(starwars, where(is.character))
+
+# Relocate all NUMERIC columns AFTER all CHARACTER columns
+relocate(starwars, where(is.numeric), .after = where(is.character))
+```

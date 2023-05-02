@@ -1,0 +1,78 @@
+---
+output: github_document
+---
+
+## Aggregating Data
+
+```{r setup, message = FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(comment = "#>")
+babynames <- here::here("data/names.csv.gz") |>     
+   readr::read_csv(show_col_types = FALSE)
+```
+
+### `group_by`: Group by one or more variables
+
+The `group_by()` function lets you group a table by one or more columns. Applying the `group_by` function to a table does not change its appearance, except for adding some metadata on the grouping variables.
+
+```{r}
+# Group by ONE column
+babynames |> 
+  group_by(sex)
+```
+
+```{r}
+# Group by multiple columns
+babynames |> 
+  group_by(sex, name)
+```
+
+
+### `summarize`: Summarize each group down to one row
+
+The reason we group a table by columns is to be able to manipulate it by group. While the `group_by` function can be used in tandem with several other manipulation functions, the most common function used is the `summarize` function. It aggregates the data for each group such that there is only ONE row per group.
+
+You can use any arbitrary function inside `summarize` as long as it collapses multiple values into a single value. For example, we can summarize the `babynames` dataset for each `sex` in terms of the total number of births and number of distinct names.
+
+```{r}
+babynames |> 
+  group_by(sex) |> 
+  summarize(
+    nb_births = sum(nb_births),
+    nb_names = n_distinct(name)
+  )
+```
+
+How about we try grouping by multiple variables? Let us compute the same summaries, but grouping by `sex` and `year` this time.
+
+```{r}
+babynames |> 
+  group_by(sex, year) |> 
+  summarize(
+    nb_births = sum(nb_births),
+    nb_names = n_distinct(name)
+  )
+```
+
+It is very important to pay attention to the message that gets printed.
+
+```
+#> `summarise()` has grouped output by 'sex'. You can override using the `.groups`
+#> argument.
+```
+
+When you group by multiple variables, each summarize operation removes only the last level of grouping. For example, in this case, the grouping by `year` was removed, but the grouping by `sex` is still retained. This design has some advantages as it lets us do hierarchical summaries without having to invoke multiple `group_by` operations. However, it can also introduce nasty surprises if you are not careful. 
+
+My recommendation would be to override this default behavior and always drop all grouping after a summarize operation. This might add some overhead especially if you are going to group it again. But doing that explicitly will save you a lot of pain.
+
+```{r}
+babynames |> 
+  group_by(sex, year) |> 
+  summarize(
+    nb_births = sum(nb_births),
+    nb_names = n_distinct(name),
+    .groups = "drop"
+  )
+```
+
+
