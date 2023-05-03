@@ -10,5 +10,36 @@
     "tab_multiline_completion": true,
     "font_size_points": 11,
     "rmd_viewer_type": "pane",
-    "editor_theme": "Dracula"
+    "editor_theme": "Dracula",
+    "insert_native_pipe_operator": true,
+    "panes": {
+        "quadrants": [
+            "Source",
+            "TabSet1",
+            "Console",
+            "TabSet2"
+        ],
+        "tabSet1": [
+            "Environment",
+            "History",
+            "Connections",
+            "Build",
+            "VCS",
+            "Tutorial",
+            "Presentation"
+        ],
+        "tabSet2": [
+            "Files",
+            "Plots",
+            "Packages",
+            "Help",
+            "Viewer",
+            "Presentations"
+        ],
+        "hiddenTabSet": [],
+        "console_left_on_top": false,
+        "console_right_on_top": true,
+        "additional_source_columns": 0
+    },
+    "posix_terminal_shell": "bash"
 }
