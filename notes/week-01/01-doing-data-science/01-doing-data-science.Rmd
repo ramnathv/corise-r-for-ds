@@ -29,7 +29,15 @@ Now that you have clean data, the third step is to __transform__ it. In this
 step, you often manipulate individual variables, add new variables, select
 observations of interest, aggregate values across specific groups etc.
 
-The real fun starts after you have transformed your data
+The real fun starts after you have transformed your data. The next step in the journey is to __visualize__ it. Visualizations let you explore the data and gain insights.
+
+An equally important part of the workflow is to __model__ the data. This involves analyzing hypotheses on the data as well as building predictions.
+
+The __transform__ > __visualize__ > __model__ cycle is usually a highly iterative one and one will find themselves tweaking each step repeatedly till you find the optimal solution.
+
+The last step in the workflow is to __communicate__ the data. This is done by turning your analysis into reports, dashboards, web apps and other artifacts that can be shared across a broad range of stakeholders.
+
+Our focus in this course will largely be on the __transform__ and __visualize__ steps.
 
 ### Why R & Tidyverse?
 
@@ -46,4 +54,5 @@ The Tidyverse is a highly opinionated set of packages that share a common
 underlying grammar and philosophy and are designed to work together to execute
 the data science workflow.
 
-### What will you Learn?
+Rather than talk about the beauty of the `tidyverse`, I want you to experience it for yourself by working through the next lesson that uses the tidyverse to turn a dataset of US baby names into a beautiful animated bar chart.
+
