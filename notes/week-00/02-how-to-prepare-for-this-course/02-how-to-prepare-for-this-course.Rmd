@@ -1,3 +1,7 @@
+---
+output: github_document
+---
+
 ### How to Prepare for This Course?
 
 We created CoRise for professionals looking to acquire new skills. This course is a "flipped classroom" model, and it moves quickly. To make the most of your CoRise experience, we recommend three key tips:

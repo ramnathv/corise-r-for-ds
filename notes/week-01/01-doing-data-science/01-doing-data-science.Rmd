@@ -1,5 +1,5 @@
 ---
-title: Doing Data Science
+output: github_document
 ---
 
 ### What is Data Science?
@@ -55,4 +55,8 @@ underlying grammar and philosophy and are designed to work together to execute
 the data science workflow.
 
 Rather than talk about the beauty of the `tidyverse`, I want you to experience it for yourself by working through the next lesson that uses the tidyverse to turn a dataset of US baby names into a beautiful animated bar chart.
+
+Shown below is a slightly more detailed roadmap of the data science workflow. We will cover this in more detail in later lessons.
+
+![data-science-workflow-detailed](https://i.imgur.com/dAuyiLz.png)
 
