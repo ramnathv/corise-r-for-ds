@@ -1,10 +1,6 @@
 
 ## Visualizing Data
 
-``` r
-library(tidyverse)
-```
-
 ### Getting Started
 
 Data visualization is a powerful tool in the field of data science that
@@ -12,6 +8,8 @@ helps to communicate complex data insights in an intuitive and
 easy-to-understand way. R is a popular programming language and
 environment for statistical computing and graphics that provides a wide
 range of tools and packages for creating high-quality visualizations.
+
+![workflow-visualizing-data](https://i.imgur.com/X960Ag4.png)
 
 R offers several different approaches to data visualization, each with
 its own strengths and weaknesses. Here are some of the most common
@@ -50,6 +48,16 @@ Let us start by printing the data to take a look at what it holds.
 
 ``` r
 library(tidyverse)
+#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+#> ✔ dplyr     1.1.2     ✔ readr     2.1.4
+#> ✔ forcats   1.0.0     ✔ stringr   1.5.0
+#> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+#> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+#> ✔ purrr     1.0.1     
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
+#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 # We filter out large diamonds so the plots look nicer!
 diamonds <- diamonds |> filter(carat <= 3)
 diamonds

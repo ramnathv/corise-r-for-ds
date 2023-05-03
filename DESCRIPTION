@@ -2,9 +2,14 @@ Package: cbcvdocker
 Title: Base Docker image for CBCV Analyses.
 Version: 0.1.0
 Imports:
-  flexdashboard,
-  gganimate,
-  gifski,
-  markdown,
-  shiny
- 
+    flexdashboard,
+    flipbookr,
+    fs,
+    gganimate,
+    gifski,
+    leaflet,
+    markdown,
+    plotly,
+    shiny,
+    statebins,
+    xaringanthemer

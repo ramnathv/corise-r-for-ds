@@ -1,65 +1,49 @@
 
 ## Transforming Data
 
-``` r
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-```
-
 Visualizing data is a lot of fun. However, the key to visualizing data
-is getting it into a tidy format that makes it easy to visualize. Ask
-any practicing data scientist and they will tell you how data
+is getting the data into a tidy format that makes it easy to visualize.
+Ask any practicing data scientist and they will tell you how data
 transformation is easily the most time consuming portion of their daily
 workflow.
 
-Fortunately for us, the `tidyverse` provides us with a grammar of data
-transformation as well, that makes it easy to make data bend to our will
-and wishes. Once you understand this grammar, you will be able to make
-any dataset dance to your tunes!
+![workflow-transform-data](https://i.imgur.com/0l6fJiZ.png)
 
-Let us read in the `babynames` dataset, so we can use it in addition to
-the `diamonds` dataset.
+Fortunately for us, the `tidyverse` provides us with a **grammar of data
+transformation** as well, that makes it easy to make data bend to our
+will and wishes. Once you understand this grammar, you will be able to
+make any dataset dance to your tunes!
+
+![dance-to-your-tunes](https://media0.giphy.com/media/4esrzplOvKkE0/giphy.gif?cid=ecf05e47dl39d633d1uhf4480lxjn7x1cxdmumgo9w4a6ccj&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+
+We will use both the `babynames` dataset as well as the `diamonds`
+dataset to explore the world of data transformation with the
+`tidyverse`.
 
 ``` r
+library(tidyverse)
 FILE_NAMES <- here::here("data/names.csv.gz")
 babynames <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
-babynames
 ```
 
-    #> # A tibble: 2,052,781 × 4
-    #>     year name      sex   nb_births
-    #>    <dbl> <chr>     <chr>     <dbl>
-    #>  1  1880 Mary      F          7065
-    #>  2  1880 Anna      F          2604
-    #>  3  1880 Emma      F          2003
-    #>  4  1880 Elizabeth F          1939
-    #>  5  1880 Minnie    F          1746
-    #>  6  1880 Margaret  F          1578
-    #>  7  1880 Ida       F          1472
-    #>  8  1880 Alice     F          1414
-    #>  9  1880 Bertha    F          1320
-    #> 10  1880 Sarah     F          1288
-    #> # ℹ 2,052,771 more rows
-
-We can categorize data transformation operations into FOUR groups.
+We can categorize data transformation operations into FOUR groups. In
+this lesson, we will touch upon the basics of this grammar.
 
 ![transform-data](https://i.imgur.com/6NUKqpe.png)
-
-In this lesson, we will touch upon the basics of this grammar.
 
 ### Manipulating Data
 
 The first set of operations involve **manipulating rows and columns** of
-a table while leaving its shape, and interpretation of a cell, largely
-intact. For example, suppose we want to display the `carat`, `price` and
-`price_per_carat` columns for the top 5 diamonds by `price_per_carat`.
-We can accomplish this using the grammar provided by the `dplyr`
-package, which is a part of the `tidyverse`.
+a table while leaving its shape, and underlying unit of observation,
+largely intact. For example, suppose we want to display the `carat`,
+`price` and `price_per_carat` columns for the top 5 diamonds by
+`price_per_carat`. We can accomplish this using the grammar provided by
+the `dplyr` package, which is a part of the `tidyverse`.
 
 Note how the pipe operator (`|>`) allows us to pass the dataset through
 a series of transformations, that together accomplish what we want. Also
-note how each row in the dataset still corresponds to an `observation`,
-and each cell is a `value` of a `variable`.
+note how each row in the dataset still corresponds to a single
+`observation` (diamond), and each cell is a `value` of a `variable`.
 
 ``` r
 # Start with the diamonds data.
@@ -86,7 +70,8 @@ diamonds |>
 Let us take another example of data manipulation, this time on the
 `babynames` data. Suppose, we want the most popular female names for
 babies born in the year 2021. We can accomplish this by stringing
-together a similar series of operations.
+together a series of data manipulation functions provided by the
+`tidyverse`.
 
 ``` r
 # Start with the babynames data
@@ -175,15 +160,12 @@ babynames_top_5 <-
     group_by(sex, name) |> 
     # Summarize total number of births by sex and name
     summarize(
-      nb_births = sum(nb_births)
+      nb_births = sum(nb_births),
+      .groups = "drop_last"
     ) |> 
+    # Slice the top 5 rows with highest values of `nb_births`.
     slice_max(nb_births, n = 5)
-```
 
-    #> `summarise()` has grouped output by 'sex'. You can override using the `.groups`
-    #> argument.
-
-``` r
 babynames_top_5
 ```
 
@@ -204,12 +186,16 @@ babynames_top_5
 
 You might have noticed a small difference between the `summarize` step
 in these two examples. In the first example with the `diamonds` data, we
-set `.groups = "drop"`. This was done to drop the grouping, since we
-wanted to get the top 5 rows overall. In the second example with the
-`babynames` data, we don’t set `.groups = "drop"`. This results in the
-data still being grouped by the `sex` variable and that is perfect as
-the `slice_max()` function can then get us the top 5 names for each
-`sex`.
+set `.groups = "drop"`. This was done to drop all grouping variables,
+since we wanted to get the top 5 rows overall.
+
+In the second example with the `babynames` data, we set
+`.groups = "drop_last"`. This results in the data still being grouped by
+the `sex` variable and that is perfect as the `slice_max()` function can
+then get us the top 5 names for each `sex`. Note that
+`.groups = "drop_last"` is the default behavior of the `summarize()`
+function. However, it is always best to be explicit about it, in order
+to avoid nasty surprises.
 
 Once again, this is just the trailer, and we will learn a lot more about
 data aggregation in later lessons. The major point I want to emphasize
@@ -220,8 +206,8 @@ handle complex transformations in a flexible manner!
 
 The first two operations we encountered before don’t alter the
 fundamental shape of the data. The next set of operations we will learn
-about are the reshaping operations, which alter the fundamental shape of
-the data.
+about are the **reshaping** operations, which alter the fundamental
+shape of the data.
 
 For example, suppose we want to display the `avg_price_per_carat` for
 every combination of `cut` and `clarity`, where `cut` is laid out in

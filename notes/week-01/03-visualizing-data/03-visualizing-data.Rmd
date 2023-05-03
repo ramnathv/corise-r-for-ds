@@ -24,14 +24,12 @@ knitr::opts_chunk$set(
 
 ## Visualizing Data
 
-```{r load-tidyverse, message = FALSE}
-library(tidyverse)
-```
-
 
 ### Getting Started
 
 Data visualization is a powerful tool in the field of data science that helps to communicate complex data insights in an intuitive and easy-to-understand way. R is a popular programming language and environment for statistical computing and graphics that provides a wide range of tools and packages for creating high-quality visualizations.
+
+![workflow-visualizing-data](https://i.imgur.com/X960Ag4.png)
 
 R offers several different approaches to data visualization, each with its own strengths and weaknesses. Here are some of the most common approaches:
 
@@ -67,7 +65,6 @@ The `diamonds` dataset is a table where each row represents a diamond, and each 
 3. Every CELL is a VALUE.
 
 Note that a large part of the data science workflow is focused on transforming raw data into tidy data before it can be visualized and modeled. You will learn more about the grammar of data transformation later in this course.
-
 
 Instead of printing some rows of the table, you can also use the `glimpse()` function to get a quick peek at the values in different columns along with their data types.
 
