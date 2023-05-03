@@ -136,7 +136,6 @@ anim <- tbl_names_top_100_female_trends |>
   aes(group = name) +
   labs(
     title = 'Animated Barchart of Top Female Babynames',
-    subtitle = '',
     x = '# Births',
     y = NULL
   ) +
@@ -147,9 +146,10 @@ anim <- tbl_names_top_100_female_trends |>
     axis.text.y = element_blank()
   ) +
   transition_time(year) +
-  ease_aes('cubic-in-out') 
+  ease_aes('cubic-in-out') +
+  labs(subtitle = "Year: {round(frame_time)}")
 
-gganimate::animate(anim, width = 600, height = 600, duration = 30)
+gganimate::animate(anim, fps = 5, width = 600, height = 800)
 ```
 
 
