@@ -5,17 +5,17 @@ title: Doing Data Science
 ### What is Data Science?
 
 Data Science is an interdisciplinary field that involves the use of scientific methods, processes, algorithms, and systems to extract knowledge and insights 
-from structured and unstructured data. It involves combining knowledge and 
-techniques from statistics, mathematics, computer science, and domain-specific knowledge to analyze and understand complex phenomena and solve problems.
+from structured and unstructured data. It involves combining knowledge and techniques from statistics, mathematics, computer science, and domain-specific knowledge to analyze and understand complex phenomena and solve problems.
 
 Data Science encompasses a wide range of activities, including data collection, cleaning, integration, analysis, modeling, and visualization, as well as the communication of findings and insights to stakeholders. It involves the use of various tools, techniques, and technologies, including statistical software, 
 machine learning algorithms, data visualization tools, and big data platforms.
 
-Data Science has numerous applications across industries, including finance, healthcare, marketing, social media, and many others. The insights and predictions derived from data analysis can be used to drive business decisions, inform 
-policy, and improve the lives of individuals and communities.
+Data Science has numerous applications across industries, including finance, healthcare, marketing, social media, and many others. The insights and predictions derived from data analysis can be used to drive business decisions, inform policy, and improve the lives of individuals and communities.
 
 
 ### How to do Data Science?
+
+![](https://imgur.com/jiBlLaM.png)
 
 The first step almost always is to __import__ data. Data comes in different
 forms and shapes: files, databases, APIs etc. Before you can start analyzing
@@ -30,10 +30,6 @@ step, you often manipulate individual variables, add new variables, select
 observations of interest, aggregate values across specific groups etc.
 
 The real fun starts after you have transformed your data
-
-![](https://imgur.com/jiBlLaM.png)
-
-
 
 ### Why R & Tidyverse?
 

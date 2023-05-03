@@ -1,11 +1,6 @@
 
 ## Importing Data
 
-``` r
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-```
-
 Importing data refers to the process of reading data from an external
 file or data source into an R session or environment. This is an
 important step in many data science projects, as it allows you to work
@@ -169,12 +164,12 @@ NAMES_TXT_FILES <- fs::dir_ls(NAMES_DIR, glob = "*.txt")
 head(NAMES_TXT_FILES)
 ```
 
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1880.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1881.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1882.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1883.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1884.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpGPx0tb/yob1885.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1880.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1881.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1882.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1883.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1884.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1885.txt
 
 ### Read Files
 
@@ -213,16 +208,16 @@ tbl_names
     #> # A tibble: 2,052,781 × 4
     #>    year                                                    name  sex   nb_births
     #>    <chr>                                                   <chr> <chr>     <dbl>
-    #>  1 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Mary  F          7065
-    #>  2 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Anna  F          2604
-    #>  3 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Emma  F          2003
-    #>  4 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Eliz… F          1939
-    #>  5 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Minn… F          1746
-    #>  6 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Marg… F          1578
-    #>  7 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Ida   F          1472
-    #>  8 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Alice F          1414
-    #>  9 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Bert… F          1320
-    #> 10 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpG… Sarah F          1288
+    #>  1 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Mary  F          7065
+    #>  2 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Anna  F          2604
+    #>  3 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Emma  F          2003
+    #>  4 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Eliz… F          1939
+    #>  5 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Minn… F          1746
+    #>  6 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Marg… F          1578
+    #>  7 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Ida   F          1472
+    #>  8 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Alice F          1414
+    #>  9 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Bert… F          1320
+    #> 10 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Sarah F          1288
     #> # ℹ 2,052,771 more rows
 
 Note that the `year` column contains the full path to the text file and
@@ -264,3 +259,5 @@ the file size small.
 NAMES_CSV_GZ <- file.path(here::here("data"), 'names.csv.gz')
 readr::write_csv(tbl_names, gzfile(NAMES_CSV_GZ))
 ```
+
+You will be using this babynames data for your first project.

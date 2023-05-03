@@ -1,12 +1,6 @@
 
 ## Manipulating Data
 
-``` r
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-set.seed(1234)
-```
-
 Recall how data manipulation operations work on rows and columns of a
 table, while leaving its shape largely intact. It is useful to group
 these operations based on whether they manipulate rows or columns.

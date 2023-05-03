@@ -1,12 +1,29 @@
 
 ## Aggregating Data
 
+Let us read the `babynames` data frame first so we can use it to explore
+data aggregation.
+
 ``` r
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-babynames <- here::here("data/names.csv.gz") |>     
-   readr::read_csv(show_col_types = FALSE)
+NAMES_FILE <- here::here("data/names.csv.gz")
+babynames <- readr::read_csv(NAMES_FILE, show_col_types = FALSE)
+babynames
 ```
+
+    #> # A tibble: 2,052,781 × 4
+    #>     year name      sex   nb_births
+    #>    <dbl> <chr>     <chr>     <dbl>
+    #>  1  1880 Mary      F          7065
+    #>  2  1880 Anna      F          2604
+    #>  3  1880 Emma      F          2003
+    #>  4  1880 Elizabeth F          1939
+    #>  5  1880 Minnie    F          1746
+    #>  6  1880 Margaret  F          1578
+    #>  7  1880 Ida       F          1472
+    #>  8  1880 Alice     F          1414
+    #>  9  1880 Bertha    F          1320
+    #> 10  1880 Sarah     F          1288
+    #> # ℹ 2,052,771 more rows
 
 ### `group_by`: Group by one or more variables
 

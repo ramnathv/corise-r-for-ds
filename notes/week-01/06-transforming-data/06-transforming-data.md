@@ -26,6 +26,8 @@ FILE_NAMES <- here::here("data/names.csv.gz")
 babynames <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
 ```
 
+![babies-and-diamonds](https://www.casalejewelers.net/media/uploads/Half%20off%20Half%20the%20Store/Babies%20vs%20Diamonds.JPG)
+
 We can categorize data transformation operations into FOUR groups. In
 this lesson, we will touch upon the basics of this grammar.
 

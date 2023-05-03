@@ -2,13 +2,20 @@
 output: github_document
 ---
 
-## Aggregating Data
 
-```{r setup, message = FALSE}
+```{r setup, include = FALSE, message = FALSE}
 library(tidyverse)
 knitr::opts_chunk$set(comment = "#>")
-babynames <- here::here("data/names.csv.gz") |>     
-   readr::read_csv(show_col_types = FALSE)
+```
+
+## Aggregating Data
+
+Let us read the `babynames` data frame first so we can use it to explore data aggregation.
+
+```{r read-babynames}
+NAMES_FILE <- here::here("data/names.csv.gz")
+babynames <- readr::read_csv(NAMES_FILE, show_col_types = FALSE)
+babynames
 ```
 
 ### `group_by`: Group by one or more variables

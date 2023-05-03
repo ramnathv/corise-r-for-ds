@@ -2,12 +2,12 @@
 output: github_document
 ---
 
-## Importing Data
-
-```{r setup, message = FALSE}
+```{r setup, include = FALSE, message = FALSE}
 library(tidyverse)
 knitr::opts_chunk$set(comment = "#>")
 ```
+
+## Importing Data
 
 Importing data refers to the process of reading data from an external file or data source into an R session or environment. This is an important step in many data science projects, as it allows you to work with real-world data in R.
 
