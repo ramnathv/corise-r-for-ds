@@ -2,6 +2,6 @@ Package: cbcvdocker
 Title: Base Docker image for CBCV Analyses.
 Version: 0.1.0
 Imports:
-  gganimate
+  gganimate,
   gifski
  
