@@ -52,6 +52,21 @@ After running this code, the zip file containing baby names data from
 the SSA website will be downloaded and saved to the specified
 `DOWNLOAD_DIR` directory with the file name specified in `NAMES_ZIP`.
 
+------------------------------------------------------------------------
+
+To become a good data scientist, you need to focus on three things:
+
+1.  Identify WHAT needs to be done?
+2.  Identify the STEPS to accomplish the task.
+3.  Write code to execute the steps.
+
+The first two areas are typically language agnostic and require one to
+focus on the ability to define a problem and break it down into steps.
+The last area is language specific, and knowing the language and its
+ecosystem well will allow you to write highly performant, concise code.
+
+------------------------------------------------------------------------
+
 ### Explore Contents
 
 Before we can import the data into R, we need to explore the contents of
@@ -77,6 +92,25 @@ the files within the zip file, rather than extracting them.
 
 Looking at the `files` object, it seems like the data is stored as
 multiple text files, one for each year.
+
+------------------------------------------------------------------------
+
+Learning a programming language is very similar to how you would learn a
+new language. You need to start with the letters of the alphabet, put
+them together to form words, put words into sentences, sentences into
+paragraphs, and paragraphs into documents.
+
+Becoming a good data scientist requires you to build a strong vocabulary
+of functionality. The area where the `tidyverse` shines bright is that
+it provides you with a highly consistent vocabulary of small building
+blocks that can be strung together to accomplish complex tasks.
+
+One learning tip I can give you is that everytime you encounter a new
+function, write it down with an example and fill in your own
+description. Periodically refer to this so you internalize this in your
+mind.
+
+------------------------------------------------------------------------
 
 ### Explore File
 
@@ -164,12 +198,12 @@ NAMES_TXT_FILES <- fs::dir_ls(NAMES_DIR, glob = "*.txt")
 head(NAMES_TXT_FILES)
 ```
 
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1880.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1881.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1882.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1883.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1884.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpsW7fn6/yob1885.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1880.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1881.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1882.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1883.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1884.txt
+    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1885.txt
 
 ### Read Files
 
@@ -208,16 +242,16 @@ tbl_names
     #> # A tibble: 2,052,781 × 4
     #>    year                                                    name  sex   nb_births
     #>    <chr>                                                   <chr> <chr>     <dbl>
-    #>  1 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Mary  F          7065
-    #>  2 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Anna  F          2604
-    #>  3 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Emma  F          2003
-    #>  4 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Eliz… F          1939
-    #>  5 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Minn… F          1746
-    #>  6 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Marg… F          1578
-    #>  7 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Ida   F          1472
-    #>  8 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Alice F          1414
-    #>  9 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Bert… F          1320
-    #> 10 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/Rtmps… Sarah F          1288
+    #>  1 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Mary  F          7065
+    #>  2 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Anna  F          2604
+    #>  3 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Emma  F          2003
+    #>  4 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Eliz… F          1939
+    #>  5 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Minn… F          1746
+    #>  6 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Marg… F          1578
+    #>  7 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Ida   F          1472
+    #>  8 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Alice F          1414
+    #>  9 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Bert… F          1320
+    #> 10 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Sarah F          1288
     #> # ℹ 2,052,771 more rows
 
 Note that the `year` column contains the full path to the text file and

@@ -43,6 +43,22 @@ The `download.file()` function is used to download the zip file from the URL spe
 After running this code, the zip file containing baby names data from the SSA website will be downloaded and saved to the specified `DOWNLOAD_DIR`
 directory with the file name specified in `NAMES_ZIP`.
 
+
+-----
+
+To become a good data scientist, you need to focus on three things:
+
+1. Identify WHAT needs to be done?
+2. Identify the STEPS to accomplish the task.
+3. Write code to execute the steps.
+
+
+The first two areas are typically language agnostic and require one to focus on the ability to define a problem and break it down into steps. The last area is language specific, and knowing the language and its ecosystem well will allow you to write highly performant, concise code.
+
+-----
+
+
+
 ### Explore Contents
 
 Before we can import the data into R, we need to explore the contents of the zip file. Let us list the files contained within the zip file, without actually unzipping them.
@@ -55,6 +71,16 @@ head(files)
 The `unzip()` function is used to extract information about the contents of the zip file, with the `list = TRUE` argument specified to only list the files within the zip file, rather than extracting them.
 
 Looking at the `files` object, it seems like the data is stored as multiple text files, one for each year.
+
+-----
+
+Learning a programming language is very similar to how you would learn a new language. You need to start with the letters of the alphabet, put them together to form words, put words into sentences, sentences into paragraphs, and paragraphs into documents. 
+
+Becoming a good data scientist requires you to build a strong vocabulary of functionality. The area where the `tidyverse` shines bright is that it provides you with a highly consistent vocabulary of small building blocks that can be strung together to accomplish complex tasks.
+
+One learning tip I can give you is that everytime you encounter a new function, write it down with an example and fill in your own description. Periodically refer to this so you internalize this in your mind.
+
+-----
 
 ### Explore File
 
