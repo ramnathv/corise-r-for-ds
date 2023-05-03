@@ -12,3 +12,6 @@ RUN wget -O /tmp/gifski-1.11.0.zip https://gif.ski/gifski-1.11.0.zip && \
 # Install R package dependencies
 COPY ./DESCRIPTION /tmp/DESCRIPTION
 RUN Rscript -e "devtools::install_deps('/tmp', upgrade = FALSE)"
+
+COPY ./rstudio/rstudio-prefs.json /etc/rstudio/rstudio-prefs.json
+
