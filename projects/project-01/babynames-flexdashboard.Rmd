@@ -1,0 +1,69 @@
+---
+title: "Project 1: 100 Years of Names"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    source: embed
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(flexdashboard)
+library(gt)
+library(gtExtras)
+library(shinipsum)
+```
+
+### Header 1
+
+```{r results = "hide"}
+# PASTE BELOW >> CODE FROM question-1-transform
+
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-1-plot BELOW
+
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
+
+### Header 2
+
+```{r}
+# PASTE BELOW >> CODE FROM question-2-transform 
+
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-2-visuliaze
+
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
+### Header 3
+
+```{r results = "hide"}
+# PASTE BELOW >> CODE FROM question-3-transform 
+
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-3-visuliaze
+
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
