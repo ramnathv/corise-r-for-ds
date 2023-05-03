@@ -1,5 +1,5 @@
-Package: cbcvdocker
-Title: Base Docker image for CBCV Analyses.
+Package: coriserds
+Title: Base Docker image for the Corise Course R for Data Science
 Version: 0.1.0
 Imports:
     flexdashboard,
