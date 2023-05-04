@@ -259,7 +259,7 @@ diamonds |>
   geom_bar()
 ```
 
-The above plot orders the colors in alphabetic order. But sometimes, it is more useful to order the bars in increasing or decreasing order of frequencies. This can be accomplished using the `fct_infreq()` function from the `forcats` package. It reorders the variable `clarity` in decreasing order of frequencies.
+In the above plot, the diamonds are sorted in alphabetical order based on clarity. But sometimes, it is more useful to order the bars in increasing or decreasing order of frequencies. This can be accomplished using the `fct_infreq()` function from the `forcats` package. It reorders the variable `clarity` in decreasing order of frequencies.
 
 ```{r plot-diamonds-bar-infreq}
 diamonds |> 
@@ -290,9 +290,7 @@ diamonds |>
   geom_point()
 ```
 
-As you can see, there is a lot of overplotting going on here that makes it
-hard to see where the points are concentrated. One way to reduce overplotting
-is to specify an `alpha` to control the opacity of the points.
+As you can see, there is a lot of overplotting going on here that makes it hard to see where the points are concentrated. One way to reduce overplotting is to specify an `alpha` to control the opacity of the points.
 
 ```{r plot-diamonds-point-alpha}
 diamonds |> 
@@ -302,7 +300,7 @@ diamonds |>
 
 ##### Hexplot
 
-An alternative to scatterplots are hexagonal plots or hexbin plots. They represent the distribution of two-dimensional data in a hexagonal grid. Each hexagon in the grid represents a bin that contains a certain number of data points. The color or shading of each bin corresponds to the density of data points within it, with darker colors indicating higher densities.
+Hexagonal bin plots, also known as hexbin plots, are a type of visualization used to represent the distribution of two-dimensional data. In these plots, the data is divided into bins which are represented as hexagons on a grid. The color or shading of each hexagon indicates the density of data points within it, where darker colors indicate higher densities. This makes it easy to see where the data is concentrated and where it is more spread out.
 
 We can create a `hexbin` plot by simply swapping out the `geom_point()` function with the `geom_hex()` function.
 
@@ -315,7 +313,7 @@ diamonds |>
 
 #### Categorical vs. Categorical
 
-We can use stacked bar plots to visualize the relationship between two categorical variables. For example, let us take a look at the joint distribution of `clarity` and `color`. This stacked bar plot is the same as a regular bar plot, except that each bar is further subdivided based on the `color` of the diamond. This lets us understand the relationship between categorical variables.
+We can use stacked bar plots to visualize the relationship between two categorical variables. For example, let us take a look at the joint distribution of `clarity` and `color`. This stacked bar plot is the same as a regular bar plot, except that each bar is further subdivided based on the `color` of the diamond. This lets us understand the relationship between the two categorical variables.
 
 
 ```{r plot-diamonds-bar-stacked}
@@ -344,7 +342,7 @@ diamonds |>
 
 ##### Boxplot
 
-We can use a boxplot to visualize the relationship between a numerical variable and a categorical variable. For example, let us look at how the `price_per_carat` of a diamond varies with its `clarity`.
+We can use a box plot to visualize the relationship between a numerical variable and a categorical variable. For example, let us look at how the `price_per_carat` of a diamond varies with its `clarity`.
 
 ```{r plot-diamonds-boxplot}
 diamonds |> 
@@ -352,7 +350,7 @@ diamonds |>
   geom_boxplot()
 ```
 
-The boxplot summarizes the distribution of `price_per_carat` by `clarity` in terms of its `median` (the thick line in the middle), its 25th and 75th percentiles (the box), and outlier observations (the points). We can observe from the plot above that the `price_per_carat` increases with `clarity` of the diamond. There is also huge variation in `price_per_carat` for diamonds in the mid range of `clarity`.
+The box plot summarizes the distribution of `price_per_carat` by `clarity` in terms of its `median` (the thick line in the middle), its 25th and 75th percentiles (the box), and the outlier observations (the points). We can observe from the plot above that the `price_per_carat` increases with `clarity` of the diamond. There is also huge variation in `price_per_carat` for diamonds in the mid range of `clarity`.
 
 We can reduce the overplotting in the outliers by setting the argument `outlier.alpha` in the `geom_boxplot()` call.
 
@@ -362,7 +360,7 @@ diamonds |>
   geom_boxplot(outlier.alpha = 0.02)
 ```
 
-##### Violin
+##### Violin Plots
 
 An interesting alternative to the boxplot is the violin plot.
 
