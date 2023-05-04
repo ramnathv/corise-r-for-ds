@@ -31,8 +31,6 @@ There are two core sessions we expect everyone to attend:
 +---------------------------+---------------------------------------------------------------------------+
 | Wednesday Project Kickoff | The weekly project explained and the first part of the project completed. |
 +---------------------------+---------------------------------------------------------------------------+
-|                           |                                                                           |
-+---------------------------+---------------------------------------------------------------------------+
 
 There are additional, non-mandatory, sessions to attend as needed:
 
@@ -47,14 +45,12 @@ There are additional, non-mandatory, sessions to attend as needed:
 +----------------------------+--------------------------------------------------------------------+
 | Sunday Project Walkthrough | A walkthrough from start to finish of the week's project           |
 +----------------------------+--------------------------------------------------------------------+
-|                            |                                                                    |
-+----------------------------+--------------------------------------------------------------------+
 
 [SIDEBAR]
 
 Time Management
 
--   **Monday:** 1-hour live lecture
+-   **Monday**: 1-hour live lecture
 
 -   **Monday-Wednesday**: Go through the articles and coding exercises, completing as many as you can and asking any questions in Slack. You will likely need to allocate about an hour each day, or more if you're new to programming.
 
@@ -66,6 +62,6 @@ Time Management
 
 -   **Sunday Evening**: Submit your project
 
--   **Monday Evening:** Complete your code/peer review. You can review other project submissions in the #projects Slack channel for inspiration and learning.
+-   **Monday Evening**: Complete your code/peer review. You can review other project submissions in the #projects Slack channel for inspiration and learning.
 
 [SIDEBAR]

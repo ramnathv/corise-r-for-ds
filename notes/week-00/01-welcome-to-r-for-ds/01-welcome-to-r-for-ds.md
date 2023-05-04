@@ -21,6 +21,8 @@ You are absolutely in the right place if any of these sound like you:
 - Financial Analysts, Accountants, or other professionals looking to
   learn R for powerful analysis.
 
+
+
 \[SIDEBAR\]
 
 Our goals for this course are ambitious. By the end, we will be able to:
