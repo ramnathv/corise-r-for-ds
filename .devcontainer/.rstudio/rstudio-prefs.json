@@ -1,0 +1,45 @@
+{
+    "server_editor_font_enabled": true,
+    "server_editor_font": "Fira Code",
+    "save_workspace": "never",
+    "load_workspace": false,
+    "soft_wrap_r_files": true,
+    "continue_comments_on_newline": true,
+    "highlight_r_function_calls": true,
+    "rainbow_parentheses": true,
+    "tab_multiline_completion": true,
+    "font_size_points": 11,
+    "rmd_viewer_type": "pane",
+    "editor_theme": "Dracula",
+    "insert_native_pipe_operator": true,
+    "panes": {
+        "quadrants": [
+            "Source",
+            "TabSet1",
+            "Console",
+            "TabSet2"
+        ],
+        "tabSet1": [
+            "Environment",
+            "History",
+            "Connections",
+            "Build",
+            "VCS",
+            "Tutorial",
+            "Presentation"
+        ],
+        "tabSet2": [
+            "Files",
+            "Plots",
+            "Packages",
+            "Help",
+            "Viewer",
+            "Presentations"
+        ],
+        "hiddenTabSet": [],
+        "console_left_on_top": false,
+        "console_right_on_top": true,
+        "additional_source_columns": 0
+    },
+    "posix_terminal_shell": "bash"
+}
