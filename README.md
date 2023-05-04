@@ -69,6 +69,8 @@ __Open RStudio in Browser__
 
 ![open-rstudio](https://i.imgur.com/jfbtafW.png)
 
+Click on the Open in Browser icon next to RStudio. This will open a new tab with RStudio. You can log in to it with the username and password `rstudio`.
+
 
 
 
