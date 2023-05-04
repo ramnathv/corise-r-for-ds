@@ -88,7 +88,11 @@ head(files)
 
 The `unzip()` function is used to extract information about the contents
 of the zip file, with the `list = TRUE` argument specified to only list
-the files within the zip file, rather than extracting them.
+the files within the zip file, rather than extracting them. The `head()`
+function is used to display the first 6 rows (by default) of an object.
+In this case, it will show the first 6 rows of the `files` object. If
+you wanted to see the first 10 rows instead, you could add a second
+argument to the `head()` function, e.g., `head(file, n = 10)`.
 
 Looking at the `files` object, it seems like the data is stored as
 multiple text files, one for each year.
@@ -105,7 +109,7 @@ of functionality. The area where the `tidyverse` shines bright is that
 it provides you with a highly consistent vocabulary of small building
 blocks that can be strung together to accomplish complex tasks.
 
-One learning tip I can give you is that everytime you encounter a new
+One learning tip I can give you is that every time you encounter a new
 function, write it down with an example and fill in your own
 description. Periodically refer to this so you internalize this in your
 mind.
@@ -116,8 +120,8 @@ mind.
 
 Let us read the first 5 lines of the text file `yob1880.txt` located
 within the zip file downloaded. We can do this using the `unz()`
-function to create a connection to the zip file `yob1880.txt`, and
-reading the first 5 lines of this text file.
+function to create a connection to the zip file `yob1880.txt`, and read
+the first 5 lines of this text file.
 
 When dealing with text files, it is really important to take the time to
 read the first few lines of data so you can understand how it is
@@ -132,7 +136,7 @@ readLines(file_con, n = 5)
     #> [1] "Mary,F,7065"      "Anna,F,2604"      "Emma,F,2003"      "Elizabeth,F,1939"
     #> [5] "Minnie,F,1746"
 
-It seems like each line of this file hold comma separated values. This
+It seems like each line of this file holds comma separated values. This
 is the most common type of text data you will find, and we can read it
 as a data frame into R using the `read_csv()` function from `readr`.
 
@@ -189,7 +193,7 @@ number of births for that name.
 We are now ready to read data from all the text files in the zip file.
 In order to do this, we should first unzip the contents of the zip file
 `NAMES_ZIP` to a temporary directory `NAMES_DIR`, and then get the paths
-to all the text files as the variable `NAMES_TEXT_FILES`.
+to all the text files as the variable `NAMES_TXT_FILES`.
 
 ``` r
 NAMES_DIR <- tempdir()
@@ -198,12 +202,9 @@ NAMES_TXT_FILES <- fs::dir_ls(NAMES_DIR, glob = "*.txt")
 head(NAMES_TXT_FILES)
 ```
 
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1880.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1881.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1882.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1883.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1884.txt
-    #> /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpTV6sAh/yob1885.txt
+    #> /tmp/RtmpG8N3Zx/yob1880.txt /tmp/RtmpG8N3Zx/yob1881.txt 
+    #> /tmp/RtmpG8N3Zx/yob1882.txt /tmp/RtmpG8N3Zx/yob1883.txt 
+    #> /tmp/RtmpG8N3Zx/yob1884.txt /tmp/RtmpG8N3Zx/yob1885.txt
 
 ### Read Files
 
@@ -240,18 +241,18 @@ tbl_names
 ```
 
     #> # A tibble: 2,052,781 × 4
-    #>    year                                                    name  sex   nb_births
-    #>    <chr>                                                   <chr> <chr>     <dbl>
-    #>  1 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Mary  F          7065
-    #>  2 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Anna  F          2604
-    #>  3 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Emma  F          2003
-    #>  4 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Eliz… F          1939
-    #>  5 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Minn… F          1746
-    #>  6 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Marg… F          1578
-    #>  7 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Ida   F          1472
-    #>  8 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Alice F          1414
-    #>  9 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Bert… F          1320
-    #> 10 /var/folders/8_/dp4gxnx554g5064bqc49b6rw0000gn/T/RtmpT… Sarah F          1288
+    #>    year                        name      sex   nb_births
+    #>    <chr>                       <chr>     <chr>     <dbl>
+    #>  1 /tmp/RtmpG8N3Zx/yob1880.txt Mary      F          7065
+    #>  2 /tmp/RtmpG8N3Zx/yob1880.txt Anna      F          2604
+    #>  3 /tmp/RtmpG8N3Zx/yob1880.txt Emma      F          2003
+    #>  4 /tmp/RtmpG8N3Zx/yob1880.txt Elizabeth F          1939
+    #>  5 /tmp/RtmpG8N3Zx/yob1880.txt Minnie    F          1746
+    #>  6 /tmp/RtmpG8N3Zx/yob1880.txt Margaret  F          1578
+    #>  7 /tmp/RtmpG8N3Zx/yob1880.txt Ida       F          1472
+    #>  8 /tmp/RtmpG8N3Zx/yob1880.txt Alice     F          1414
+    #>  9 /tmp/RtmpG8N3Zx/yob1880.txt Bertha    F          1320
+    #> 10 /tmp/RtmpG8N3Zx/yob1880.txt Sarah     F          1288
     #> # ℹ 2,052,771 more rows
 
 Note that the `year` column contains the full path to the text file and

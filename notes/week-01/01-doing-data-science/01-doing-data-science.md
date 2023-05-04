@@ -89,7 +89,7 @@ together to execute the data science workflow.
 
 Rather than talk about the beauty of the `tidyverse`, I want you to
 experience it for yourself by working through the next lesson that uses
-the tidyverse to turn a dataset of US baby names into a beautiful
+the `tidyverse` to turn a dataset of US baby names into a beautiful
 animated bar chart.
 
 ## R in a Nutshell
@@ -113,10 +113,10 @@ baby_nb_births <- c(120L, 30L, 60L)
 baby_pct_births <- c(0.04, 0.01, 0.02)
 ```
 
-Some of you might be wondering that if a vector is a collection of
-elements, what would one call a single element of a vector? A scalar
-perhaps? Well, the answer might surprise you. There are NO scalars in R.
-A single element of a vector is also a vector, albeit of length 1.
+Some of you might be wondering if a vector is a collection of elements,
+what would one call a single element of a vector? A scalar perhaps?
+Well, the answer might surprise you. There are NO scalars in R. A single
+element of a vector is also a vector, albeit of length 1.
 
 ``` r
 baby_name <- "John" 
@@ -124,20 +124,20 @@ baby_name <- "John"
 
 Three comments are in order.
 
-1.  First you might have noticed the strange looking symbol, `<-`. It is
-    the assignment operator in R and used to assign an object to a name.
-    It consists of two symbols, a less-than-or-equal symbol followed by
-    a hyphen, but might appear as a single symbol when you use fonts
-    like Fira Code, which have special ligatures for combination of
-    symbols.
+1.  First you might have noticed the strange-looking symbol, `<-`. It is
+    the assignment operator in R and is used to assign an object to a
+    name. It consists of two symbols, a less-than-or-equal symbol
+    followed by a hyphen, but might appear as a single symbol when you
+    use fonts like Fira Code, which have special ligatures for
+    combinations of symbols.
 
 2.  Second, you might have observed that we used an `L` as a suffix for
     some numbers. The reason for this is that R needs a way to tell
-    apart the integer 120 from the floating point number 120 and adding
+    apart the integer 120 from the floating-point number 120, and adding
     the suffix provides that precise disambiguation.
 
 3.  Third, what about that `c()` used to define these vectors. Is it an
-    object too? Nope! `c()` is a function that concatenates multiple
+    object, too? Nope! `c()` is a function that concatenates multiple
     elements into a single vector. You will learn more about functions
     in the next section.
 
@@ -190,7 +190,9 @@ extract the first letter, the `table()` function to tabulate the
 frequency counts, and the `barplot()` function to create the bar plot.
 
 ``` r
-# 1. Extract the first letter from each name
+# 1. Extract the first letter from each name.
+# Note the first 1 means the substring starts at the first letter
+# and the second 1 means the substring stops at the first letter.
 first_letters <- substr(state.name, 1, 1)
 
 # 2. Count the frequency of each letter
@@ -313,5 +315,6 @@ This is a whirlwind introduction to R and summarizes the key ideas you
 will need for this course. For a more thorough introduction to R, I
 would strongly recommend the book [Hands On Programming with
 R](https://rstudio-education.github.io/hopr/index.html). The online
-version of the book is free to use. In order to use R for Data Science
-in the long run, you will need to get more familiar with the language.
+version of the book is free to use. Familiarity with R beyond what is
+covered in this course will be essential for those who hope to use the
+language in data science-focused careers.

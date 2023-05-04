@@ -68,7 +68,7 @@ files <- unzip(NAMES_ZIP, list = TRUE)
 head(files)
 ```
 
-The `unzip()` function is used to extract information about the contents of the zip file, with the `list = TRUE` argument specified to only list the files within the zip file, rather than extracting them.
+The `unzip()` function is used to extract information about the contents of the zip file, with the `list = TRUE` argument specified to only list the files within the zip file, rather than extracting them. The `head()` function is used to display the first 6 rows (by default) of an object. In this case, it will show the first 6 rows of the `files` object. If you wanted to see the first 10 rows instead, you could add a second argument to the `head()` function, e.g., `head(file, n = 10)`.
 
 Looking at the `files` object, it seems like the data is stored as multiple text files, one for each year.
 
@@ -78,13 +78,13 @@ Learning a programming language is very similar to how you would learn a new lan
 
 Becoming a good data scientist requires you to build a strong vocabulary of functionality. The area where the `tidyverse` shines bright is that it provides you with a highly consistent vocabulary of small building blocks that can be strung together to accomplish complex tasks.
 
-One learning tip I can give you is that everytime you encounter a new function, write it down with an example and fill in your own description. Periodically refer to this so you internalize this in your mind.
+One learning tip I can give you is that every time you encounter a new function, write it down with an example and fill in your own description. Periodically refer to this so you internalize this in your mind.
 
 -----
 
 ### Explore File
 
-Let us read the first 5 lines of the text file `yob1880.txt` located within the zip file downloaded. We can do this using the `unz()` function to create a connection to the zip file `yob1880.txt`, and reading the first 5 lines of this text file.
+Let us read the first 5 lines of the text file `yob1880.txt` located within the zip file downloaded. We can do this using the `unz()` function to create a connection to the zip file `yob1880.txt`, and read the first 5 lines of this text file.
 
 When dealing with text files, it is really important to take the time to read the first few lines of data so you can understand how it is formatted, and what would be the appropriate function to use to import it as a data frame.
 
@@ -94,7 +94,7 @@ file_con <- unz(NAMES_ZIP, 'yob1880.txt')
 readLines(file_con, n = 5)
 ```
 
-It seems like each line of this file hold comma separated values. This is the most common type of text data you will find, and we can read it as a data frame into R using the `read_csv()` function from `readr`. 
+It seems like each line of this file holds comma separated values. This is the most common type of text data you will find, and we can read it as a data frame into R using the `read_csv()` function from `readr`. 
 
 Another important point to note is that this text file does NOT contain a row with the column headers. Hence, we will need to specify it explicitly when we read the data into R.
 
@@ -122,7 +122,7 @@ The resulting `tbl_names` object is a data frame containing the baby names data,
 
 ### Unzip Files
 
-We are now ready to read data from all the text files in the zip file. In order to do this, we should first unzip the contents of the zip file `NAMES_ZIP` to a temporary directory `NAMES_DIR`, and then get the paths to all the text files as the variable `NAMES_TEXT_FILES`.
+We are now ready to read data from all the text files in the zip file. In order to do this, we should first unzip the contents of the zip file `NAMES_ZIP` to a temporary directory `NAMES_DIR`, and then get the paths to all the text files as the variable `NAMES_TXT_FILES`.
 
 ```{r unzip-files}
 NAMES_DIR <- tempdir()
