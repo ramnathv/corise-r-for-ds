@@ -10,20 +10,24 @@ course taught by CoRise.
 
 ## Getting Started
 
-### Install the `gitpod` extension
+The easiest way to get started is by forking this repository and opening it in a cloud workspace, either using [Gitpod](#gitpod) or [Github Codespaces](#github-codespaces)
+
+### Gitpod
+
+__Install the `gitpod` extension__
 
 The easiest way to get started is by installing the [gitpod browser extension](https://www.gitpod.io/docs/configure/user-settings/browser-extension). Once you add this extension, you will see a green colored gitpod button in every GitHub repository that has integrated with gitpod.
 
 ![gitpod-button](https://imgur.com/2RYt1RN.png)
 
 
-### Fork this repository to your GitHub account
+__Fork this repository to your GitHub account__
 
 The next step is to fork this repository to your GitHub account. Doing this will let you work with your own copy of the data and documents and allow you to make and save changes.
 
 ![fork-repo](https://imgur.com/woqAXx9.png)
 
-### Click on the green colored gitpod button
+__Click on the green colored gitpod button__
 
 This will take you to `gitpod`. You might be prompted to sign in to `gitpod` if you have not already done so. I would recommend using the `github` sign in as it would make it a lot easier for you to save your changes back to `github`.
 
@@ -44,6 +48,27 @@ I would recommend clicking on the Open Browser icon on the top right to open RSt
 ![gitpod-rstudio-newtab](https://i.imgur.com/l9PzGZb.png)
 
 You can log in with the username `gitpod` and password `gitpod`.
+
+### Github Codespaces
+
+__Fork this repository to your github account__
+
+The first step is to fork this repository to your github account. Doing this will let you work with your own copy of the data and documents and allow you to make and save changes.
+
+![fork-repo](https://i.imgur.com/qULlQGP.png)
+
+__Click Create Codespace on Main__
+
+The next step is to click on the green button "Create codespace on main". This will start building a new container and workspace for you.
+
+![click-open-in-codespaces](https://i.imgur.com/SKYcYcG.png)
+
+It might take a while the very first time you build it. If all goes, you will be greeted with this screen.
+
+__Open RStudio in Browser__
+
+![open-rstudio](https://i.imgur.com/jfbtafW.png)
+
 
 
 
