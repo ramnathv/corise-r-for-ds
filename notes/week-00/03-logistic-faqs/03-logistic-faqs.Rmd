@@ -1,3 +1,7 @@
+---
+output: github_document
+---
+
 ### Are sessions recorded?
 
 We encourage you to attend our live sessions in real-time as they are designed to be interactive, but if you cannot attend any session, we will also make recordings available for you as well. Simply click on the calendar link on the left to access these recordings.

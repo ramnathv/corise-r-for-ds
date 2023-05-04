@@ -18,7 +18,7 @@ Gleaning over the responses in the #r-for-data-science-introductions channel, we
 
 If you haven't already, feel free to introduce yourself in the #r-for-data-science-introductions channel.
 
-[SIDEBAR]
+----
 
 Our goals for this course are ambitious. By the end, we will be able to:
 
@@ -26,7 +26,7 @@ Our goals for this course are ambitious. By the end, we will be able to:
 
 - Complete a data analysis on real-world data (using tried-and-true best practices)
 
-[SIDEBAR]
+----
 
 ### 👉 Let me introduce myself
 

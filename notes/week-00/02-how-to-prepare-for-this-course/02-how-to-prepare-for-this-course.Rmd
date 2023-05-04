@@ -46,7 +46,7 @@ There are additional, non-mandatory, sessions to attend as needed:
 | Sunday Project Walkthrough | A walkthrough from start to finish of the week's project           |
 +----------------------------+--------------------------------------------------------------------+
 
-[SIDEBAR]
+----
 
 Time Management
 
@@ -64,4 +64,4 @@ Time Management
 
 -   **Monday Evening**: Complete your code/peer review. You can review other project submissions in the #projects Slack channel for inspiration and learning.
 
-[SIDEBAR]
+----

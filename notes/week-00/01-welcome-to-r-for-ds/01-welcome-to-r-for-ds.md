@@ -12,7 +12,14 @@ As students, you will learn by doing, via hands-on, real-world projects.
 You’ll be supported along the way by an amazing cohort of professional
 peers and our incredible course team 🙌.
 
-You are absolutely in the right place if any of these sound like you:
+Gleaning over the responses in the \#r-for-data-science-introductions
+channel, we have students from around the world learning with us here,
+coming from a wide array of backgrounds and experiences. I am thrilled
+to have you here, and know that the knowledge, skills, and connections
+you will build by engaging with these course materials will provide
+value no matter where you are on your journey. Here I list *some* of the
+ways in which I see people identifying themselves with the materials of
+this course.
 
 - Anyone with some programming knowledge interested in becoming a Data
   Analyst, Data Scientist or Machine Learning Engineer.
@@ -20,10 +27,14 @@ You are absolutely in the right place if any of these sound like you:
   into data science.
 - Financial Analysts, Accountants, or other professionals looking to
   learn R for powerful analysis.
+- Students and academics wanting to learn how to build visualizations or
+  better understand the visualizations.
+- Anyone interested in learning how to tell a story with data.
 
+If you haven’t already, feel free to introduce yourself in the
+\#r-for-data-science-introductions channel.
 
-
-\[SIDEBAR\]
+------------------------------------------------------------------------
 
 Our goals for this course are ambitious. By the end, we will be able to:
 
@@ -33,7 +44,7 @@ Our goals for this course are ambitious. By the end, we will be able to:
 - Complete a data analysis on real-world data (using tried-and-true best
   practices)
 
-\[SIDEBAR\]
+------------------------------------------------------------------------
 
 ### 👉 Let me introduce myself
 
