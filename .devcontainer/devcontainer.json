@@ -49,8 +49,8 @@
 
 	// Use 'postAttachCommand' to run commands after the container is started.
 	"postAttachCommand": {
-		"renviron": "echo R_LIBS_USER=/home/gitpod/libs >> /home/gitpod/.Renviron",
-        "rsession": "echo session-default-working-dir=/workspace/corise-r-for-ds | sudo tee -a /etc/rstudio/rsession.conf",
+		// "renviron": "echo R_LIBS_USER=/home/gitpod/libs >> /home/gitpod/.Renviron",
+        "rsession": "echo session-default-working-dir=/workspaces/corise-r-for-ds | sudo tee -a /etc/rstudio/rsession.conf",
 		"rstudio": "sudo rstudio-server start"
 	}
 
