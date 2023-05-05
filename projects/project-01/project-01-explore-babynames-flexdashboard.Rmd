@@ -1,5 +1,5 @@
 ---
-title: "Project 1: 100 Years of Names"
+title: "Project 1: Exploring 100+ Years of US Baby Names"
 output: 
   flexdashboard::flex_dashboard:
     storyboard: true
@@ -7,12 +7,25 @@ output:
     source: embed
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 library(tidyverse)
 library(flexdashboard)
-library(gt)
-library(gtExtras)
-library(shinipsum)
+FILE_NAME <- here::here("data/names.csv.gz")
+tbl_names <- readr::read_csv(FILE_NAME, show_col_types = FALSE)
+knitr::opts_chunk$set(
+  fig.path = "img/",
+  fig.retina = 2,
+  fig.width = 6,
+  fig.asp = 9/16,
+  fig.pos = "t",
+  fig.align = "center",
+  # dpi = if (knitr::is_latex_output()) 72 else 150,
+  out.width = "100%",
+  # dev = "svg",
+  dev.args = list(png = list(type = "cairo-png")),
+  optipng = "-o1 -quiet"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 8))
 ```
 
 ### Header 1
@@ -35,7 +48,7 @@ library(shinipsum)
 
 ### Header 2
 
-```{r}
+```{r results = "hide"}
 # PASTE BELOW >> CODE FROM question-2-transform 
 
 ```
@@ -53,13 +66,13 @@ library(shinipsum)
 ### Header 3
 
 ```{r results = "hide"}
-# PASTE BELOW >> CODE FROM question-3-transform 
+# PASTE BELOW >> CODE FROM question-3-transform-1 and question-3-transform-2
 
 ```
 
 
 ```{r}
-# PASTE BELOW >> CODE FROM question-3-visuliaze
+# PASTE BELOW >> CODE FROM question-3-visuliaze-1
 
 ```
 
