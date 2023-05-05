@@ -49,7 +49,7 @@ Let us start by printing the data to take a look at what it holds.
 ``` r
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.1     ✔ readr     2.1.4
+#> ✔ dplyr     1.1.2     ✔ readr     2.1.4
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.0
 #> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
@@ -462,9 +462,6 @@ function with the `geom_hex()` function.
 diamonds |> 
   ggplot(aes(x = carat, y = price)) +
   geom_hex()
-#> Warning: Computation failed in `stat_binhex()`
-#> Caused by error in `compute_group()`:
-#> ! The package "hexbin" is required for `stat_binhex()`
 ```
 
 <img src="img/plot-diamonds-hex-1.png" width="100%" style="display: block; margin: auto;" />

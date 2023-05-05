@@ -8,6 +8,7 @@ Imports:
     gganimate,
     gifski,
     here,
+    hexbin,
     leaflet,
     markdown,
     plotly,
