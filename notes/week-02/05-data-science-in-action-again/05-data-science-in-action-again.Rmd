@@ -4,29 +4,45 @@ output: github_document
 
 # Most Popular Unisex Names
 
-```{r setup}
-library(tidyverse)
-library(gt)
-library(gtExtras)
-```
-
 ## Unisex Names
 
-There are some names that are used commonly by both the sexes. Let us dive into 
-the data and figure out what are the most popular unisex names. Let us 
-assume that a name is considered unisex if there are more than 33% males and 
-33% females with that name. We can tweak these thresholds subsequently to see 
-if it reveals a different set of names!
+![unisex-names](https://fivethirtyeight.com/wp-content/uploads/2015/06/unisex.jpg)
+
+There are some names that are used commonly by both the sexes. FiveThirtyEight published a [blog post](https://fivethirtyeight.com/features/there-are-922-unisex-names-in-america-is-yours-one-of-them/) on this topic in 2015.
+
+![fivethirtyeight-output](https://fivethirtyeight.com/wp-content/uploads/2015/06/flowers-datalab-unisexnames-1.png?w=1220)
+
+
+Wouldn't it be cool if we redid the same analysis, but with more data! Let us dive into the data and figure out what are the most popular unisex names. Let us assume that a name is considered unisex if there are more than 33% males and 33% females with that name. We can tweak these thresholds subsequently to see if it reveals a different set of names!
 
 ### Import
 
+```{r setup, message = FALSE}
+library(tidyverse)
+library(gt)
+library(gtExtras)
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+As always, we start by importing the data from `data/names.csv.gz`.
+
 ```{r import-data}
-FILE_NAMES <- here::here('data/names.csv.gz')
-tbl_names <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
+file_name_names <- here::here('data/names.csv.gz')
+tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
 tbl_names
 ```
 
+----
+**Note**
+
+Note that we have two other dataset named `namesbystate.csv.gz` and `frenchnames.csv.gz` in the data folder. The first dataset gives you number of births by `name`, `sex`, `year` and US `state`, while the second dataset gives you french babynames. So if you feel bored with this US babynames data, feel free to take an alternate dataset for a spin.
+----
+
 ### Transform
+
+#### Step 1
+
+Let us start by computing the total number of births by `name` and `sex`.
 
 ```{r tbl-names-unisex-1}
 tbl_names_unisex_1 <- tbl_names |> 
@@ -38,6 +54,10 @@ tbl_names_unisex_1 <- tbl_names |>
 
 tbl_names_unisex_1
 ```
+
+#### Step 2
+
+We can now pivot this data to the wide format so we can have ONE row per name
 
 ```{r tbl-names-unisex-2}
 tbl_names_unisex_2 <- tbl_names_unisex_1 |> 
@@ -51,34 +71,46 @@ tbl_names_unisex_2 <- tbl_names_unisex_1 |>
 tbl_names_unisex_2
 ```
 
+
+#### Step 3
+
+The wide format makes it easier to compute the percentage of males and percentage of females for each name. Additionally, let us also add a column for the total number of births across sexes for a given name.
+
 ```{r tbl-names-unisex-3}
 tbl_names_unisex_3 <- tbl_names_unisex_2 |> 
  mutate(
-   nb_births = nb_births_M + nb_births_F,
-   pct_births_M = nb_births_M / nb_births,
-   pct_births_F = nb_births_F / nb_births
+   nb_births_total = nb_births_M + nb_births_F,
+   pct_births_M = nb_births_M / nb_births_total,
+   pct_births_F = nb_births_F / nb_births_total
  )
 
 tbl_names_unisex_3
 ```
 
+#### Step 4
+
+We defined a unisex name as one where the percentage of males and percentage of females are both >= 33%. We also add an additional threshold for total number of births, so that we don't pick up low-volume idiosyncratic names.
 
 ```{r tbl-names-unisex-4}
 tbl_names_unisex_4 <- tbl_names_unisex_3 |> 
   filter(
     pct_births_M > 0.33,
     pct_births_F > 0.33,
-    nb_births > 50000
+    nb_births_total > 50000
   ) |> 
-  arrange(desc(nb_births))
+  arrange(desc(nb_births_total))
 
 tbl_names_unisex_4
 ```
 
+#### Step 5
+
+Finally, we want to group by `name` and `nb_births` and `nest` the percentages into a single column. This will make it easier to visualize the data.
+
 ```{r tbl-names-unisex-5}
 tbl_names_unisex_5 <- tbl_names_unisex_4 |> 
-  select(name, nb_births, pct_births_M, pct_births_F) |> 
-  group_by(name, nb_births) |> 
+  select(name, nb_births_total, pct_births_M, pct_births_F) |> 
+  group_by(name, nb_births_total) |> 
   nest() |> 
   ungroup() |>
   head(15)
@@ -86,6 +118,7 @@ tbl_names_unisex_5 <- tbl_names_unisex_4 |>
 tbl_names_unisex_5
 ```
 
+While we have broken down the transformations into multiple pieces so we could focus on each piece separately, it is often better to write the transformations as a single pipeline as it makes it easier to add, remove, and update steps without having to go back and forth.
 
 ```{r tbl-names-unisex}
 tbl_names_unisex <- tbl_names |> 
@@ -104,30 +137,39 @@ tbl_names_unisex <- tbl_names |>
   ) |> 
   # Add columns for total births and percentage male and female
   mutate(
-    nb_births = nb_births_M + nb_births_F,
-    pct_births_M = nb_births_M / nb_births,
-    pct_births_F = nb_births_F / nb_births
+    nb_births_total = nb_births_M + nb_births_F,
+    pct_births_M = nb_births_M / nb_births_total,
+    pct_births_F = nb_births_F / nb_births_total
   ) |> 
   # Filter for popular unisex names 
   # [At least 33% males and females, > 50000 total births]
   filter(
     pct_births_M > 0.33,
     pct_births_F > 0.33,
-    nb_births > 50000
+    nb_births_total > 50000
   ) |> 
-  arrange(desc(nb_births)) |> 
-  select(name, nb_births, pct_births_M, pct_births_F) |> 
-  group_by(name, nb_births) |> 
+  arrange(desc(nb_births_total)) |> 
+  select(name, nb_births_total, pct_births_M, pct_births_F) |> 
+  group_by(name, nb_births_total) |> 
   nest() |> 
   ungroup() |>
   head(15)
-
-tbl_names_unisex
 ```
 
-```{r}
+### Visualize
+
+We are all set to visualize the data! We can use `ggplot2` to create some lovely plots from this data. But, we are going to use another R package named `gt` and its companion package `gtExtras` to visualize this data as a table. The `gt` package implements a grammar for tables and you will see how it can create amazing looking tables, that sometimes look better than plots.
+
+Let us visualize this data as an html table with a stacked bar chart that summarizes information about unisex names, and can help identify popular names that are used relatively equally for both men and women.
+
+
+```{r plot-tbl-names-unisex}
 tbl_names_unisex |>
+  # Create an HTML table using the `gt` package
   gt::gt() |> 
+  # Format the values in `nb_births_total` to display with ZERO decimals
+  fmt_number(nb_births_total, decimals = 0) |> 
+  # Use the `gt_plt_bar_stack` function to add a stacked bar plot column.
   gtExtras::gt_plt_bar_stack(
     data, 
     width = 65,
@@ -135,21 +177,99 @@ tbl_names_unisex |>
     palette= c("#2596be", "#f4ba19"),
     fmt_fn = scales::label_percent()
   ) |> 
-  fmt_number(columns = 'nb_births', decimals = 0) |> 
+  # Add useful title and subtitle in the table header
   gt::tab_header(
     title = md("**The Most Common Unisex Names**"),
     subtitle = "Names for which at least one-third the names were male, and
     at least one-third were female, through 2021"
   ) |> 
+  # Theme the plot using 538's theme
   gtExtras::gt_theme_538()
 ```
 
+A detailed explanation of the code is provided below. Note that you can always use the `?` in R to learn more about a specific function.
+
+* `tbl_names_unisex` is a data frame that contains information about unisex names.
+* `gt::gt()` is a function that creates a data table from the data frame. The resulting table will include columns for the variables in the data frame, and will have various formatting options applied based on the other functions in the code.
+* `gtExtras::gt_plt_bar_stack()` is a function that adds a stacked bar chart to the table. The chart shows the percentage of births by sex for each name, and the bars are colored using the specified palette. The `fmt_fn` argument is used to format the y-axis labels as percentages.
+  * `data` is the data frame to use for the chart.
+  * `width` specifies the width of the chart.
+  * `labels` is a vector of length 2 that specifies the labels for the two bars (male and female).
+  * `palette` is a vector of length 2 that specifies the colors for the two bars.
+  * `fmt_fn` is a function that is used to format the y-axis labels.
+* `fmt_number()` is a function that formats one or more columns in the data table as numbers with a specified number of decimal places.
+  * `columns` specifies the columns to format.
+  * `decimals` specifies the number of decimal places to include.
+* `gt::tab_header()` is a function that sets the title and subtitle for the table.
+  * `title` is the title of the table, formatted using Markdown syntax.
+  * `subtitle` is the subtitle of the table.
+* `gtExtras::gt_theme_538()` is a function that applies a specific theme to the table, which includes various formatting options for fonts, colors, and layout.
+
+## Unisex Names Trends
+
+What if we wanted to do one better than the 538 blog post? Well, in addition to showing the most popular unisex names, we could also display trends in the percentage over time.
 
 ### Transform
 
+Transforming Data is a lot like cooking. Everyone uses the same tools, but depending on the recipe you follow, you could end up making dishes that taste very different. Our first step here is to get a table of unisex names just like we did before. However, this time, we are going to use a different recipe.
 
-```{r}
-tbl_names_unisex <- tbl_names |> 
+#### Step 1
+
+Begin by grouping the data by `name` and `sex` and computing the total number of births for each `name` and `sex` combination.
+
+```{r tbl-names-unisex-v2-1}
+tbl_names_unisex_v2_1 <- tbl_names |> 
+  # Group by name and sex
+  group_by(name, sex) |> 
+  # Summarize the total number of births, drop the grouping
+  summarize(nb_births = sum(nb_births), .groups = 'drop')
+  
+tbl_names_unisex_v2_1
+```
+#### Step 2
+
+Next, let us group the data by `name`, and compute the total number of births for each `name`, and the percentage of births for each `sex`.
+
+```{r tbl-names-unisex-v2-2}
+tbl_names_unisex_v2_2 <- tbl_names_unisex_v2_1 |> 
+  # Group by name
+  group_by(name) |> 
+  # For each name, add NEW columns with number and pct of births
+  mutate(
+    nb_births_total = sum(nb_births),
+    pct_births = nb_births / nb_births_total
+  ) |> 
+  # Remove the grouping
+  ungroup()
+
+tbl_names_unisex_v2_2
+```
+#### Step 3
+
+We filter the data to only keep rows
+
+- where `sex` is `M`
+- that have >= 50,000 births 
+- where percentage of births is between 0.33 and 0.67 (this is equivalent to both M and F having more than 33% share)
+    
+```{r tbl-names-unisex-v2-3}
+tbl_names_unisex_v2_3 <- tbl_names_unisex_v2_2 |> 
+  filter(sex == "M") |> 
+  # Keep only names with more than 50,000 births and pct between 0.33 and 0.67
+  filter(
+    # Filter for pct_births between 0.33 and 0.67
+    between(pct_births, 0.33, 0.67),
+    # Filter for total births > 50000
+    nb_births_total > 50000
+  )
+
+tbl_names_unisex_v2_3
+```
+
+We can put them together in a single data pipeline.
+
+```{r tbl-names-unisex-v2}
+tbl_names_unisex_v2 <- tbl_names |> 
   # Group by name and sex
   group_by(name, sex) |> 
   # Summarize the total number of births, drop the grouping
@@ -167,45 +287,131 @@ tbl_names_unisex <- tbl_names |>
   filter(sex == "M") |> 
   # Keep only names with more than 50,000 births and pct between 0.33 and 0.67
   filter(
+    # Filter for pct_births between 0.33 and 0.67
     between(pct_births, 0.33, 0.67),
+    # Filter for total births > 50000
     nb_births_total > 50000
   )
-
-tbl_names_unisex
 ```
 
-### Visualize
+#### Step 4
 
-```{r}
-tbl_names_unisex_trends <- tbl_names |> 
+Let us join `tbl_names` with `tbl_names_unisex` to keep only names that are considered unisex. Then we group the resulting data by `name` and `year` and adds new columns for the total number of births and the percentage of births for each `name` and `year` combination.
+
+
+```{r tbl-names-unisex-trends-1}
+tbl_names_unisex_trends_1 <- tbl_names |> 
+  # Semi join with `tbl_names_unisex` by name
   semi_join(tbl_names_unisex, by = "name") |> 
+  # Group by `name` and `year`
   group_by(name, year) |> 
+  # Add columns for total number of births and pct births
+  mutate(
+    nb_births_total = sum(nb_births),
+    pct_births = nb_births / nb_births_total
+  )
+
+tbl_names_unisex_trends_1
+```
+
+#### Step 5
+
+We want to summarize the trends in percentage of males for a given unisex name over the years. We can do this by filtering the data for Males, grouping by `name`, and adding a list column of `pct_births` across the years. Additionally, we add a few more useful summaries including total number of births, percentage of male births and percentage of female births for each name.
+
+```{r tbl-names-unisex-trends-2}
+tbl_names_unisex_trends_2 <- tbl_names_unisex_trends_1 |> 
+  # Keep only rows for Males
+  filter(sex == "M") |> 
+  # Group by name
+  group_by(name) |> 
+  # Summarize for each name
+  summarize(
+    # Total number of births
+    nb_births_total = sum(nb_births_total),
+    # List of pct_births across years
+    pct_births_by_year = list(pct_births),
+    # Percentage of Males
+    pct_births_M = sum(nb_births) / sum(nb_births_total),
+    # Percentage of Females
+    pct_births_F = 1 - pct_births_M,
+    .groups = 'drop'
+  ) 
+
+tbl_names_unisex_trends_2
+```
+
+#### Step 6
+
+Finally, let us group the data by `name`, `nb_births_total`, and `pct_births_by_year`, and nest the columns `pct_births_M` and `pct_births_F` into a single column names `pct_births`.
+
+As a last step, we can ungroup this data, arrange it in descending order of total births and select only the columns we need.
+
+```{r tbl-names-unisex-trends-3}
+tbl_names_unisex_trends_3 <- tbl_names_unisex_trends_2 |> 
+  # Group by name, total births and pct_births_by_year
+  group_by(name, nb_births_total, pct_births_by_year) |> 
+  # Nest pct_births_M and pct_births_F into a single column
+  nest(pct_births = c(pct_births_M, pct_births_F)) |> 
+  # Ungroup the data
+  ungroup() |> 
+  # Arrange in descending order of total births
+  arrange(desc(nb_births_total)) |> 
+  # Select the relevant columns (`name`, `nb_births_total`, percentages)
+  select(name, nb_births_total, pct_births, pct_births_by_year)
+
+tbl_names_unisex_trends_3
+```
+
+We can throw all the steps together into a single data pipeline.
+
+```{r tbl-names-unisex-trends}
+tbl_names_unisex_trends <- tbl_names |> 
+  # Semi join with `tbl_names_unisex` by name
+  semi_join(tbl_names_unisex, by = "name") |> 
+  # Group by `name` and `year`
+  group_by(name, year) |> 
+  # Add columns for total number of births and pct births
   mutate(
     nb_births_total = sum(nb_births),
     pct_births = nb_births / nb_births_total
   ) |> 
+  # Keep only rows for Males
   filter(sex == "M") |> 
+  # Group by name
   group_by(name) |> 
+  # Summarize for each name
   summarize(
+    # Total number of births
     nb_births_total = sum(nb_births_total),
+    # List of pct_births across years
     pct_births_by_year = list(pct_births),
+    # Percentage of Males
     pct_births_M = sum(nb_births) / sum(nb_births_total),
+    # Percentage of Females
     pct_births_F = 1 - pct_births_M,
     .groups = 'drop'
   ) |> 
+  # Group by name, total births and pct_births_by_year
   group_by(name, nb_births_total, pct_births_by_year) |> 
+  # Nest pct_births_M and pct_births_F into a single column
   nest(pct_births = c(pct_births_M, pct_births_F)) |> 
+  # Ungroup the data
   ungroup() |> 
+  # Arrange in descending order of total births
   arrange(desc(nb_births_total)) |> 
+  # Select the relevant columns (`name`, `nb_births_total`, percentages)
   select(name, nb_births_total, pct_births, pct_births_by_year)
-  
-tbl_names_unisex
 ```
 
-```{r}
+### Visualize
+
+```{r plot-names-unisex-trends}
 tbl_names_unisex_trends |> 
+  # Create an HTML table using the `gt` package
   gt::gt() |> 
+  # Format the values in `nb_births_total` to display with ZERO decimals
   fmt_number(nb_births_total, decimals = 0) |> 
+  # Use the `gt_plt_bar_stack` function to add a stacked bar plot column.
   gtExtras::gt_plt_bar_stack(
     pct_births,
     width = 65,
@@ -213,12 +419,15 @@ tbl_names_unisex_trends |>
     palette= c("#2596be", "#f4ba19"),
     fmt_fn = scales::label_percent()
   ) |> 
+  # Use the `gt_plt_sparkline` function to display a sparkline of trends
   gtExtras::gt_plt_sparkline(pct_births_by_year) |> 
+  # Add useful title and subtitle in the table header
   gt::tab_header(
     title = md("**The Most Common Unisex Names**"),
     subtitle = "Names for which at least one-third the names were male, and
     at least one-third were female, through 2021"
   ) |> 
+  # Theme the plot using 538's theme
   gtExtras::gt_theme_538()
 ```
 
