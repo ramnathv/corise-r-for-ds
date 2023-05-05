@@ -1,0 +1,224 @@
+---
+output: github_document
+---
+
+# Most Popular Unisex Names
+
+```{r setup}
+library(tidyverse)
+library(gt)
+library(gtExtras)
+```
+
+## Unisex Names
+
+There are some names that are used commonly by both the sexes. Let us dive into 
+the data and figure out what are the most popular unisex names. Let us 
+assume that a name is considered unisex if there are more than 33% males and 
+33% females with that name. We can tweak these thresholds subsequently to see 
+if it reveals a different set of names!
+
+### Import
+
+```{r import-data}
+FILE_NAMES <- here::here('data/names.csv.gz')
+tbl_names <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
+tbl_names
+```
+
+### Transform
+
+```{r tbl-names-unisex-1}
+tbl_names_unisex_1 <- tbl_names |> 
+  group_by(name, sex) |> 
+  summarize(
+    nb_births = sum(nb_births),
+    .groups = 'drop'
+  )
+
+tbl_names_unisex_1
+```
+
+```{r tbl-names-unisex-2}
+tbl_names_unisex_2 <- tbl_names_unisex_1 |> 
+  pivot_wider(
+    names_from = sex, 
+    names_prefix = 'nb_births_',
+    values_from = nb_births, 
+    values_fill = 0
+  )
+
+tbl_names_unisex_2
+```
+
+```{r tbl-names-unisex-3}
+tbl_names_unisex_3 <- tbl_names_unisex_2 |> 
+ mutate(
+   nb_births = nb_births_M + nb_births_F,
+   pct_births_M = nb_births_M / nb_births,
+   pct_births_F = nb_births_F / nb_births
+ )
+
+tbl_names_unisex_3
+```
+
+
+```{r tbl-names-unisex-4}
+tbl_names_unisex_4 <- tbl_names_unisex_3 |> 
+  filter(
+    pct_births_M > 0.33,
+    pct_births_F > 0.33,
+    nb_births > 50000
+  ) |> 
+  arrange(desc(nb_births))
+
+tbl_names_unisex_4
+```
+
+```{r tbl-names-unisex-5}
+tbl_names_unisex_5 <- tbl_names_unisex_4 |> 
+  select(name, nb_births, pct_births_M, pct_births_F) |> 
+  group_by(name, nb_births) |> 
+  nest() |> 
+  ungroup() |>
+  head(15)
+
+tbl_names_unisex_5
+```
+
+
+```{r tbl-names-unisex}
+tbl_names_unisex <- tbl_names |> 
+  # Aggregate births across `name` and `sex`
+  group_by(name, sex) |> 
+  summarize(
+    nb_births = sum(nb_births),
+    .groups = 'drop'
+  ) |>
+  # Pivot the table wider
+  pivot_wider(
+    names_from = sex, 
+    names_prefix = 'nb_births_',
+    values_from = nb_births, 
+    values_fill = 0
+  ) |> 
+  # Add columns for total births and percentage male and female
+  mutate(
+    nb_births = nb_births_M + nb_births_F,
+    pct_births_M = nb_births_M / nb_births,
+    pct_births_F = nb_births_F / nb_births
+  ) |> 
+  # Filter for popular unisex names 
+  # [At least 33% males and females, > 50000 total births]
+  filter(
+    pct_births_M > 0.33,
+    pct_births_F > 0.33,
+    nb_births > 50000
+  ) |> 
+  arrange(desc(nb_births)) |> 
+  select(name, nb_births, pct_births_M, pct_births_F) |> 
+  group_by(name, nb_births) |> 
+  nest() |> 
+  ungroup() |>
+  head(15)
+
+tbl_names_unisex
+```
+
+```{r}
+tbl_names_unisex |>
+  gt::gt() |> 
+  gtExtras::gt_plt_bar_stack(
+    data, 
+    width = 65,
+    labels = c("MALE", "FEMALE"),
+    palette= c("#2596be", "#f4ba19"),
+    fmt_fn = scales::label_percent()
+  ) |> 
+  fmt_number(columns = 'nb_births', decimals = 0) |> 
+  gt::tab_header(
+    title = md("**The Most Common Unisex Names**"),
+    subtitle = "Names for which at least one-third the names were male, and
+    at least one-third were female, through 2021"
+  ) |> 
+  gtExtras::gt_theme_538()
+```
+
+
+### Transform
+
+
+```{r}
+tbl_names_unisex <- tbl_names |> 
+  # Group by name and sex
+  group_by(name, sex) |> 
+  # Summarize the total number of births, drop the grouping
+  summarize(nb_births = sum(nb_births), .groups = 'drop') |> 
+  # Group by name
+  group_by(name) |> 
+  # For each name, add NEW columns with number and pct of births
+  mutate(
+    nb_births_total = sum(nb_births),
+    pct_births = nb_births / nb_births_total
+  ) |> 
+  # Remove the grouping
+  ungroup() |> 
+  # Keep rows corresponding to Males
+  filter(sex == "M") |> 
+  # Keep only names with more than 50,000 births and pct between 0.33 and 0.67
+  filter(
+    between(pct_births, 0.33, 0.67),
+    nb_births_total > 50000
+  )
+
+tbl_names_unisex
+```
+
+### Visualize
+
+```{r}
+tbl_names_unisex_trends <- tbl_names |> 
+  semi_join(tbl_names_unisex, by = "name") |> 
+  group_by(name, year) |> 
+  mutate(
+    nb_births_total = sum(nb_births),
+    pct_births = nb_births / nb_births_total
+  ) |> 
+  filter(sex == "M") |> 
+  group_by(name) |> 
+  summarize(
+    nb_births_total = sum(nb_births_total),
+    pct_births_by_year = list(pct_births),
+    pct_births_M = sum(nb_births) / sum(nb_births_total),
+    pct_births_F = 1 - pct_births_M,
+    .groups = 'drop'
+  ) |> 
+  group_by(name, nb_births_total, pct_births_by_year) |> 
+  nest(pct_births = c(pct_births_M, pct_births_F)) |> 
+  ungroup() |> 
+  arrange(desc(nb_births_total)) |> 
+  select(name, nb_births_total, pct_births, pct_births_by_year)
+  
+tbl_names_unisex
+```
+
+```{r}
+tbl_names_unisex_trends |> 
+  gt::gt() |> 
+  fmt_number(nb_births_total, decimals = 0) |> 
+  gtExtras::gt_plt_bar_stack(
+    pct_births,
+    width = 65,
+    labels = c("MALE", "FEMALE"),
+    palette= c("#2596be", "#f4ba19"),
+    fmt_fn = scales::label_percent()
+  ) |> 
+  gtExtras::gt_plt_sparkline(pct_births_by_year) |> 
+  gt::tab_header(
+    title = md("**The Most Common Unisex Names**"),
+    subtitle = "Names for which at least one-third the names were male, and
+    at least one-third were female, through 2021"
+  ) |> 
+  gtExtras::gt_theme_538()
+```
+
