@@ -55,7 +55,7 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 8))
 
 
 ```{r}
-# PASTE BELOW >> CODE FROM question-2-visuliaze
+# PASTE BELOW >> CODE FROM question-2-visualize
 
 ```
 
@@ -72,7 +72,7 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 8))
 
 
 ```{r}
-# PASTE BELOW >> CODE FROM question-3-visuliaze-1
+# PASTE BELOW >> CODE FROM question-3-visualize-1
 
 ```
 
