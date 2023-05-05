@@ -49,7 +49,7 @@ Let us start by printing the data to take a look at what it holds.
 ``` r
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.2     ✔ readr     2.1.4
+#> ✔ dplyr     1.1.1     ✔ readr     2.1.4
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.0
 #> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
@@ -462,6 +462,9 @@ function with the `geom_hex()` function.
 diamonds |> 
   ggplot(aes(x = carat, y = price)) +
   geom_hex()
+#> Warning: Computation failed in `stat_binhex()`
+#> Caused by error in `compute_group()`:
+#> ! The package "hexbin" is required for `stat_binhex()`
 ```
 
 <img src="img/plot-diamonds-hex-1.png" width="100%" style="display: block; margin: auto;" />
@@ -607,6 +610,13 @@ diamonds |>
 ```
 
 <img src="img/plot-diamonds-facet-wrap-1.png" width="100%" style="display: block; margin: auto;" />
+
+By default, the same scales are used for all panels. You can allow
+scales to vary across all the panels with the `scales` argument. Free
+scales make it easier to see patterns within each panel, but harder to
+compare across panels. The question to ask yourself is: Should scales be
+fixed (`fixed`, the default), free (`free`), or free in one dimension
+(`free_x`, `free_y`)?
 
 We are not restricted to splitting the panels based on a single
 variable. We can split it into a grid based on a combination of
