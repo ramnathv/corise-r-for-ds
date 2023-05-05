@@ -11,6 +11,7 @@ Imports:
     gtExtras,
     here,
     hexbin,
+    Hmisc,
     leaflet,
     markdown,
     plotly,
