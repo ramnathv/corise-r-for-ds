@@ -24,6 +24,8 @@ knitr::opts_chunk$set(
 
 ## Exploring 100+ Years of US Baby Names
 
+![names](https://images.unsplash.com/photo-1508061538535-6effdf9eb6f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bmFtZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60)
+
 In this project, we will explore 100+ years of US Baby Names. Although this dataset only has 4 columns, there are so many interesting  questions one could explore. While the possibilities are endless, here are five interesting questions for you to explore.
 
 1. Popular Names: What are the most popular names?
@@ -37,11 +39,21 @@ You need to complete at least the first three questions. The last two questions 
 
 ### Import
 
+Let us start by importing the data from `data/names.csv.gz`. You can use the `read_csv` function from the `readr` package to do this.
+
 ```{r import-data, message = FALSE}
+# Load the tidyverse package
 library(tidyverse)
-FILE_NAME <- here::here("data/names.csv.gz")
-tbl_names <- readr::read_csv(FILE_NAME, show_col_types = FALSE)
-tbl_names
+
+# Read the csv file `file_name_names` as data frame `tbl_names`
+file_name_names <- here::here("data/names.csv.gz")
+tbl_names <- readr::read_csv(
+  file = ___, 
+  show_col_types = FALSE
+)
+
+# Print `tbl_names`
+
 ```
 
 ### Question 1: [Popular Names] What are the most popular names?
@@ -438,3 +450,9 @@ tbl_names_vowel_consonant |>
 
 The fct_reorder() function is a useful tool for reordering the levels of a factor based on the values of another variable. This function can be particularly helpful when creating visualizations, as it allows you to display data in a more organized and informative manner. In this exercise, fct_reorder() is used to reorder the levels of the first_last factor according to the median of the pct_births variable. By doing so, the resulting plot will show the trends in vowels and consonants usage in a more structured way, making it easier to identify and interpret the patterns.
 ----
+
+## MORE BONUS
+
+You can turn your plots into a beautiful dashboard with minimal effort. An Rmarkdown dashboard template has been provided for you. Open the file [project-01-explore-babynames-flexdashboard.Rmd](project-01-explore-babynames-flexdashboard.Rmd). It has placeholders for code, where you can paste the completed code chunks from this document. Pay close attention to the labels of the chunks referred to.
+
+
