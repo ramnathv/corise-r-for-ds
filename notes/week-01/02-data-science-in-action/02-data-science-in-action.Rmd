@@ -161,7 +161,7 @@ Here's what the code does step by step:
 
 3. The `ggplot()` function is used to initialize a new plot, specifying the `nb_births` and `rank` columns as the x and y aesthetic mappings, respectively. The `fct_rev()` function from the `forcats` package is used to reverse the order of the y-axis, so that the top-ranked names appear at the top of the plot.
 
-4. The `geom_col()` function is used to create a bar chart, with the `fill` aesthetic mapping set to the `name` column to color the bars by name. The `show.legend` argument is set to `FALSE` to suppress the default legend.
+4. The `geom_col()` function is used to create a bar chart, with the `fill` aesthetic mapping set to the `name` column to color the bars by name. The `show.legend` argument is set to `FALSE` to suppress the default legend. Note that the `ggplot()` function uses the `+` operator to add layers, scales, themes, and other components to the plot.
 
 5. The `geom_text()` function is used to add text labels to the bars, with the `label` aesthetic mapping set to the `name` column. The `x` aesthetic mapping is set to 0, which aligns the text with the left edge of the plot. The `hjust` argument is set to 0, which left-aligns the text. The `size` argument is set to 5, which specifies the font size of the text.
 

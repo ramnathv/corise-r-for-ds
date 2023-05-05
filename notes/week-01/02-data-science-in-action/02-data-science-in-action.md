@@ -258,7 +258,9 @@ Here’s what the code does step by step:
 4.  The `geom_col()` function is used to create a bar chart, with the
     `fill` aesthetic mapping set to the `name` column to color the bars
     by name. The `show.legend` argument is set to `FALSE` to suppress
-    the default legend.
+    the default legend. Note that the `ggplot()` function uses the `+`
+    operator to add layers, scales, themes, and other components to the
+    plot.
 
 5.  The `geom_text()` function is used to add text labels to the bars,
     with the `label` aesthetic mapping set to the `name` column. The `x`

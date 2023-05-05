@@ -49,7 +49,7 @@ Let us start by printing the data to take a look at what it holds.
 ``` r
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.2     ✔ readr     2.1.4
+#> ✔ dplyr     1.1.1     ✔ readr     2.1.4
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.0
 #> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
@@ -386,11 +386,11 @@ diamonds |>
 
 <img src="img/plot-diamonds-bar-1.png" width="100%" style="display: block; margin: auto;" />
 
-The above plot orders the colors in alphabetic order. But sometimes, it
-is more useful to order the bars in increasing or decreasing order of
-frequencies. This can be accomplished using the `fct_infreq()` function
-from the `forcats` package. It reorders the variable `clarity` in
-decreasing order of frequencies.
+In the above plot, the diamonds are sorted in alphabetical order based
+on clarity. But sometimes, it is more useful to order the bars in
+increasing or decreasing order of frequencies. This can be accomplished
+using the `fct_infreq()` function from the `forcats` package. It
+reorders the variable `clarity` in decreasing order of frequencies.
 
 ``` r
 diamonds |> 
@@ -447,12 +447,13 @@ diamonds |>
 
 ##### Hexplot
 
-An alternative to scatterplots are hexagonal plots or hexbin plots. They
-represent the distribution of two-dimensional data in a hexagonal grid.
-Each hexagon in the grid represents a bin that contains a certain number
-of data points. The color or shading of each bin corresponds to the
-density of data points within it, with darker colors indicating higher
-densities.
+Hexagonal bin plots, also known as hexbin plots, are a type of
+visualization used to represent the distribution of two-dimensional
+data. In these plots, the data is divided into bins which are
+represented as hexagons on a grid. The color or shading of each hexagon
+indicates the density of data points within it, where darker colors
+indicate higher densities. This makes it easy to see where the data is
+concentrated and where it is more spread out.
 
 We can create a `hexbin` plot by simply swapping out the `geom_point()`
 function with the `geom_hex()` function.
@@ -461,6 +462,9 @@ function with the `geom_hex()` function.
 diamonds |> 
   ggplot(aes(x = carat, y = price)) +
   geom_hex()
+#> Warning: Computation failed in `stat_binhex()`
+#> Caused by error in `compute_group()`:
+#> ! The package "hexbin" is required for `stat_binhex()`
 ```
 
 <img src="img/plot-diamonds-hex-1.png" width="100%" style="display: block; margin: auto;" />
@@ -472,7 +476,7 @@ categorical variables. For example, let us take a look at the joint
 distribution of `clarity` and `color`. This stacked bar plot is the same
 as a regular bar plot, except that each bar is further subdivided based
 on the `color` of the diamond. This lets us understand the relationship
-between categorical variables.
+between the two categorical variables.
 
 ``` r
 diamonds |> 
@@ -510,7 +514,7 @@ diamonds |>
 
 ##### Boxplot
 
-We can use a boxplot to visualize the relationship between a numerical
+We can use a box plot to visualize the relationship between a numerical
 variable and a categorical variable. For example, let us look at how the
 `price_per_carat` of a diamond varies with its `clarity`.
 
@@ -522,9 +526,9 @@ diamonds |>
 
 <img src="img/plot-diamonds-boxplot-1.png" width="100%" style="display: block; margin: auto;" />
 
-The boxplot summarizes the distribution of `price_per_carat` by
+The box plot summarizes the distribution of `price_per_carat` by
 `clarity` in terms of its `median` (the thick line in the middle), its
-25th and 75th percentiles (the box), and outlier observations (the
+25th and 75th percentiles (the box), and the outlier observations (the
 points). We can observe from the plot above that the `price_per_carat`
 increases with `clarity` of the diamond. There is also huge variation in
 `price_per_carat` for diamonds in the mid range of `clarity`.
@@ -540,7 +544,7 @@ diamonds |>
 
 <img src="img/plot-diamonds-boxplot-alpha-1.png" width="100%" style="display: block; margin: auto;" />
 
-##### Violin
+##### Violin Plots
 
 An interesting alternative to the boxplot is the violin plot.
 
