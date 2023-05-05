@@ -2,13 +2,28 @@
 output: github_document
 ---
 
-```{r setup, include = FALSE, message = FALSE}
-knitr::opts_chunk$set(fig.path = "img/")
-```
-
-
 ## Doing Data Science
-
+```{r setup, include = FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "img/",
+  fig.retina = 2,
+  fig.width = 6,
+  fig.asp = 9 / 16,
+  fig.pos = "t",
+  fig.align = "center",
+  # dpi = if (knitr::is_latex_output()) 72 else 150,
+  out.width = "100%",
+  # dev = "svg",
+  dev.args = list(png = list(type = "cairo-png")),
+  optipng = "-o1 -quiet"
+)
+knitr::opts_knit$set(
+  upload.fun = imgur_upload_v2, base.url = NULL
+)
+```
 ### What is Data Science?
 
 Data Science is an interdisciplinary field that involves the use of scientific methods, processes, algorithms, and systems to extract knowledge and insights 
@@ -19,28 +34,22 @@ machine learning algorithms, data visualization tools, and big data platforms.
 
 Data Science has numerous applications across industries, including finance, healthcare, marketing, social media, and many others. The insights and predictions derived from data analysis can be used to drive business decisions, inform policy, and improve the lives of individuals and communities.
 
-
 ### How to do Data Science?
 
 Learning Data Science is like learning to cook. You start with a set of ingredients and follow a recipe to combine them and transform them into a delicious dish.
 
-![cooking](https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80)
+<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="80%" class="center">
 
 While there are several workflows to do data science, the one that has resonated the most with me, and what I have used over time is the one recommended by [Hadley Wickham](https://hadley.nz/).
 
-![](https://imgur.com/jiBlLaM.png)
+<img src="https://imgur.com/jiBlLaM.png" title="Data Science Workflow" caption="Data Science Workflow" width="100%">
 
-The first step almost always is to __import__ data. Data comes in different
-forms and shapes: files, databases, APIs etc. Before you can start analyzing
-data, you need to bring it into the environment you are working with.
+The first step almost always is to __import__ data. Data comes in different forms and shapes: files, databases, APIs etc. Before you can start analyzing data, you need to bring it into the environment you are working with.
 
-Raw data is almost always NEVER clean. Hence, the next step in a typical
-data science workflow is to __tidy__ it. Tidying data often involves cleaning
+Raw data is almost always NEVER clean. Hence, the next step in a typical data science workflow is to __tidy__ it. Tidying data often involves cleaning
 
 
-Now that you have clean data, the third step is to __transform__ it. In this
-step, you often manipulate individual variables, add new variables, select
-observations of interest, aggregate values across specific groups etc.
+Now that you have clean data, the third step is to __transform__ it. In this step, you often manipulate individual variables, add new variables, select observations of interest, aggregate values across specific groups etc.
 
 The real fun starts after you have transformed your data. The next step in the journey is to __visualize__ it. Visualizations let you explore the data and gain insights.
 
@@ -52,22 +61,13 @@ The last step in the workflow is to __communicate__ the data. This is done by tu
 
 Our focus in this course will largely be on the __transform__ and __visualize__ steps of the workflow. Shown below is a slightly more detailed roadmap of the key topics we will cover in this course.
 
-![data-science-workflow-detailed](https://i.imgur.com/dAuyiLz.png)
+<img src="https://i.imgur.com/dAuyiLz.png" title="Data Science Workflow - Detailed" caption="Data Science Workflow - Detailed" width="100%">
 
 ### Why R & Tidyverse?
 
-<!-- Why R? -->
+One of the biggest strengths of R is its extensive ecosystem of __packages__. An R package is a suite of functions along with data and documentation, that extends the functionality of base R. 
 
-
-One of the biggest strengths of R is its extensive ecosystem of __packages__.
-An R package is a suite of functions along with data and documentation, that
-extends the functionality of base R. 
-
-<!-- Why Tidyverse -->
-
-The Tidyverse is a highly opinionated set of packages that share a common
-underlying grammar and philosophy and are designed to work together to execute
-the data science workflow.
+The Tidyverse is a highly opinionated set of packages that share a common underlying grammar and philosophy and are designed to work together to execute the data science workflow.
 
 Rather than talk about the beauty of the `tidyverse`, I want you to experience it for yourself by working through the next lesson that uses the `tidyverse` to turn a dataset of US baby names into a beautiful animated bar chart.
 
@@ -88,7 +88,7 @@ baby_pct_births <- c(0.04, 0.01, 0.02)
 Some of you might be wondering if a vector is a collection of elements, what would one call a single element of a vector? A scalar perhaps? Well, the answer might surprise you. There are NO scalars in R. A single element of a vector is also a vector, albeit of length 1. 
 
 ```{r scalar}
-baby_name <- "John" 
+baby_name <- "John"
 ```
 
 
@@ -120,7 +120,7 @@ hist(rnorm(n = 1000))
 
 ### Embrace the Pipe
 
-![pipe](https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg)
+<img src="https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg" width="100%" caption="Pipe" title="Pipe" />
 
 Now suppose you are given a vector of US state names, `state.name`, and you want to create a bar plot that shows a frequency distribution of the first letter. How would you go about it? Let us write down the steps first.
 
@@ -163,10 +163,10 @@ Similar to the multi-line code, as  you add more steps to the recipe, this can o
 Well, fortunately, R has our backs covered once again. In R 4.1, the language formally introduced the pipe operator `|>`  that lets us rewrite the same code in a more intuitive fashion.
 
 ```{r pipe}
-state.name |>     # Take baby_names, then
+state.name |> # Take baby_names, then
   substr(1, 1) |> # Extract the first letter, then
-  table() |>      # Tabulate the frequencies, then
-  barplot()       # Create a bar plot.
+  table() |> # Tabulate the frequencies, then
+  barplot() # Create a bar plot.
 ```
 
 Notice how the steps are now ordered exactly the same way we wrote our recipe, and there is no clutter of intermediate objects. In fact, if the functions were named as verbs, the code would read just like the English language. 
@@ -187,19 +187,18 @@ A <- array(1:24, dim = c(2, 3, 4))
 __Heterogeneous__ data structures can hold different types of data (numeric, character, logical etc.). Lists are the 1-dimensional equivalent of vectors, and can be used to store a mix of data types. For example, the two lists shown below store the first name, last name and age of a person. While both lists hold the same information, the second list names its constituent elements, which can come very handy when we try to access them.
 
 ```{r data-structures-2}
-l1 <- list('Jane', 'Austen', 42)
-l2 <- list(first_name = 'Jane', last_name = 'Austen', age = 42L)
+l1 <- list("Jane", "Austen", 42)
+l2 <- list(first_name = "Jane", last_name = "Austen", age = 42L)
 ```
 
 
 Lists are extremely flexible and can be nested to hold other lists too.
 
 ```{r lists}
-l1 <- list('Jane', 'Austen', 42)
-l2 <- list('Jane', 'Eyre', 52)
+l1 <- list("Jane", "Austen", 42)
+l2 <- list("Jane", "Eyre", 52)
 l <- list(l1, l2)
 ```
-
 
 A __Data Frame__ is a special type of list where each element of the list has the same length. Visually, this resembles a rectangular table, the most ubiquitous data structure found everywhere from excel tables to sql databases. 
 
@@ -216,7 +215,3 @@ D
 We will mostly work with data frames in this course.
 
 This is a whirlwind introduction to R and summarizes the key ideas you will need for this course. For a more thorough introduction to R, I would strongly recommend the book [Hands On Programming with R](https://rstudio-education.github.io/hopr/index.html). The online version of the book is free to use. Familiarity with R beyond what is covered in this course will be essential for those who hope to use the language in data science-focused careers.
-
-
-
-

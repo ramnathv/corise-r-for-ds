@@ -29,13 +29,13 @@ Learning Data Science is like learning to cook. You start with a set of
 ingredients and follow a recipe to combine them and transform them into
 a delicious dish.
 
-![cooking](https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80)
+<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="80%" class="center">
 
 While there are several workflows to do data science, the one that has
 resonated the most with me, and what I have used over time is the one
 recommended by [Hadley Wickham](https://hadley.nz/).
 
-![](https://imgur.com/jiBlLaM.png)
+<img src="https://imgur.com/jiBlLaM.png" title="Data Science Workflow" caption="Data Science Workflow" width="100%">
 
 The first step almost always is to **import** data. Data comes in
 different forms and shapes: files, databases, APIs etc. Before you can
@@ -71,17 +71,13 @@ Our focus in this course will largely be on the **transform** and
 **visualize** steps of the workflow. Shown below is a slightly more
 detailed roadmap of the key topics we will cover in this course.
 
-![data-science-workflow-detailed](https://i.imgur.com/dAuyiLz.png)
+<img src="https://i.imgur.com/dAuyiLz.png" title="Data Science Workflow - Detailed" caption="Data Science Workflow - Detailed" width="100%">
 
 ### Why R & Tidyverse?
-
-<!-- Why R? -->
 
 One of the biggest strengths of R is its extensive ecosystem of
 **packages**. An R package is a suite of functions along with data and
 documentation, that extends the functionality of base R.
-
-<!-- Why Tidyverse -->
 
 The Tidyverse is a highly opinionated set of packages that share a
 common underlying grammar and philosophy and are designed to work
@@ -119,7 +115,7 @@ Well, the answer might surprise you. There are NO scalars in R. A single
 element of a vector is also a vector, albeit of length 1.
 
 ``` r
-baby_name <- "John" 
+baby_name <- "John"
 ```
 
 Three comments are in order.
@@ -157,7 +153,7 @@ x <- rnorm(n = 1000)
 hist(x)
 ```
 
-![](img/function-call-1.png)<!-- -->
+<img src="https://i.imgur.com/LjVOQF6.png" width="100%" style="display: block; margin: auto;" />
 
 The first line calls the function `rnorm()` to generate a numeric vector
 of 1000 random normal variables. The second line plots a **histogram**
@@ -167,11 +163,11 @@ of these numbers. You can even combine the two lines into a single line!
 hist(rnorm(n = 1000))
 ```
 
-![](img/histogram-1.png)<!-- -->
+<img src="https://i.imgur.com/G9sziU1.png" width="100%" style="display: block; margin: auto;" />
 
 ### Embrace the Pipe
 
-![pipe](https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg)
+<img src="https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg" width="100%" caption="Pipe" title="Pipe" />
 
 Now suppose you are given a vector of US state names, `state.name`, and
 you want to create a bar plot that shows a frequency distribution of the
@@ -202,7 +198,7 @@ first_letters_counts <- table(first_letters)
 barplot(first_letters_counts)
 ```
 
-![](img/sequential-1.png)<!-- -->
+<img src="https://i.imgur.com/eDZI0cI.png" width="100%" style="display: block; margin: auto;" />
 
 Running this code will create a nice bar plot. Note how we just had to
 know the right functions to use to get the job done! The multiple lines
@@ -217,7 +213,7 @@ Alternatively, we could have also written this code as a one-liner!
 barplot(table(substr(state.name, 1, 1)))
 ```
 
-![](img/oneline-1.png)<!-- -->
+<img src="https://i.imgur.com/siTChm9.png" width="100%" style="display: block; margin: auto;" />
 
 It skips the step of having to create intermediate variables and naming
 them appropriately. However, if you were to read the code carefully, you
@@ -237,13 +233,13 @@ language formally introduced the pipe operator `|>` that lets us rewrite
 the same code in a more intuitive fashion.
 
 ``` r
-state.name |>     # Take baby_names, then
+state.name |> # Take baby_names, then
   substr(1, 1) |> # Extract the first letter, then
-  table() |>      # Tabulate the frequencies, then
-  barplot()       # Create a bar plot.
+  table() |> # Tabulate the frequencies, then
+  barplot() # Create a bar plot.
 ```
 
-![](img/pipe-1.png)<!-- -->
+<img src="https://i.imgur.com/q55uXm1.png" width="100%" style="display: block; margin: auto;" />
 
 Notice how the steps are now ordered exactly the same way we wrote our
 recipe, and there is no clutter of intermediate objects. In fact, if the
@@ -278,15 +274,15 @@ list names its constituent elements, which can come very handy when we
 try to access them.
 
 ``` r
-l1 <- list('Jane', 'Austen', 42)
-l2 <- list(first_name = 'Jane', last_name = 'Austen', age = 42L)
+l1 <- list("Jane", "Austen", 42)
+l2 <- list(first_name = "Jane", last_name = "Austen", age = 42L)
 ```
 
 Lists are extremely flexible and can be nested to hold other lists too.
 
 ``` r
-l1 <- list('Jane', 'Austen', 42)
-l2 <- list('Jane', 'Eyre', 52)
+l1 <- list("Jane", "Austen", 42)
+l2 <- list("Jane", "Eyre", 52)
 l <- list(l1, l2)
 ```
 
@@ -303,11 +299,10 @@ D <- data.frame(
   births = c(5490, 9102)
 )
 D
+#>   name    sex year births
+#> 1 Mary Female 1980   5490
+#> 2 John   Male 1980   9102
 ```
-
-    ##   name    sex year births
-    ## 1 Mary Female 1980   5490
-    ## 2 John   Male 1980   9102
 
 We will mostly work with data frames in this course.
 
