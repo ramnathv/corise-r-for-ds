@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
 knitr::opts_knit$set(
   upload.fun = imgur_upload_v2, base.url = NULL
 )
+set.seed(1234)
 ```
 ### What is Data Science?
 

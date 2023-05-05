@@ -153,7 +153,7 @@ x <- rnorm(n = 1000)
 hist(x)
 ```
 
-<img src="https://i.imgur.com/LjVOQF6.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/04W4ip3.png" width="100%" style="display: block; margin: auto;" />
 
 The first line calls the function `rnorm()` to generate a numeric vector
 of 1000 random normal variables. The second line plots a **histogram**
@@ -163,7 +163,7 @@ of these numbers. You can even combine the two lines into a single line!
 hist(rnorm(n = 1000))
 ```
 
-<img src="https://i.imgur.com/G9sziU1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/cw1vu25.png" width="100%" style="display: block; margin: auto;" />
 
 ### Embrace the Pipe
 
@@ -198,7 +198,7 @@ first_letters_counts <- table(first_letters)
 barplot(first_letters_counts)
 ```
 
-<img src="https://i.imgur.com/eDZI0cI.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/vrKZ98D.png" width="100%" style="display: block; margin: auto;" />
 
 Running this code will create a nice bar plot. Note how we just had to
 know the right functions to use to get the job done! The multiple lines
@@ -213,7 +213,7 @@ Alternatively, we could have also written this code as a one-liner!
 barplot(table(substr(state.name, 1, 1)))
 ```
 
-<img src="https://i.imgur.com/siTChm9.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/51oeKCE.png" width="100%" style="display: block; margin: auto;" />
 
 It skips the step of having to create intermediate variables and naming
 them appropriately. However, if you were to read the code carefully, you
@@ -239,7 +239,7 @@ state.name |> # Take baby_names, then
   barplot() # Create a bar plot.
 ```
 
-<img src="https://i.imgur.com/q55uXm1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/XuGfxML.png" width="100%" style="display: block; margin: auto;" />
 
 Notice how the steps are now ordered exactly the same way we wrote our
 recipe, and there is no clutter of intermediate objects. In fact, if the
