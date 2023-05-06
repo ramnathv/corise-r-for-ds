@@ -1,37 +1,41 @@
 ---
 output: github_document
 ---
-
-
-```{r setup, include = FALSE, message = FALSE}
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-set.seed(1234)
-```
-
 ## Manipulating Data
 
-Recall how data manipulation operations work on rows and columns of a table, while leaving its shape largely intact. It is useful to group these operations based on whether they manipulate rows or columns. 
+Recall how data manipulation operations work on rows and columns of a table, while leaving its shape largely intact. It is useful to group these operations based on whether they manipulate rows or columns.
 
-![manipulate-data](https://imgur.com/xd7PCyy.png)
+```{r manipulate-data, out.width = "100%", echo = FALSE}
+knitr::include_graphics("https://imgur.com/xd7PCyy.png")
+```
 
-We will use a handy dataset named `starwars` that ships with the `dplyr` package, to illustrate the basic idea behind these data manipulation operations. While the data is largely self explanatory, as always, you can type `? starwars` to get more details on the data.
+
+
+```{r setup, message = FALSE}
+# Load packages and common utilities
+library(tidyverse)
+source(here::here("_common.R"))
+knitr::opts_chunk$set(collapse = FALSE)
+```
+
+We will use a handy dataset named `starwars` that ships with the `dplyr` package, to illustrate the basic idea behind these data manipulation operations.
 
 ```{r}
 starwars
 ```
 
 
+While the data is largely self explanatory, as always, you can type `? starwars` to get more details on the data.
+
 ### Manipulating Rows
 
-These functions operate on the rows of a table and allow us to subset a table based on 
+These functions operate on the rows of a table and allow us to subset a table.
 
 #### `filter`: Keep rows that match a condition
 
 The `filter()` functions allows you to subset rows of a table based on a set of one or more matching conditions. You can combine one or more criteria to keep only the rows that you want to keep.
 
 Run these examples one at a time to understand what they accomplish. In order to get the most out of it, have a hypothesis in place before you run the line of code, so you can corroborate your understanding with the results. Finally, don't limit yourself to these examples. Come up with your own criteria and explore.
-
 
 ```{r}
 # One criterion, One expression
@@ -101,12 +105,11 @@ slice_sample(starwars, n = 5)
 slice_sample(starwars, prop = 0.20)
 ```
 
-
 ### Manipulating Columns
 
 #### `select`: Keep or drop columns (1 / 2)
 
-The `select` function lets you keep or drop columns in a dataset. You can use unquoted column names, ranges, and even boolean operators to define your selection. 
+The `select` function lets you keep or drop columns in a dataset. You can use unquoted column names, ranges, and even boolean operators to define your selection.
 
 ```{r}
 # Keep columns name and mass
@@ -142,7 +145,6 @@ select(starwars, where(is.numeric))
 select(starwars, where(is.list))
 ```
 
-
 #### `mutate`: Create, modify, and delete columns
 
 The `mutate()` function can be used to create, modify, or remove columns.
@@ -163,9 +165,7 @@ mutate(starwars, mass_lbs = mass * 2.2, mass = NULL)
 
 #### `rename`: Rename columns
 
-The `rename()` function can be used to rename one or more columns. It can
-be combined with the selector functions like `ends_with()` to operate on
-multiple columns based on patterns.
+The `rename()` function can be used to rename one or more columns. It can be combined with the selector functions like `ends_with()` to operate on multiple columns based on patterns.
 
 ```{r}
 # Rename
@@ -180,8 +180,7 @@ rename_with(starwars, toupper, ends_with("color"))
 
 #### `relocate`: Relocate columns
 
-The `relocate()` function can be used to relocate a column before or
-after another column in the table.
+The `relocate()` function can be used to relocate a column before or after another column in the table.
 
 ```{r}
 # Relocate column AFTER a column
@@ -205,7 +204,6 @@ The `unite()` function can be used to combine multiple columns into a single col
 unite(starwars, height_mass, height, mass, sep = "_|_")
 ```
 
-
 #### `separate`: Separate one column into multiple columns
 
 The `separate()` function does the exact opposite of the `unite()` function and separates a single column into multiple columns based on a separator. Look at the help documents by typing `? separate` to get a comprehensive look at the various argumetns and use cases it supports.
@@ -215,4 +213,3 @@ separate(starwars, name, c('first_name', 'last_name'), sep = "\\s")
 ```
 
 In this lesson, you learnt the most fundamental verbs of data manipulation that let you operate on the rows and columns of a table, while keeping the underlying unit of observation the same. The full power of the `tidyverse` stems from the fact that you can combine these verbs together into a pipeline to achieve even the most complex data transformations.
-

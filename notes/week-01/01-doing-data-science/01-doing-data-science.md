@@ -29,7 +29,7 @@ Learning Data Science is like learning to cook. You start with a set of
 ingredients and follow a recipe to combine them and transform them into
 a delicious dish.
 
-<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="80%" class="center">
+<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="100%" class="center">
 
 While there are several workflows to do data science, the one that has
 resonated the most with me, and what I have used over time is the one
@@ -75,22 +75,49 @@ detailed roadmap of the key topics we will cover in this course.
 
 ### Why R & Tidyverse?
 
+[R](https://cran.r-project.org/) is a programming language that is
+widely used for **data analysis**, **statistical computing**, and **data
+visualization**. It is an open-source language that is supported by a
+large and active community of users, which has led to the development of
+many powerful and useful packages for data analysis.
+
 One of the biggest strengths of R is its extensive ecosystem of
 **packages**. An R package is a suite of functions along with data and
-documentation, that extends the functionality of base R.
+documentation, that extend the functionality of the base R programming
+language.
 
-The Tidyverse is a highly opinionated set of packages that share a
-common underlying grammar and philosophy and are designed to work
-together to execute the data science workflow.
+[Tidyverse](https://tidyverse.org) is a collection of R packages that
+share a common underlying grammar and philosophy and are designed to
+work together to execute the data science workflow, and make data
+manipulation and analysis easier and more efficient. The core packages
+in Tidyverse include:
 
-Rather than talk about the beauty of the `tidyverse`, I want you to
-experience it for yourself by working through the next lesson that uses
-the `tidyverse` to turn a dataset of US baby names into a beautiful
-animated bar chart.
+- [dplyr](https://dplyr.tidyverse.org): for data manipulation
+- [ggplot2](https://ggplot2.tidyverse.org): for data visualization
+- [tidyr](https://tidyr.tidyverse.org): for data tidying
+- [readr](https://readr.tidyverse.org): for reading data into R
+- [purrr](https://purrr.tidyverse.org): for functional programming
+- [stringr](https://stringr.tidyverse.org): for working with strings
 
-## R in a Nutshell
+Together, these packages provide a consistent and powerful set of tools
+for working with data in R. The philosophy behind Tidyverse is based on
+the “tidy data” concept, which emphasizes that data should be structured
+in a consistent way to make it easier to work with. Tidyverse packages
+are designed to work with tidy data, making it easier to perform common
+data manipulation tasks such as filtering, sorting, grouping, and
+summarizing.
 
-### Everything that exists is an object \[John Chambers\]
+Overall, R and Tidyverse provide a powerful and flexible environment for
+data analysis and visualization. They are popular among data scientists
+and analysts because of their ease of use, versatility, and active
+community support. Rather than talk about the beauty of the `tidyverse`,
+I want you to experience it for yourself by working through the next
+lesson that uses the `tidyverse` to turn a dataset of US baby names into
+a beautiful animated bar chart.
+
+### R in a Nutshell
+
+#### Everything that exists is an object \[John Chambers\]
 
 The first idea to grasp is that everything in R is an object. The most
 fundamental type of object in R is a **vector**. You can think about a
@@ -137,7 +164,7 @@ Three comments are in order.
     elements into a single vector. You will learn more about functions
     in the next section.
 
-### Everything that happens is the result of a function call \[John Chambers\]
+#### Everything that happens is the result of a function call \[John Chambers\]
 
 The second core idea in R is that every action is the result of a
 function call. You already encountered the `c()` function that took in
@@ -153,7 +180,7 @@ x <- rnorm(n = 1000)
 hist(x)
 ```
 
-<img src="https://i.imgur.com/04W4ip3.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/Doy6ftA.png" width="100%" style="display: block; margin: auto;" />
 
 The first line calls the function `rnorm()` to generate a numeric vector
 of 1000 random normal variables. The second line plots a **histogram**
@@ -163,9 +190,9 @@ of these numbers. You can even combine the two lines into a single line!
 hist(rnorm(n = 1000))
 ```
 
-<img src="https://i.imgur.com/cw1vu25.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/UkkA6vV.png" width="100%" style="display: block; margin: auto;" />
 
-### Embrace the Pipe
+#### Embrace the Pipe
 
 <img src="https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg" width="100%" caption="Pipe" title="Pipe" />
 
@@ -198,7 +225,7 @@ first_letters_counts <- table(first_letters)
 barplot(first_letters_counts)
 ```
 
-<img src="https://i.imgur.com/vrKZ98D.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/iaFInr0.png" width="100%" style="display: block; margin: auto;" />
 
 Running this code will create a nice bar plot. Note how we just had to
 know the right functions to use to get the job done! The multiple lines
@@ -213,7 +240,7 @@ Alternatively, we could have also written this code as a one-liner!
 barplot(table(substr(state.name, 1, 1)))
 ```
 
-<img src="https://i.imgur.com/51oeKCE.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/P1XovOB.png" width="100%" style="display: block; margin: auto;" />
 
 It skips the step of having to create intermediate variables and naming
 them appropriately. However, if you were to read the code carefully, you
@@ -233,20 +260,20 @@ language formally introduced the pipe operator `|>` that lets us rewrite
 the same code in a more intuitive fashion.
 
 ``` r
-state.name |> # Take baby_names, then
+state.name |>     # Take baby_names, then
   substr(1, 1) |> # Extract the first letter, then
-  table() |> # Tabulate the frequencies, then
-  barplot() # Create a bar plot.
+  table() |>      # Tabulate the frequencies, then
+  barplot()       # Create a bar plot.
 ```
 
-<img src="https://i.imgur.com/XuGfxML.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/jUwObM3.png" width="100%" style="display: block; margin: auto;" />
 
 Notice how the steps are now ordered exactly the same way we wrote our
 recipe, and there is no clutter of intermediate objects. In fact, if the
 functions were named as verbs, the code would read just like the English
 language.
 
-### Embrace Data Structures
+#### Embrace Data Structures
 
 While learning any new programming language, it is important to
 understand the data structures it supports, and how to create, read,

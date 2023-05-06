@@ -1,30 +1,8 @@
 ---
 output: github_document
 ---
-
 ## Doing Data Science
-```{r setup, include = FALSE, message = FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "img/",
-  fig.retina = 2,
-  fig.width = 6,
-  fig.asp = 9 / 16,
-  fig.pos = "t",
-  fig.align = "center",
-  # dpi = if (knitr::is_latex_output()) 72 else 150,
-  out.width = "100%",
-  # dev = "svg",
-  dev.args = list(png = list(type = "cairo-png")),
-  optipng = "-o1 -quiet"
-)
-knitr::opts_knit$set(
-  upload.fun = imgur_upload_v2, base.url = NULL
-)
-set.seed(1234)
-```
+
 ### What is Data Science?
 
 Data Science is an interdisciplinary field that involves the use of scientific methods, processes, algorithms, and systems to extract knowledge and insights 
@@ -39,7 +17,7 @@ Data Science has numerous applications across industries, including finance, hea
 
 Learning Data Science is like learning to cook. You start with a set of ingredients and follow a recipe to combine them and transform them into a delicious dish.
 
-<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="80%" class="center">
+<img src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" title="Cooking" caption="Cooking" width="100%" class="center">
 
 While there are several workflows to do data science, the one that has resonated the most with me, and what I have used over time is the one recommended by [Hadley Wickham](https://hadley.nz/).
 
@@ -66,15 +44,32 @@ Our focus in this course will largely be on the __transform__ and __visualize__ 
 
 ### Why R & Tidyverse?
 
-One of the biggest strengths of R is its extensive ecosystem of __packages__. An R package is a suite of functions along with data and documentation, that extends the functionality of base R. 
+[R](https://cran.r-project.org/) is a programming language that is widely used for __data analysis__, __statistical computing__, and __data visualization__. It is an open-source language that is supported by a large and active community of users, which has led to the development of many powerful and useful packages for data analysis.
 
-The Tidyverse is a highly opinionated set of packages that share a common underlying grammar and philosophy and are designed to work together to execute the data science workflow.
+One of the biggest strengths of R is its extensive ecosystem of __packages__. An R package is a suite of functions along with data and documentation, that extend the functionality of the base R programming language. 
 
-Rather than talk about the beauty of the `tidyverse`, I want you to experience it for yourself by working through the next lesson that uses the `tidyverse` to turn a dataset of US baby names into a beautiful animated bar chart.
 
-## R in a Nutshell
+[Tidyverse](https://tidyverse.org)  is a collection of R packages that share a common underlying grammar and philosophy and are designed to work together to execute the data science workflow, and make data manipulation and analysis easier and more efficient. The core packages in Tidyverse include:
 
-### Everything that exists is an object [John Chambers]
+- [dplyr](https://dplyr.tidyverse.org): for data manipulation
+- [ggplot2](https://ggplot2.tidyverse.org): for data visualization
+- [tidyr](https://tidyr.tidyverse.org): for data tidying
+- [readr](https://readr.tidyverse.org): for reading data into R
+- [purrr](https://purrr.tidyverse.org): for functional programming
+- [stringr](https://stringr.tidyverse.org): for working with strings
+
+Together, these packages provide a consistent and powerful set of tools for working with data in R. The philosophy behind Tidyverse is based on the "tidy data" concept, which emphasizes that data should be structured in a consistent way to make it easier to work with. Tidyverse packages are designed to work with tidy data, making it easier to perform common data manipulation tasks such as filtering, sorting, grouping, and summarizing.
+
+Overall, R and Tidyverse provide a powerful and flexible environment for data analysis and visualization. They are popular among data scientists and analysts because of their ease of use, versatility, and active community support. Rather than talk about the beauty of the `tidyverse`, I want you to experience it for yourself by working through the next lesson that uses the `tidyverse` to turn a dataset of US baby names into a beautiful animated bar chart.
+
+### R in a Nutshell
+
+```{r include = FALSE}
+# Load common utility functions
+source(here::here("_common.R"))
+```
+
+#### Everything that exists is an object [John Chambers]
 
 The first idea to grasp is that everything in R is an object. The most fundamental type of object in R is a __vector__. You can think about a vector as a collection of elements. Shown below are three different vectors, each of which has been assigned a name. The first object holds characters, the second one holds logicals, the third consists of integers, while the fourth consists of numbers. Overall, R supports SIX different types of vectors: `integer`, `numeric`, `logical`, `character`, `complex`, and `raw`. In this course, we will only worry about the first FOUR!
 
@@ -102,7 +97,7 @@ Three comments are in order.
 3. Third, what about that `c()` used to define these vectors. Is it an object, too? Nope! `c()`  is a function that concatenates multiple elements into a single vector. You will learn more about functions in the next section.
 
 
-### Everything that happens is the result of a function call [John Chambers]
+#### Everything that happens is the result of a function call [John Chambers]
 
 The second core idea in R is that every action is the result of a function call. You already encountered the `c()` function that took in multiple elements and concatenated them into a single vector. The base R language ships with a large range of functions that can perform simple to complex actions. For example, let us suppose you want to generate 1000 random normal variables and plot a histogram. In most other languages,  you will need to write multiple lines of code to accomplish this task. However, in base R, it boils down to two lines of code.
  
@@ -119,7 +114,7 @@ hist(rnorm(n = 1000))
 ```
 
 
-### Embrace the Pipe
+#### Embrace the Pipe
 
 <img src="https://static.wixstatic.com/media/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg/v1/fill/w_640,h_446,al_c,lg_1,q_80,enc_auto/8bdd38_24ca8c3b77e84e89ab218bab1d04ecf6~mv2.jpeg" width="100%" caption="Pipe" title="Pipe" />
 
@@ -164,15 +159,15 @@ Similar to the multi-line code, as  you add more steps to the recipe, this can o
 Well, fortunately, R has our backs covered once again. In R 4.1, the language formally introduced the pipe operator `|>`  that lets us rewrite the same code in a more intuitive fashion.
 
 ```{r pipe}
-state.name |> # Take baby_names, then
+state.name |>     # Take baby_names, then
   substr(1, 1) |> # Extract the first letter, then
-  table() |> # Tabulate the frequencies, then
-  barplot() # Create a bar plot.
+  table() |>      # Tabulate the frequencies, then
+  barplot()       # Create a bar plot.
 ```
 
 Notice how the steps are now ordered exactly the same way we wrote our recipe, and there is no clutter of intermediate objects. In fact, if the functions were named as verbs, the code would read just like the English language. 
 
-### Embrace Data Structures
+#### Embrace Data Structures
 
 While learning any new programming language, it is important to understand the data structures it supports, and how to create, read, update, and delete its elements. R supports a rich set of data structures. 
 

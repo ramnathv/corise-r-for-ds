@@ -5,12 +5,18 @@ Recall how data manipulation operations work on rows and columns of a
 table, while leaving its shape largely intact. It is useful to group
 these operations based on whether they manipulate rows or columns.
 
-![manipulate-data](https://imgur.com/xd7PCyy.png)
+<img src="https://imgur.com/xd7PCyy.png" width="100%" />
+
+``` r
+# Load packages and common utilities
+library(tidyverse)
+source(here::here("_common.R"))
+knitr::opts_chunk$set(collapse = FALSE)
+```
 
 We will use a handy dataset named `starwars` that ships with the `dplyr`
 package, to illustrate the basic idea behind these data manipulation
-operations. While the data is largely self explanatory, as always, you
-can type `? starwars` to get more details on the data.
+operations.
 
 ``` r
 starwars
@@ -33,10 +39,13 @@ starwars
     #> # ℹ 5 more variables: homeworld <chr>, species <chr>, films <list>,
     #> #   vehicles <list>, starships <list>
 
+While the data is largely self explanatory, as always, you can type
+`? starwars` to get more details on the data.
+
 ### Manipulating Rows
 
 These functions operate on the rows of a table and allow us to subset a
-table based on
+table.
 
 #### `filter`: Keep rows that match a condition
 

@@ -1,46 +1,53 @@
 ---
 output: github_document
 ---
-
-
-```{r setup, include = FALSE, message = FALSE}
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-```
-
 ## Transforming Data
 
 Visualizing data is a lot of fun. However, the key to visualizing data is getting the data into a tidy format that makes it easy to visualize. Ask any practicing data scientist and they will tell you how data transformation is easily the most time consuming portion of their daily workflow.
 
-![workflow-transform-data](https://i.imgur.com/0l6fJiZ.png)
+```{r workflow-transform-data,  out.width = "100%", echo = FALSE}
+knitr::include_graphics("https://i.imgur.com/0l6fJiZ.png")
+```
 
 Fortunately for us, the `tidyverse` provides us with a __grammar of data transformation__ as well, that makes it easy to make data bend to our will and wishes. Once you understand this grammar, you will be able to make any dataset dance to your tunes!
 
-![dance-to-your-tunes](https://media0.giphy.com/media/4esrzplOvKkE0/giphy.gif?cid=ecf05e47dl39d633d1uhf4480lxjn7x1cxdmumgo9w4a6ccj&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+
+```{r dance-to-your-tunes, out.width = "100%", echo = FALSE}
+knitr::include_graphics("https://media0.giphy.com/media/4esrzplOvKkE0/giphy.gif?cid=ecf05e47dl39d633d1uhf4480lxjn7x1cxdmumgo9w4a6ccj&ep=v1_gifs_search&rid=giphy.gif&ct=g")
+```
+
+
+```{r setup, message = FALSE}
+# Load packages and utility scripts
+library(tidyverse)
+source(here::here("_common.R"))
+```
+
 
 We will use both the `babynames` dataset as well as the `diamonds` dataset to explore the world of data transformation with the `tidyverse`.
 
-
 ```{r read-babynames, message = FALSE}
-library(tidyverse)
 FILE_NAMES <- here::here("data/names.csv.gz")
 babynames <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
 ```
 
-![babies-and-diamonds](https://www.casalejewelers.net/media/uploads/Half%20off%20Half%20the%20Store/Babies%20vs%20Diamonds.JPG)
+
+```{r babies-and-diamonds, echo = FALSE, out.width="100%"}
+knitr::include_graphics("https://www.casalejewelers.net/media/uploads/Half%20off%20Half%20the%20Store/Babies%20vs%20Diamonds.JPG")
+```
+
 
 We can categorize data transformation operations into FOUR groups. In this lesson, we will touch upon the basics of this grammar.
 
 
-![transform-data](https://i.imgur.com/6NUKqpe.png)
+```{r transform-data, out.width="100%", echo = FALSE}
+knitr::include_graphics("https://i.imgur.com/6NUKqpe.png")
+```
 
 
 ### Manipulating Data
 
-The first set of operations involve __manipulating rows and columns__ of a table while leaving its shape, and underlying unit of observation, largely intact. For example, suppose we want to display the `carat`, `price` and `price_per_carat` columns for the top 5 diamonds by `price_per_carat`. We can accomplish this using the grammar provided by the `dplyr` package, which is a part of the `tidyverse`.
-
-Note how the pipe operator (`|>`) allows us to pass the dataset through a series of transformations, that together accomplish what we want. Also note how each row in the dataset still corresponds to a single `observation` (diamond), and each cell is a `value` of a `variable`.
-
+The first set of operations involve __manipulating rows and columns__ of a table while leaving the underlying unit of observation, and its shape largely intact. For example, suppose we want to display the `carat`, `price` and `price_per_carat` columns for the top 5 diamonds by `price_per_carat`. We can accomplish this using the grammar provided by the `dplyr` package, which is a part of the `tidyverse`.
 
 ```{r manipulate-data-diamonds}
 # Start with the diamonds data.
@@ -54,6 +61,8 @@ diamonds |>
   # Slice the first five rows
   slice_head(n = 5)
 ```
+
+Note how the pipe operator (`|>`) allows us to pass the dataset through a series of transformations, that together accomplish what we want. Also note how each row in the dataset still corresponds to a single `observation` (diamond), and each cell is a `value` of a `variable`.
 
 Let us take another example of data manipulation, this time on the `babynames` data. Suppose, we want the most popular female names for babies born in the year 2021. We can accomplish this by stringing together a series of data manipulation functions provided by the `tidyverse`.
 
@@ -79,12 +88,10 @@ The second set of data manipulation operations that are extremely useful are __d
 For example, suppose we want to summarize diamonds by combination of `cut` and `clarity`. We can group them by `cut` and `clarity` and summarize each group by computing the `avg_price`, `avg_carat` and `avg_price_per_carat`. The `dplyr` package provides us with the useful functions `group_by()` and `summarize()` to accomplish what we want.  
 
 ```{r aggregate-data-diamonds}
-diamonds_by_cut_clarity <- 
-  # Start with diamonds data
-  diamonds |> 
+diamonds_by_cut_clarity <- diamonds |> 
     # Group by cut and clarity
     group_by(cut, clarity) |> 
-    # Summarize each group
+    # Summarize average price, carat, and price/carat
     summarize(
       avg_price = mean(price),
       avg_carat = mean(carat),
@@ -98,9 +105,7 @@ diamonds_by_cut_clarity
 Suppose, we want to get the top 5 most popular Male and Female names of all time. Can we accomplish it with the grammar we have learnt so far? Well, the answer is ALMOST yes. We can summarize the total number of births by `sex` and `name`, and then use the `slice_max()` function to slice the rows to get the top 5 rows in terms of `nb_births` for each `sex`.
 
 ```{r aggregate-data-babynames}
-babynames_top_5 <- 
-  # Start with the babynames table
-  babynames |> 
+babynames_top_5 <- babynames |> 
     # Group by sex and name
     group_by(sex, name) |> 
     # Summarize total number of births by sex and name
@@ -142,13 +147,17 @@ The `tidyverse` provides several functions to reshape data and we will learn all
 
 Finally, the last set of data transformation operations, we will learn about are those that involve __combining__ more than one dataset. We often want to combine datasets either by joining them or stacking them. The `tidyverse` provides several functions to accomplish this in a consistent manner.
 
-![types-of-joins](https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png)
+
+```{r types-of-join, echo = FALSE}
+knitr::include_graphics("https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png")
+```
+
 
 We will learn more about this in a later lesson.
 
 ----
-[SIDEBAR]
 
 The `tidyverse` follows the unix philosophy of providing simple building blocks that do ONE thing and only ONE thing really well. The power of the `tidyverse` stems from the consistency of these building blocks and the ability to string them together into a pipeline. While this might at times lead to more lines of code, the fact that it gives you enormous flexibility makes it worthwhile. Note that it is possible to combine these building blocks into bigger sub-assemblies to abstract any repetitive patterns at play. This is beyond the scope of this course, but is what makes the `tidyverse` truly powerful in the real world!
+
 ----
 

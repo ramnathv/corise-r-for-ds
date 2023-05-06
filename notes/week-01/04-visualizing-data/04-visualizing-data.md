@@ -1,15 +1,13 @@
 
 ## Visualizing Data
 
-### Getting Started
-
 Data visualization is a powerful tool in the field of data science that
 helps to communicate complex data insights in an intuitive and
 easy-to-understand way. R is a popular programming language and
 environment for statistical computing and graphics that provides a wide
 range of tools and packages for creating high-quality visualizations.
 
-![workflow-visualizing-data](https://i.imgur.com/X960Ag4.png)
+![](https://i.imgur.com/X960Ag4.png)<!-- -->
 
 R offers several different approaches to data visualization, each with
 its own strengths and weaknesses. Here are some of the most common
@@ -36,28 +34,23 @@ In this course, we will focus on `ggplot2`, as it provides us with a
 highly systematic grammar to create complex visualizations in a flexible
 manner.
 
-### Diamonds
+``` r
+# Load packages and common utility scripts
+library(tidyverse)
+source(here::here("_common.R"))
+```
 
-The journey of every visualization begins with the data. We will use the
-`diamonds` dataset that ships with the `ggplot2` package to explore the
-amazing world of data visualization!
+### Tidy Data - Diamonds
+
+The journey of every visualization begins with tidy data. We will use
+the `diamonds` dataset that ships with the `ggplot2` package to explore
+the amazing world of data visualization!
 
 ![diamonds](https://longs.nyc3.digitaloceanspaces.com/DiamondClarity-1.jpg?width=1024&name=DiamondClarity-1.jpg)
 
 Let us start by printing the data to take a look at what it holds.
 
 ``` r
-library(tidyverse)
-#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.2     ✔ readr     2.1.4
-#> ✔ forcats   1.0.0     ✔ stringr   1.5.0
-#> ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-#> ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-#> ✔ purrr     1.0.1     
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> ✖ dplyr::filter() masks stats::filter()
-#> ✖ dplyr::lag()    masks stats::lag()
-#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 # We filter out large diamonds so the plots look nicer!
 diamonds <- diamonds |> filter(carat <= 3)
 diamonds
@@ -84,9 +77,9 @@ has an Ideal `cut`, and SI2 `clarity`. This dataset is a good example of
 what we would call tidy data. A dataset is said to be tidy if it
 satisfies the following three conditions.
 
-1.  Every ROW is an OBSERVATION.
-2.  Every COLUMN is a VARIABLE.
-3.  Every CELL is a VALUE.
+1.  Every **row** is an **observation**.
+2.  Every **column** is a **variable**.
+3.  Every **cell** is a **value**.
 
 Note that a large part of the data science workflow is focused on
 transforming raw data into tidy data before it can be visualized and
@@ -124,32 +117,27 @@ building blocks and the tools to compose these elements together into a
 visualization. Let us take a tour of how to compose a visualization
 using `ggplot2` by replicating the visualization shown below.
 
-<img src="img/plot-diamonds-compose-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/5A63DCi.png" width="100%" style="display: block; margin: auto;" />
 
 The core idea of visualizing data with `ggplot2` is to decompose your
 plot into its underlying layers. Accordingly, we can start with the raw
 canvas for the plot by calling the `ggplot()` function on the dataset.
 This returns a not-so-interesting empty plot, but trust me when I say
-that this is the start of the magic!
+that this is the start of the magic 🪄!
 
 ``` r
 diamonds |> 
   ggplot()
 ```
 
-<img src="img/plot-diamonds-compose-1-1.png" width="100%" style="display: block; margin: auto;" />
-The next visual element in the plot we will recreate are the axes. The x
-axis is mapped to the variable `carat`, while the y axis is mapped to
-the variable `price`. We can add this to the plot using the aesthetic
+<img src="https://i.imgur.com/zIjKU3Y.png" width="100%" style="display: block; margin: auto;" />
+
+The next visual element in the plot we will recreate are the **axes**.
+The x axis is mapped to the variable `carat`, while the y axis is mapped
+to the variable `price`. We can add this to the plot using the aesthetic
 function `aes()` and providing it with a mapping of the relevant axis to
 the variable in the dataset. While, we can pass multiple mappings to a
 single `aes()` call, we will keep it separate for now.
-
-Note how we use the `+` operator rather than the pipe operator (`|>`) to
-build our plot. This is because the `ggplot2` package was released way
-before the pipe made its way into R. It is one of the few
-inconsistencies that exist in the `tidyverse` which otherwise prides
-itself on its amazing ability to be consistent all the way!
 
 ``` r
 diamonds |> 
@@ -158,7 +146,13 @@ diamonds |>
   aes(y = price)
 ```
 
-<img src="img/plot-diamonds-compose-2-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/kwEHiPN.png" width="100%" style="display: block; margin: auto;" />
+
+Note how we use the `+` operator rather than the pipe operator (`|>`) to
+build our plot. This is because the `ggplot2` package was released way
+before the pipe made its way into R. It is one of the few
+inconsistencies that exist in the `tidyverse` which otherwise prides
+itself on its amazing ability to be consistent all the way!
 
 Now that we have mapped the axis, it is time to add more visual elements
 to the plot. The first element we see are the points on the plot. We can
@@ -174,7 +168,8 @@ diamonds |>
   geom_point()
 ```
 
-<img src="img/plot-diamonds-compose-3-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/g2e2TwN.png" width="100%" style="display: block; margin: auto;" />
+
 We are making good progress here! We can now see the points on the plot.
 However, it does not quite look like the plot we set out to create. The
 points in our original plot were colored based on the `clarity` of the
@@ -192,7 +187,7 @@ diamonds |>
   geom_point()
 ```
 
-<img src="img/plot-diamonds-compose-4-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/K9qoQBe.png" width="100%" style="display: block; margin: auto;" />
 
 That looks much better now! We are almost there. The next visual element
 we need to add are the lines. Each line is the line of best fit for a
@@ -218,10 +213,9 @@ diamonds |>
   aes(color = clarity) +
   geom_point() +
   geom_smooth(method = "lm")
-#> `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="img/plot-diamonds-compose-5-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/rfrPPmC.png" width="100%" style="display: block; margin: auto;" />
 
 Finally, it is time to add labels to the plot. Labelling your plot
 correctly is very important to creating good visualizations. Once again,
@@ -244,10 +238,7 @@ diamonds |>
   labs(subtitle = "Price per carat of diamonds increases with clarity") +
   labs(caption = "Source: Diamonds Dataset") +
   theme(plot.title.position = "plot")
-#> `geom_smooth()` using formula = 'y ~ x'
 ```
-
-<img src="img/plot-diamonds-compose-6-1.png" width="100%" style="display: block; margin: auto;" />
 
 You might be thinking that this syntax is quite verbose to create plots
 on a regular basis. And you wont be alone to think this way.
@@ -271,7 +262,7 @@ diamonds |>
   theme(plot.title.position = "plot")
 ```
 
-<img src="img/plot-diamonds-compose-7-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/VidMkX2.png" width="100%" style="display: block; margin: auto;" />
 
 Suppose, you wanted to add only ONE line of best fit to the plot rather
 than the multiple lines. How would you modify the code above to
@@ -295,10 +286,9 @@ diamonds |>
     caption = "Source: Diamonds Dataset"
   ) +
   theme(plot.title.position = "plot")
-#> `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="img/plot-diamonds-compose-variation-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/C5wm0w5.png" width="100%" style="display: block; margin: auto;" />
 
 ### Visualizing Variables
 
@@ -336,7 +326,7 @@ diamonds |>
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="img/plot-diamonds-histogram-long-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/82rpgcc.png" width="100%" style="display: block; margin: auto;" />
 
 We can write the code for the plot above more concisely by moving the
 `aes` mapping inside the `ggplot()` call. This is the idiomatic way to
@@ -346,10 +336,9 @@ write `ggplot2` code and we will use it going forward.
 diamonds |> 
   ggplot(aes(x = price / carat)) +
   geom_histogram(color = 'white')
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="img/plot-diamonds-histogram-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/CgcLzut.png" width="100%" style="display: block; margin: auto;" />
 
 ##### Density
 
@@ -363,7 +352,7 @@ diamonds |>
   geom_density()
 ```
 
-<img src="img/plot-diamonds-density-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/UXeGjsC.png" width="100%" style="display: block; margin: auto;" />
 
 #### Categorical
 
@@ -384,7 +373,7 @@ diamonds |>
   geom_bar()
 ```
 
-<img src="img/plot-diamonds-bar-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/g73OXQ4.png" width="100%" style="display: block; margin: auto;" />
 
 In the above plot, the diamonds are sorted in alphabetical order based
 on clarity. But sometimes, it is more useful to order the bars in
@@ -398,7 +387,7 @@ diamonds |>
   geom_bar()
 ```
 
-<img src="img/plot-diamonds-bar-infreq-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/gXKAF95.png" width="100%" style="display: block; margin: auto;" />
 
 At times, it is advantageous to create horizontal bar plots, where the
 categorical variables are on the `y` axis. Once again, `ggplot2` makes
@@ -411,7 +400,7 @@ diamonds |>
   geom_bar()
 ```
 
-<img src="img/plot-diamonds-bar-infreq-horizontal-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/sT0oray.png" width="100%" style="display: block; margin: auto;" />
 
 ### Visualizing Relationships
 
@@ -430,7 +419,7 @@ diamonds |>
   geom_point()
 ```
 
-<img src="img/plot-diamonds-point-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/zLj0Ebl.png" width="100%" style="display: block; margin: auto;" />
 
 As you can see, there is a lot of overplotting going on here that makes
 it hard to see where the points are concentrated. One way to reduce
@@ -443,7 +432,7 @@ diamonds |>
   geom_point(alpha = 0.1)
 ```
 
-<img src="img/plot-diamonds-point-alpha-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/1MVvBHX.png" width="100%" style="display: block; margin: auto;" />
 
 ##### Hexplot
 
@@ -464,7 +453,7 @@ diamonds |>
   geom_hex()
 ```
 
-<img src="img/plot-diamonds-hex-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/AFiwbGd.png" width="100%" style="display: block; margin: auto;" />
 
 #### Categorical vs. Categorical
 
@@ -481,7 +470,7 @@ diamonds |>
   geom_bar()
 ```
 
-<img src="img/plot-diamonds-bar-stacked-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/wKCpb0e.png" width="100%" style="display: block; margin: auto;" />
 
 We can set the `position` argument to `fill` to stack all the bars to
 100%. This allows us to explore how one categorical variable is
@@ -493,7 +482,7 @@ diamonds |>
   geom_bar(position = "fill")
 ```
 
-<img src="img/plot-diamonds-bar-fill-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/TH7rWSf.png" width="100%" style="display: block; margin: auto;" />
 
 Finally, it is sometimes valuable NOT to stack the bars, but display
 them side-by-side. We can accomplish this by setting `position` to
@@ -505,7 +494,7 @@ diamonds |>
   geom_bar(position = "dodge")
 ```
 
-<img src="img/plot-diamonds-bar-dodge-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/6PwtJ8z.png" width="100%" style="display: block; margin: auto;" />
 
 #### Numerical vs. Categorical
 
@@ -521,7 +510,7 @@ diamonds |>
   geom_boxplot()
 ```
 
-<img src="img/plot-diamonds-boxplot-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/6ao4OTH.png" width="100%" style="display: block; margin: auto;" />
 
 The box plot summarizes the distribution of `price_per_carat` by
 `clarity` in terms of its `median` (the thick line in the middle), its
@@ -539,9 +528,9 @@ diamonds |>
   geom_boxplot(outlier.alpha = 0.02)
 ```
 
-<img src="img/plot-diamonds-boxplot-alpha-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/3vTR7Up.png" width="100%" style="display: block; margin: auto;" />
 
-##### Violin Plots
+##### Violinplot
 
 An interesting alternative to the boxplot is the violin plot.
 
@@ -551,7 +540,7 @@ diamonds |>
   geom_violin()
 ```
 
-<img src="img/plot-diamonds-violin-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/SjCmBiu.png" width="100%" style="display: block; margin: auto;" />
 
 #### Multiple Variables
 
@@ -571,7 +560,7 @@ diamonds |>
   geom_point()
 ```
 
-<img src="img/plot-diamonds-point-multiple-1-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/smHnpnX.png" width="100%" style="display: block; margin: auto;" />
 
 If we want to visualize variation by `cut` of the diamond as well, we
 can map an additional aesthetic `shape` to `cut`.
@@ -582,7 +571,7 @@ diamonds |>
   geom_point()
 ```
 
-<img src="img/plot-diamonds-point-multiple-2-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/AVBPpDW.png" width="100%" style="display: block; margin: auto;" />
 
 We will learn more about the different `aesthetics` supported by
 `ggplot2()` in Week 2. While mapping additional aesthetics is a
@@ -606,7 +595,7 @@ diamonds |>
   facet_wrap(~ cut)
 ```
 
-<img src="img/plot-diamonds-facet-wrap-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/25gFUmL.png" width="100%" style="display: block; margin: auto;" />
 
 By default, the same scales are used for all panels. You can allow
 scales to vary across all the panels with the `scales` argument. Free
@@ -627,7 +616,7 @@ diamonds |>
   theme_gray(base_size = 7)
 ```
 
-<img src="img/plot-diamonds-facet-grid-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://i.imgur.com/56gN54I.png" width="100%" style="display: block; margin: auto;" />
 
 The `ggplot2` package provides a really powerful abstraction of the
 grammar of graphics. We will dive deeper into this grammar in Week 2.

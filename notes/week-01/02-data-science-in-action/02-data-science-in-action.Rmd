@@ -1,17 +1,6 @@
 ---
 output: github_document
 ---
-
-```{r setup, message = FALSE, include = FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "img/",
-  fig.retina = 2
-)
-```
-
 ## Data Science in Action
 
 The best way to get started is by carrying out an analysis from end-to-end. We will use a dataset with 100+ years of US baby names, compiled by the Social Security Administration (SSA). We will utilize the data science workflow to __import__ the data, __transform__ it, and __visualize__ trends in female names as an animated racing barchart!
@@ -19,30 +8,32 @@ The best way to get started is by carrying out an analysis from end-to-end. We w
 > Don't worry if you don't follow all the code here. The idea is to show you what you can accomplish at the end of this course. The goal here is to run the code, tinker with it, and get a sense of how to do things. We will cover each of these topics in more detail in the later lessons.
 
 
-Before we begin, we need to load the necessary packages.
+Before we begin, we need to load the necessary packages. Recall that __packages__ are extensions to the R ecosystem and add new functionality. They are stored in a library. For this analysis, we will load the `tidyverse` package which is a collection of packages that make data analysis easier, and the `gganimate` package which will let us turn our visualization into an animated barchart.
 
 ```{r load-packages, message = FALSE}
+# Load packages and common utility functions
 library(tidyverse)
 library(gganimate)
+source(here::here("_common.R"))
 ```
-
-Packages are extensions to the R ecosystem and add new functionality. They are stored in a library. For this analysis, we will load the `tidyverse` package which is a collection of packages that make data analysis easier, and the `gganimate` package which will let us turn our visualization into an animated barchart.
 
 ### Import
 
 The first step in any data analysis is importing the data. The baby names data is available as a gzipped csv file. We will read this file as a data frame using the function `read_csv()` from the `readr` package, which is a part of the `tidyverse`.
 
 ```{r import-data}
-FILE_NAMES <- here::here('data/names.csv.gz')
-tbl_names <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
+file_path_names <- here::here('data/names.csv.gz')
+tbl_names <- readr::read_csv(file_path_names, show_col_types = FALSE)
 tbl_names
 ```
 
 The raw data on the SSA website is actually a zip file with multiple text files that needs to be processed further before we can read it into R as a table. The gory details of how we do this are presented in the next lesson, so you can enjoy creating your animated bar chart without much further ado.
 
-### Transform (1 / 2)
+### Transform
 
-Given, we want to visualize trends in the top female names, we first need to get a data frame with the top 100 female names. We can do this by following a recipe that transforms the data one step at a time.
+#### Step 1
+
+Given, we want to visualize trends in the top female names, we first need to get a data frame with the top 100 female names of all time. We can do this by following a recipe that transforms the data one step at a time.
 
 We take a data frame `tbl_names` containing information about baby names and their birth counts, filter it to keep only female names, group the remaining rows by name, and summarize the total number of births for each name group. Then we extract the top 100 female names by the number of births and store them in a new data frame `tbl_names_top_100_female`.
 
@@ -78,7 +69,7 @@ We can understand the code in greater detail by stepping through it one line at 
 7. Finally, the resulting data frame with the top 100 female names is stored in the `tbl_names_top_100_female` variable.
 
 
-### Transform (2 / 2)
+#### Step 2
 
 Now that we have the top 100 female names, we want to subset the names data to only retain the data for these 100 female names. Additionally, we want to add the rank for each name based on the number of births in that year. This will be very handy when we create the animated barchart.
 

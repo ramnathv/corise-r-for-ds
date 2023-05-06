@@ -13,18 +13,19 @@ the data science workflow to **import** the data, **transform** it, and
 > things. We will cover each of these topics in more detail in the later
 > lessons.
 
-Before we begin, we need to load the necessary packages.
+Before we begin, we need to load the necessary packages. Recall that
+**packages** are extensions to the R ecosystem and add new
+functionality. They are stored in a library. For this analysis, we will
+load the `tidyverse` package which is a collection of packages that make
+data analysis easier, and the `gganimate` package which will let us turn
+our visualization into an animated barchart.
 
 ``` r
+# Load packages and common utility functions
 library(tidyverse)
 library(gganimate)
+source(here::here("_common.R"))
 ```
-
-Packages are extensions to the R ecosystem and add new functionality.
-They are stored in a library. For this analysis, we will load the
-`tidyverse` package which is a collection of packages that make data
-analysis easier, and the `gganimate` package which will let us turn our
-visualization into an animated barchart.
 
 ### Import
 
@@ -34,8 +35,8 @@ a data frame using the function `read_csv()` from the `readr` package,
 which is a part of the `tidyverse`.
 
 ``` r
-FILE_NAMES <- here::here('data/names.csv.gz')
-tbl_names <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
+file_path_names <- here::here('data/names.csv.gz')
+tbl_names <- readr::read_csv(file_path_names, show_col_types = FALSE)
 tbl_names
 #> # A tibble: 2,052,781 × 4
 #>     year name      sex   nb_births
@@ -59,11 +60,14 @@ R as a table. The gory details of how we do this are presented in the
 next lesson, so you can enjoy creating your animated bar chart without
 much further ado.
 
-### Transform (1 / 2)
+### Transform
+
+#### Step 1
 
 Given, we want to visualize trends in the top female names, we first
-need to get a data frame with the top 100 female names. We can do this
-by following a recipe that transforms the data one step at a time.
+need to get a data frame with the top 100 female names of all time. We
+can do this by following a recipe that transforms the data one step at a
+time.
 
 We take a data frame `tbl_names` containing information about baby names
 and their birth counts, filter it to keep only female names, group the
@@ -126,7 +130,7 @@ line at a time.
 7.  Finally, the resulting data frame with the top 100 female names is
     stored in the `tbl_names_top_100_female` variable.
 
-### Transform (2 / 2)
+#### Step 2
 
 Now that we have the top 100 female names, we want to subset the names
 data to only retain the data for these 100 female names. Additionally,
@@ -239,7 +243,7 @@ anim <- tbl_names_top_100_female_trends |>
 gganimate::animate(anim, fps = 5, width = 600, height = 800)
 ```
 
-![](img/visualize-data-1.gif)<!-- -->
+<img src="https://i.imgur.com/9aWmyES.gif" width="100%" style="display: block; margin: auto;" />
 
 Here’s what the code does step by step:
 

@@ -17,4 +17,5 @@ Imports:
     plotly,
     shiny,
     statebins,
+    xaringanExtra,
     xaringanthemer

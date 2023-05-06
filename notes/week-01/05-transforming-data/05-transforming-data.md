@@ -7,45 +7,45 @@ Ask any practicing data scientist and they will tell you how data
 transformation is easily the most time consuming portion of their daily
 workflow.
 
-![workflow-transform-data](https://i.imgur.com/0l6fJiZ.png)
+<img src="https://i.imgur.com/0l6fJiZ.png" width="100%" />
 
 Fortunately for us, the `tidyverse` provides us with a **grammar of data
 transformation** as well, that makes it easy to make data bend to our
 will and wishes. Once you understand this grammar, you will be able to
 make any dataset dance to your tunes!
 
-![dance-to-your-tunes](https://media0.giphy.com/media/4esrzplOvKkE0/giphy.gif?cid=ecf05e47dl39d633d1uhf4480lxjn7x1cxdmumgo9w4a6ccj&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+<img src="https://media0.giphy.com/media/4esrzplOvKkE0/giphy.gif?cid=ecf05e47dl39d633d1uhf4480lxjn7x1cxdmumgo9w4a6ccj&ep=v1_gifs_search&rid=giphy.gif&ct=g" width="100%" />
+
+``` r
+# Load packages and utility scripts
+library(tidyverse)
+source(here::here("_common.R"))
+```
 
 We will use both the `babynames` dataset as well as the `diamonds`
 dataset to explore the world of data transformation with the
 `tidyverse`.
 
 ``` r
-library(tidyverse)
 FILE_NAMES <- here::here("data/names.csv.gz")
 babynames <- readr::read_csv(FILE_NAMES, show_col_types = FALSE)
 ```
 
-![babies-and-diamonds](https://www.casalejewelers.net/media/uploads/Half%20off%20Half%20the%20Store/Babies%20vs%20Diamonds.JPG)
+<img src="https://www.casalejewelers.net/media/uploads/Half%20off%20Half%20the%20Store/Babies%20vs%20Diamonds.JPG" width="100%" style="display: block; margin: auto;" />
 
 We can categorize data transformation operations into FOUR groups. In
 this lesson, we will touch upon the basics of this grammar.
 
-![transform-data](https://i.imgur.com/6NUKqpe.png)
+<img src="https://i.imgur.com/6NUKqpe.png" width="100%" style="display: block; margin: auto;" />
 
 ### Manipulating Data
 
 The first set of operations involve **manipulating rows and columns** of
-a table while leaving its shape, and underlying unit of observation,
+a table while leaving the underlying unit of observation, and its shape
 largely intact. For example, suppose we want to display the `carat`,
 `price` and `price_per_carat` columns for the top 5 diamonds by
 `price_per_carat`. We can accomplish this using the grammar provided by
 the `dplyr` package, which is a part of the `tidyverse`.
-
-Note how the pipe operator (`|>`) allows us to pass the dataset through
-a series of transformations, that together accomplish what we want. Also
-note how each row in the dataset still corresponds to a single
-`observation` (diamond), and each cell is a `value` of a `variable`.
 
 ``` r
 # Start with the diamonds data.
@@ -58,16 +58,20 @@ diamonds |>
   arrange(desc(price_per_carat)) |> 
   # Slice the first five rows
   slice_head(n = 5)
+#> # A tibble: 5 × 3
+#>   carat price price_per_carat
+#>   <dbl> <int>           <dbl>
+#> 1  1.04 18542          17829.
+#> 2  1.07 18279          17083.
+#> 3  1.03 17590          17078.
+#> 4  1.07 18114          16929.
+#> 5  1.02 17100          16765.
 ```
 
-    #> # A tibble: 5 × 3
-    #>   carat price price_per_carat
-    #>   <dbl> <int>           <dbl>
-    #> 1  1.04 18542          17829.
-    #> 2  1.07 18279          17083.
-    #> 3  1.03 17590          17078.
-    #> 4  1.07 18114          16929.
-    #> 5  1.02 17100          16765.
+Note how the pipe operator (`|>`) allows us to pass the dataset through
+a series of transformations, that together accomplish what we want. Also
+note how each row in the dataset still corresponds to a single
+`observation` (diamond), and each cell is a `value` of a `variable`.
 
 Let us take another example of data manipulation, this time on the
 `babynames` data. Suppose, we want the most popular female names for
@@ -86,16 +90,15 @@ babynames |>
   arrange(desc(nb_births)) |> 
   # Slice the first five rows
   slice_head(n = 5)
+#> # A tibble: 5 × 3
+#>   name      sex   nb_births
+#>   <chr>     <chr>     <dbl>
+#> 1 Olivia    F         17728
+#> 2 Emma      F         15433
+#> 3 Charlotte F         13285
+#> 4 Amelia    F         12952
+#> 5 Ava       F         12759
 ```
-
-    #> # A tibble: 5 × 3
-    #>   name      sex   nb_births
-    #>   <chr>     <chr>     <dbl>
-    #> 1 Olivia    F         17728
-    #> 2 Emma      F         15433
-    #> 3 Charlotte F         13285
-    #> 4 Amelia    F         12952
-    #> 5 Ava       F         12759
 
 A large part of transforming data will involve data manipulation
 operations. This is just a trailer of what is to come, and we will learn
@@ -116,12 +119,10 @@ summarize each group by computing the `avg_price`, `avg_carat` and
 functions `group_by()` and `summarize()` to accomplish what we want.
 
 ``` r
-diamonds_by_cut_clarity <- 
-  # Start with diamonds data
-  diamonds |> 
+diamonds_by_cut_clarity <- diamonds |> 
     # Group by cut and clarity
     group_by(cut, clarity) |> 
-    # Summarize each group
+    # Summarize average price, carat, and price/carat
     summarize(
       avg_price = mean(price),
       avg_carat = mean(carat),
@@ -130,22 +131,21 @@ diamonds_by_cut_clarity <-
     )
 
 diamonds_by_cut_clarity
+#> # A tibble: 40 × 5
+#>    cut   clarity avg_price avg_carat avg_price_per_carat
+#>    <ord> <ord>       <dbl>     <dbl>               <dbl>
+#>  1 Fair  I1          3704.     1.36                2721.
+#>  2 Fair  SI2         5174.     1.20                4298.
+#>  3 Fair  SI1         4208.     0.965               4363.
+#>  4 Fair  VS2         4175.     0.885               4716.
+#>  5 Fair  VS1         4165.     0.880               4734.
+#>  6 Fair  VVS2        3350.     0.692               4844.
+#>  7 Fair  VVS1        3871.     0.665               5824.
+#>  8 Fair  IF          1912.     0.474               4031.
+#>  9 Good  I1          3597.     1.20                2990.
+#> 10 Good  SI2         4580.     1.04                4424.
+#> # ℹ 30 more rows
 ```
-
-    #> # A tibble: 40 × 5
-    #>    cut   clarity avg_price avg_carat avg_price_per_carat
-    #>    <ord> <ord>       <dbl>     <dbl>               <dbl>
-    #>  1 Fair  I1          3704.     1.36                2721.
-    #>  2 Fair  SI2         5174.     1.20                4298.
-    #>  3 Fair  SI1         4208.     0.965               4363.
-    #>  4 Fair  VS2         4175.     0.885               4716.
-    #>  5 Fair  VS1         4165.     0.880               4734.
-    #>  6 Fair  VVS2        3350.     0.692               4844.
-    #>  7 Fair  VVS1        3871.     0.665               5824.
-    #>  8 Fair  IF          1912.     0.474               4031.
-    #>  9 Good  I1          3597.     1.20                2990.
-    #> 10 Good  SI2         4580.     1.04                4424.
-    #> # ℹ 30 more rows
 
 Suppose, we want to get the top 5 most popular Male and Female names of
 all time. Can we accomplish it with the grammar we have learnt so far?
@@ -155,9 +155,7 @@ slice the rows to get the top 5 rows in terms of `nb_births` for each
 `sex`.
 
 ``` r
-babynames_top_5 <- 
-  # Start with the babynames table
-  babynames |> 
+babynames_top_5 <- babynames |> 
     # Group by sex and name
     group_by(sex, name) |> 
     # Summarize total number of births by sex and name
@@ -169,22 +167,21 @@ babynames_top_5 <-
     slice_max(nb_births, n = 5)
 
 babynames_top_5
+#> # A tibble: 10 × 3
+#> # Groups:   sex [2]
+#>    sex   name      nb_births
+#>    <chr> <chr>         <dbl>
+#>  1 F     Mary        4132497
+#>  2 F     Elizabeth   1661030
+#>  3 F     Patricia    1572795
+#>  4 F     Jennifer    1469379
+#>  5 F     Linda       1453755
+#>  6 M     James       5202714
+#>  7 M     John        5150510
+#>  8 M     Robert      4834094
+#>  9 M     Michael     4392696
+#> 10 M     William     4156142
 ```
-
-    #> # A tibble: 10 × 3
-    #> # Groups:   sex [2]
-    #>    sex   name      nb_births
-    #>    <chr> <chr>         <dbl>
-    #>  1 F     Mary        4132497
-    #>  2 F     Elizabeth   1661030
-    #>  3 F     Patricia    1572795
-    #>  4 F     Jennifer    1469379
-    #>  5 F     Linda       1453755
-    #>  6 M     James       5202714
-    #>  7 M     John        5150510
-    #>  8 M     Robert      4834094
-    #>  9 M     Michael     4392696
-    #> 10 M     William     4156142
 
 You might have noticed a small difference between the `summarize` step
 in these two examples. In the first example with the `diamonds` data, we
@@ -225,16 +222,15 @@ diamonds_by_cut_clarity |>
     names_from = clarity,
     values_from = avg_price_per_carat
   )
+#> # A tibble: 5 × 9
+#>   cut          I1   SI2   SI1   VS2   VS1  VVS2  VVS1    IF
+#>   <ord>     <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 Fair      2721. 4298. 4363. 4716. 4734. 4844. 5824. 4031.
+#> 2 Good      2990. 4424. 4443. 5010. 5017. 5007. 4489. 6649.
+#> 3 Very Good 3181. 4687. 4648. 5197. 5189. 5363. 4973. 7105.
+#> 4 Premium   3067. 4847. 4903. 5458. 5654. 5797. 5294. 6390.
+#> 5 Ideal     3546. 4719. 4680. 4898. 5172. 5545. 4976. 4995.
 ```
-
-    #> # A tibble: 5 × 9
-    #>   cut          I1   SI2   SI1   VS2   VS1  VVS2  VVS1    IF
-    #>   <ord>     <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-    #> 1 Fair      2721. 4298. 4363. 4716. 4734. 4844. 5824. 4031.
-    #> 2 Good      2990. 4424. 4443. 5010. 5017. 5007. 4489. 6649.
-    #> 3 Very Good 3181. 4687. 4648. 5197. 5189. 5363. 4973. 7105.
-    #> 4 Premium   3067. 4847. 4903. 5458. 5654. 5797. 5294. 6390.
-    #> 5 Ideal     3546. 4719. 4680. 4898. 5172. 5545. 4976. 4995.
 
 The `tidyverse` provides several functions to reshape data and we will
 learn all about it in later lessons.
@@ -247,11 +243,20 @@ often want to combine datasets either by joining them or stacking them.
 The `tidyverse` provides several functions to accomplish this in a
 consistent manner.
 
-![types-of-joins](https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png)
+<img src="https://dataschool.com/assets/images/how-to-teach-people-sql/sqlJoins/sqlJoins_7.png" width="100%" style="display: block; margin: auto;" />
 
 We will learn more about this in a later lesson.
 
-|                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| \[SIDEBAR\]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| The `tidyverse` follows the unix philosophy of providing simple building blocks that do ONE thing and only ONE thing really well. The power of the `tidyverse` stems from the consistency of these building blocks and the ability to string them together into a pipeline. While this might at times lead to more lines of code, the fact that it gives you enormous flexibility makes it worthwhile. Note that it is possible to combine these building blocks into bigger sub-assemblies to abstract any repetitive patterns at play. This is beyond the scope of this course, but is what makes the `tidyverse` truly powerful in the real world! |
+------------------------------------------------------------------------
+
+The `tidyverse` follows the unix philosophy of providing simple building
+blocks that do ONE thing and only ONE thing really well. The power of
+the `tidyverse` stems from the consistency of these building blocks and
+the ability to string them together into a pipeline. While this might at
+times lead to more lines of code, the fact that it gives you enormous
+flexibility makes it worthwhile. Note that it is possible to combine
+these building blocks into bigger sub-assemblies to abstract any
+repetitive patterns at play. This is beyond the scope of this course,
+but is what makes the `tidyverse` truly powerful in the real world!
+
+------------------------------------------------------------------------

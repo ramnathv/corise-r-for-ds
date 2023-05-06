@@ -1,31 +1,33 @@
 ---
 output: github_document
 ---
-
-```{r setup, include = FALSE, message = FALSE}
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-```
-
 ## Importing Data
 
 Importing data refers to the process of reading data from an external file or data source into an R session or environment. This is an important step in many data science projects, as it allows you to work with real-world data in R.
 
-
-![import-data](https://i.imgur.com/Up3eaUJ.png)
-
+```{r import-data, echo = FALSE, out.width="100%"}
+knitr::include_graphics("https://i.imgur.com/Up3eaUJ.png")
+```
 
 In R, there are several functions and packages that can be used to import data. Some of the most commonly used ones are:
 
-- `read.table()`, `read.csv()`, and `read.delim()`: These are base R functions for reading in tabular data from text files with different formats.
+-   `read.table()`, `read.csv()`, and `read.delim()`: These are base R functions for reading in tabular data from text files with different formats.
 
-- `readr::read_csv()` and `readr::read_tsv()`: These are functions from the `readr` package, which provides fast and efficient reading of tabular data with more flexible options for handling missing values, column types, and so on.
+-   `readr::read_csv()` and `readr::read_tsv()`: These are functions from the `readr` package, which provides fast and efficient reading of tabular data with more flexible options for handling missing values, column types, and so on.
 
-- `haven::read_sas()`, `haven::read_dta()`, `haven::read_spss()`: These are functions from the `haven` package, which can be used to read in data from SAS, Stata, and SPSS files respectively.
+-   `haven::read_sas()`, `haven::read_dta()`, `haven::read_spss()`: These are functions from the `haven` package, which can be used to read in data from SAS, Stata, and SPSS files respectively.
 
-- `readxl::read_excel()`: This is a function from the `readxl` package, which can be used to read in data from Excel files.
+-   `readxl::read_excel()`: This is a function from the `readxl` package, which can be used to read in data from Excel files.
 
-- `httr::GET()`: This function can be used to retrieve data from a web API or a remote data source over the internet.
+-   `httr::GET()`: This function can be used to retrieve data from a web API or a remote data source over the internet.
+
+
+```{r setup, include = FALSE, message = FALSE}
+# Load packages and common utility funtions
+library(tidyverse)
+source(here::here("_common.R"))
+```
+
 
 ### Download Zip File
 
@@ -35,31 +37,30 @@ In this course, we will be working with a very interesting dataset of 100+ years
 NAMES_URL <- "https://www.ssa.gov/oact/babynames/names.zip"
 DOWNLOAD_DIR <- here::here("data")
 NAMES_ZIP <- file.path(DOWNLOAD_DIR, basename(NAMES_URL))
-download.file(NAMES_URL, NAMES_ZIP)
+
+# Download `NAMES_ZIP` from `NAMES_URL` if it does not already exist
+if (!file.exists(NAMES_ZIP)) {
+  download.file(NAMES_URL, NAMES_ZIP)
+}
 ```
 
-The `download.file()` function is used to download the zip file from the URL specified in `NAMES_URL` and save it to the location specified in `NAMES_ZIP`. 
+The `download.file()` function is used to download the zip file from the URL specified in `NAMES_URL` and save it to the location specified in `NAMES_ZIP`. Note that we first check if the file to be downloaded already exists and download it ONLY if it has not been downloaded already.
 
-After running this code, the zip file containing baby names data from the SSA website will be downloaded and saved to the specified `DOWNLOAD_DIR`
-directory with the file name specified in `NAMES_ZIP`.
+After running this code, the zip file containing baby names data from the SSA website will be downloaded and saved to the specified `DOWNLOAD_DIR` directory with the file name specified in `NAMES_ZIP`.
 
-
------
+------------------------------------------------------------------------
 
 To become a good data scientist, you need to focus on three things:
 
-1. Identify WHAT needs to be done?
-2. Identify the STEPS to accomplish the task.
-3. Write code to execute the steps.
-
+1.  Identify WHAT needs to be done?
+2.  Identify the STEPS to accomplish the task.
+3.  Write code to execute the steps.
 
 The first two areas are typically language agnostic and require one to focus on the ability to define a problem and break it down into steps. The last area is language specific, and knowing the language and its ecosystem well will allow you to write highly performant, concise code.
 
------
+------------------------------------------------------------------------
 
-
-
-### Explore Contents
+### Explore Zip File
 
 Before we can import the data into R, we need to explore the contents of the zip file. Let us list the files contained within the zip file, without actually unzipping them.
 
@@ -68,38 +69,38 @@ files <- unzip(NAMES_ZIP, list = TRUE)
 head(files)
 ```
 
-The `unzip()` function is used to extract information about the contents of the zip file, with the `list = TRUE` argument specified to only list the files within the zip file, rather than extracting them. The `head()` function is used to display the first 6 rows (by default) of an object. In this case, it will show the first 6 rows of the `files` object. If you wanted to see the first 10 rows instead, you could add a second argument to the `head()` function, e.g., `head(file, n = 10)`.
+The `unzip()` function is used to extract information about the contents of the zip file, with the `list = TRUE` argument specified to only list the files within the zip file, rather than extracting them. 
+
+The `head()` function is used to display the first 6 rows (by default) of an object. In this case, it will show the first 6 rows of the `files` object. If you wanted to see the first 10 rows instead, you could add a second argument to the `head()` function, e.g., `head(file, n = 10)`.
 
 Looking at the `files` object, it seems like the data is stored as multiple text files, one for each year.
 
------
+----
 
-Learning a programming language is very similar to how you would learn a new language. You need to start with the letters of the alphabet, put them together to form words, put words into sentences, sentences into paragraphs, and paragraphs into documents. 
+Learning a programming language is very similar to how you would learn a new language. You need to start with the __letters__ of the alphabet, put them together to form __words__, put words into __sentences__, sentences into __paragraphs__, and paragraphs into __documents__.
 
 Becoming a good data scientist requires you to build a strong vocabulary of functionality. The area where the `tidyverse` shines bright is that it provides you with a highly consistent vocabulary of small building blocks that can be strung together to accomplish complex tasks.
 
 One learning tip I can give you is that every time you encounter a new function, write it down with an example and fill in your own description. Periodically refer to this so you internalize this in your mind.
 
------
+----
 
-### Explore File
+### Explore Text File
 
 Let us read the first 5 lines of the text file `yob1880.txt` located within the zip file downloaded. We can do this using the `unz()` function to create a connection to the zip file `yob1880.txt`, and read the first 5 lines of this text file.
 
 When dealing with text files, it is really important to take the time to read the first few lines of data so you can understand how it is formatted, and what would be the appropriate function to use to import it as a data frame.
-
 
 ```{r explore-contents}
 file_con <- unz(NAMES_ZIP, 'yob1880.txt')
 readLines(file_con, n = 5)
 ```
 
-It seems like each line of this file holds comma separated values. This is the most common type of text data you will find, and we can read it as a data frame into R using the `read_csv()` function from `readr`. 
+It seems like each line of this file holds comma separated values. This is the most common type of text data you will find, and we can read it as a data frame into R using the `read_csv()` function from `readr`.
 
 Another important point to note is that this text file does NOT contain a row with the column headers. Hence, we will need to specify it explicitly when we read the data into R.
 
-
-### Read File
+### Read CSV File
 
 Let us now read the text file `yob1880.txt`, into a data frame using the `read_csv()` function from the `readr` package. We will use the connection object `file_con` that we created previously.
 
@@ -113,14 +114,13 @@ tbl_names <- readr::read_csv(
 tbl_names
 ```
 
-
-1. The `file` argument specifies the connection to the text file to be read.
-2. The `col_names` argument specifies the column names to be assigned to the resulting data frame, with the first column being named 'name', the second column being named 'sex', and the third column being named 'nb_births'.
-3. The `show_col_types` argument is set to `FALSE`, which means that column types will not be displayed as the data is read in.
+1.  The `file` argument specifies the connection to the text file to be read.
+2.  The `col_names` argument specifies the column names to be assigned to the resulting data frame, with the first column being named 'name', the second column being named 'sex', and the third column being named 'nb_births'.
+3.  The `show_col_types` argument is set to `FALSE`, which means that column types will not be displayed as the data is read in.
 
 The resulting `tbl_names` object is a data frame containing the baby names data, with one row per name and columns for name, sex, and the number of births for that name.
 
-### Unzip Files
+### Unzip Zip File
 
 We are now ready to read data from all the text files in the zip file. In order to do this, we should first unzip the contents of the zip file `NAMES_ZIP` to a temporary directory `NAMES_DIR`, and then get the paths to all the text files as the variable `NAMES_TXT_FILES`.
 
@@ -131,17 +131,17 @@ NAMES_TXT_FILES <- fs::dir_ls(NAMES_DIR, glob = "*.txt")
 head(NAMES_TXT_FILES)
 ```
 
-### Read Files
+### Read CSV Files
 
-We can now use the `read_csv` function from the `readr` package to read all the text files into a data frame. It is important to understand the arguments to this function, as it is one of the most commonly used import functions. 
+We can now use the `read_csv` function from the `readr` package to read all the text files into a data frame. It is important to understand the arguments to this function, as it is one of the most commonly used import functions.
 
-1. The `file` argument specifies the file to read in, and in this case, it is `NAMES_TXT_FILES`, which is a character vector containing the paths to all the text files in the directory.
+1.  The `file` argument specifies the file to read in, and in this case, it is `NAMES_TXT_FILES`, which is a character vector containing the paths to all the text files in the directory.
 
-2. The `col_names` argument specifies the names of the columns in the CSV file. In this case, the file has three columns: `name`, `sex`, and `nb_births`.
+2.  The `col_names` argument specifies the names of the columns in the CSV file. In this case, the file has three columns: `name`, `sex`, and `nb_births`.
 
-3. The `show_col_types` argument is set to `FALSE`, which means that the function will not print the types of the columns.
+3.  The `show_col_types` argument is set to `FALSE`, which means that the function will not print the types of the columns.
 
-4. The `id = 'year'` argument specifies that the path to the file should be added as an extra column named `year`. This is required in order to add the `year` information to the data frame, since it is not already present. 
+4.  The `id = 'year'` argument specifies that the path to the file should be added as an extra column named `year`. This is required in order to add the `year` information to the data frame, since it is not already present.
 
 ```{r read-files}
 tbl_names <- readr::read_csv(
@@ -163,7 +163,7 @@ tbl_names <- tbl_names |>
 tbl_names
 ```
 
-### Write Data
+### Write CSV File
 
 The final step is to write the imported and tidied data to a compressed csv file, using the `write_csv()` function from the `readr` package. Note that it is best to save csv files with compression in order to keep the file size small.
 
@@ -173,5 +173,3 @@ readr::write_csv(tbl_names, gzfile(NAMES_CSV_GZ))
 ```
 
 You will be using this babynames data for your first project.
-
-
