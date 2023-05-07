@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 ![shakespeare-whats-in-a-name](https://miro.medium.com/v2/resize:fit:800/1*Prp8tivsOP54c-bPTpxj5A.png)
 
-So, what more is in a name? Well, with some further work, it is possible to predict the age of a person based on the name (Whoa! Really????). The popular FiveThirtyEight published a [blog post](https://fivethirtyeight.com/features/how-to-tell-someones-age-when-all-you-know-is-her-name/) on this in 2014. Would it not be fun to try and replicate the results? Actually, we are going to do more than just replicate the results, since we now have 7 years worth of additional data.
+So, what more is in a name? Believe it or not, it is possible to predict the age of a person based on their name (Whoa! Really????). In fact, FiveThirtyEight, a popular website that focuses on data-driven journalism, published a [blog post](https://fivethirtyeight.com/features/how-to-tell-someones-age-when-all-you-know-is-her-name/) on this in 2014. Wouldn't it be exciting to try and replicate their findings? Actually, we are going to do more than just replicate their results, since we now have 7 years worth of additional data.
 
 ![estimate-age-from-name](https://fivethirtyeight.com/wp-content/uploads/2014/05/silver-feature-most-common-women-names3.png)
 
@@ -36,9 +36,9 @@ So, what more is in a name? Well, with some further work, it is possible to pred
 
 #### Names
 
-Let us start by reading in the babynames data from `data/names.csv.gz`.
+Let us start by reading in the baby names data from `data/names.csv.gz`.
 
-```{r tbl-names, message = FALSE}
+```{r tbl-names, message=FALSE}
 # Load the tidyverse package
 
 
@@ -70,7 +70,9 @@ The key column of interest to us is `lx`, which provides the number of people bo
 
 How do we get this data in R? There are no CSV files to download. The data is on the website of the SSA as an HTML table. Moreover, the data for different years are on different pages. This is a very common situation you will find yourself in as a data scientist.
 
-Fortunately, R and the `tidyverse` has an excellent set of packages that make it easy to scrape data from the web programmatically and bring them into R as a table. This goes beyond the scope of this course and so I have simply included the code I used to scrape this data.
+Fortunately, R and the `tidyverse` has an excellent set of packages that make it easy to scrape data from the web programmatically and bring them into R as a table. This goes beyond the scope of this course and so I have simply included the code I used to scrape this data. 
+
+The code below defining two functions, `read_lifetable()` and `read_lifetables()`, which read life tables from the Social Security Administration's website and processes the data into a more usable format.
 
 
 ```{r}
