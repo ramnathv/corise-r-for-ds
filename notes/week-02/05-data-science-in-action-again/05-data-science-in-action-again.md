@@ -1,16 +1,14 @@
 
-# Most Popular Unisex Names
-
 ## Unisex Names
 
-![unisex-names](https://fivethirtyeight.com/wp-content/uploads/2015/06/unisex.jpg)
+<img src="https://fivethirtyeight.com/wp-content/uploads/2015/06/unisex.jpg" width="100%" />
 
 There are some names that are used commonly by both the sexes.
 FiveThirtyEight published a [blog
 post](https://fivethirtyeight.com/features/there-are-922-unisex-names-in-america-is-yours-one-of-them/)
 on this topic in 2015.
 
-![fivethirtyeight-output](https://fivethirtyeight.com/wp-content/uploads/2015/06/flowers-datalab-unisexnames-1.png?w=1220)
+<img src="https://fivethirtyeight.com/wp-content/uploads/2015/06/flowers-datalab-unisexnames-1.png?w=1220" width="75%" />
 
 Wouldn’t it be cool if we redid the same analysis, but with more data!
 Let us dive into the data and figure out what are the most popular
@@ -19,14 +17,18 @@ are more than 33% males and 33% females with that name. We can tweak
 these thresholds subsequently to see if it reveals a different set of
 names!
 
-### Import
+Let us load some R packages that we will need to accomplish this task.
 
 ``` r
+# Load packages and common utility functions
 library(tidyverse)
 library(gt)
 library(gtExtras)
 knitr::opts_chunk$set(collapse = TRUE)
+source(here::here("_common.R"))
 ```
+
+### Import
 
 As always, we start by importing the data from `data/names.csv.gz`.
 
@@ -34,28 +36,37 @@ As always, we start by importing the data from `data/names.csv.gz`.
 file_name_names <- here::here('data/names.csv.gz')
 tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
 tbl_names
-## # A tibble: 2,052,781 × 4
-##     year name      sex   nb_births
-##    <dbl> <chr>     <chr>     <dbl>
-##  1  1880 Mary      F          7065
-##  2  1880 Anna      F          2604
-##  3  1880 Emma      F          2003
-##  4  1880 Elizabeth F          1939
-##  5  1880 Minnie    F          1746
-##  6  1880 Margaret  F          1578
-##  7  1880 Ida       F          1472
-##  8  1880 Alice     F          1414
-##  9  1880 Bertha    F          1320
-## 10  1880 Sarah     F          1288
-## # ℹ 2,052,771 more rows
+#> # A tibble: 2,052,781 × 4
+#>     year name      sex   nb_births
+#>    <dbl> <chr>     <chr>     <dbl>
+#>  1  1880 Mary      F          7065
+#>  2  1880 Anna      F          2604
+#>  3  1880 Emma      F          2003
+#>  4  1880 Elizabeth F          1939
+#>  5  1880 Minnie    F          1746
+#>  6  1880 Margaret  F          1578
+#>  7  1880 Ida       F          1472
+#>  8  1880 Alice     F          1414
+#>  9  1880 Bertha    F          1320
+#> 10  1880 Sarah     F          1288
+#> # ℹ 2,052,771 more rows
 ```
 
-|                                                                                                                                                                                                                                                                                                                                                              |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Note**                                                                                                                                                                                                                                                                                                                                                     |
-| Note that we have two other dataset named `namesbystate.csv.gz` and `frenchnames.csv.gz` in the data folder. The first dataset gives you number of births by `name`, `sex`, `year` and US `state`, while the second dataset gives you french babynames. So if you feel bored with this US babynames data, feel free to take an alternate dataset for a spin. |
+------------------------------------------------------------------------
+
+Note that we have two other dataset named
+[data/namesbystate.csv.gz](data/namesbystate.csv.gz) and
+[data/frenchnames.csv.gz](data/frenchnames.csv.gz) in the data folder.
+The first dataset gives you number of births by `name`, `sex`, `year`
+and US `state`, while the second dataset gives you french babynames. So
+if you feel bored with this US babynames data, feel free to take an
+alternate dataset for a spin.
+
+------------------------------------------------------------------------
 
 ### Transform
+
+Our goal is to arrive at data that has
 
 #### Step 1
 
@@ -71,26 +82,26 @@ tbl_names_unisex_1 <- tbl_names |>
   )
 
 tbl_names_unisex_1
-## # A tibble: 112,620 × 3
-##    name      sex   nb_births
-##    <chr>     <chr>     <dbl>
-##  1 Aaban     M           120
-##  2 Aabha     F            51
-##  3 Aabid     M            16
-##  4 Aabidah   F             5
-##  5 Aabir     M            10
-##  6 Aabriella F            51
-##  7 Aada      F            13
-##  8 Aadam     M           320
-##  9 Aadan     M           130
-## 10 Aadarsh   M           233
-## # ℹ 112,610 more rows
+#> # A tibble: 112,620 × 3
+#>    name      sex   nb_births
+#>    <chr>     <chr>     <dbl>
+#>  1 Aaban     M           120
+#>  2 Aabha     F            51
+#>  3 Aabid     M            16
+#>  4 Aabidah   F             5
+#>  5 Aabir     M            10
+#>  6 Aabriella F            51
+#>  7 Aada      F            13
+#>  8 Aadam     M           320
+#>  9 Aadan     M           130
+#> 10 Aadarsh   M           233
+#> # ℹ 112,610 more rows
 ```
 
 #### Step 2
 
 We can now pivot this data to the wide format so we can have ONE row per
-name
+name.
 
 ``` r
 tbl_names_unisex_2 <- tbl_names_unisex_1 |> 
@@ -102,20 +113,20 @@ tbl_names_unisex_2 <- tbl_names_unisex_1 |>
   )
 
 tbl_names_unisex_2
-## # A tibble: 101,338 × 3
-##    name      nb_births_M nb_births_F
-##    <chr>           <dbl>       <dbl>
-##  1 Aaban             120           0
-##  2 Aabha               0          51
-##  3 Aabid              16           0
-##  4 Aabidah             0           5
-##  5 Aabir              10           0
-##  6 Aabriella           0          51
-##  7 Aada                0          13
-##  8 Aadam             320           0
-##  9 Aadan             130           0
-## 10 Aadarsh           233           0
-## # ℹ 101,328 more rows
+#> # A tibble: 101,338 × 3
+#>    name      nb_births_M nb_births_F
+#>    <chr>           <dbl>       <dbl>
+#>  1 Aaban             120           0
+#>  2 Aabha               0          51
+#>  3 Aabid              16           0
+#>  4 Aabidah             0           5
+#>  5 Aabir              10           0
+#>  6 Aabriella           0          51
+#>  7 Aada                0          13
+#>  8 Aadam             320           0
+#>  9 Aadan             130           0
+#> 10 Aadarsh           233           0
+#> # ℹ 101,328 more rows
 ```
 
 #### Step 3
@@ -133,20 +144,20 @@ tbl_names_unisex_3 <- tbl_names_unisex_2 |>
  )
 
 tbl_names_unisex_3
-## # A tibble: 101,338 × 6
-##    name      nb_births_M nb_births_F nb_births_total pct_births_M pct_births_F
-##    <chr>           <dbl>       <dbl>           <dbl>        <dbl>        <dbl>
-##  1 Aaban             120           0             120            1            0
-##  2 Aabha               0          51              51            0            1
-##  3 Aabid              16           0              16            1            0
-##  4 Aabidah             0           5               5            0            1
-##  5 Aabir              10           0              10            1            0
-##  6 Aabriella           0          51              51            0            1
-##  7 Aada                0          13              13            0            1
-##  8 Aadam             320           0             320            1            0
-##  9 Aadan             130           0             130            1            0
-## 10 Aadarsh           233           0             233            1            0
-## # ℹ 101,328 more rows
+#> # A tibble: 101,338 × 6
+#>    name      nb_births_M nb_births_F nb_births_total pct_births_M pct_births_F
+#>    <chr>           <dbl>       <dbl>           <dbl>        <dbl>        <dbl>
+#>  1 Aaban             120           0             120            1            0
+#>  2 Aabha               0          51              51            0            1
+#>  3 Aabid              16           0              16            1            0
+#>  4 Aabidah             0           5               5            0            1
+#>  5 Aabir              10           0              10            1            0
+#>  6 Aabriella           0          51              51            0            1
+#>  7 Aada                0          13              13            0            1
+#>  8 Aadam             320           0             320            1            0
+#>  9 Aadan             130           0             130            1            0
+#> 10 Aadarsh           233           0             233            1            0
+#> # ℹ 101,328 more rows
 ```
 
 #### Step 4
@@ -166,27 +177,27 @@ tbl_names_unisex_4 <- tbl_names_unisex_3 |>
   arrange(desc(nb_births_total))
 
 tbl_names_unisex_4
-## # A tibble: 18 × 6
-##    name    nb_births_M nb_births_F nb_births_total pct_births_M pct_births_F
-##    <chr>         <dbl>       <dbl>           <dbl>        <dbl>        <dbl>
-##  1 Jessie       110714      168626          279340        0.396        0.604
-##  2 Riley         98494      123172          221666        0.444        0.556
-##  3 Casey        112422       77093          189515        0.593        0.407
-##  4 Jackie        78684       90928          169612        0.464        0.536
-##  5 Peyton        50509       80495          131004        0.386        0.614
-##  6 Jaime         69610       49914          119524        0.582        0.418
-##  7 Kerry         49770       48610           98380        0.506        0.494
-##  8 Kendall       34648       62542           97190        0.356        0.644
-##  9 Jody          31383       55775           87158        0.360        0.640
-## 10 Frankie       41376       34954           76330        0.542        0.458
-## 11 Quinn         34303       41171           75474        0.455        0.545
-## 12 Harley        39777       27687           67464        0.590        0.410
-## 13 Pat           26733       40123           66856        0.400        0.600
-## 14 Skyler        40372       25744           66116        0.611        0.389
-## 15 Emerson       28321       26304           54625        0.518        0.482
-## 16 Tommie        34320       17539           51859        0.662        0.338
-## 17 Emery         19077       31289           50366        0.379        0.621
-## 18 Rowan         32712       17341           50053        0.654        0.346
+#> # A tibble: 18 × 6
+#>    name    nb_births_M nb_births_F nb_births_total pct_births_M pct_births_F
+#>    <chr>         <dbl>       <dbl>           <dbl>        <dbl>        <dbl>
+#>  1 Jessie       110714      168626          279340        0.396        0.604
+#>  2 Riley         98494      123172          221666        0.444        0.556
+#>  3 Casey        112422       77093          189515        0.593        0.407
+#>  4 Jackie        78684       90928          169612        0.464        0.536
+#>  5 Peyton        50509       80495          131004        0.386        0.614
+#>  6 Jaime         69610       49914          119524        0.582        0.418
+#>  7 Kerry         49770       48610           98380        0.506        0.494
+#>  8 Kendall       34648       62542           97190        0.356        0.644
+#>  9 Jody          31383       55775           87158        0.360        0.640
+#> 10 Frankie       41376       34954           76330        0.542        0.458
+#> 11 Quinn         34303       41171           75474        0.455        0.545
+#> 12 Harley        39777       27687           67464        0.590        0.410
+#> 13 Pat           26733       40123           66856        0.400        0.600
+#> 14 Skyler        40372       25744           66116        0.611        0.389
+#> 15 Emerson       28321       26304           54625        0.518        0.482
+#> 16 Tommie        34320       17539           51859        0.662        0.338
+#> 17 Emery         19077       31289           50366        0.379        0.621
+#> 18 Rowan         32712       17341           50053        0.654        0.346
 ```
 
 #### Step 5
@@ -200,28 +211,30 @@ tbl_names_unisex_5 <- tbl_names_unisex_4 |>
   select(name, nb_births_total, pct_births_M, pct_births_F) |> 
   group_by(name, nb_births_total) |> 
   nest() |> 
-  ungroup() |>
-  head(15)
+  ungroup()
 
 tbl_names_unisex_5
-## # A tibble: 15 × 3
-##    name    nb_births_total data            
-##    <chr>             <dbl> <list>          
-##  1 Jessie           279340 <tibble [1 × 2]>
-##  2 Riley            221666 <tibble [1 × 2]>
-##  3 Casey            189515 <tibble [1 × 2]>
-##  4 Jackie           169612 <tibble [1 × 2]>
-##  5 Peyton           131004 <tibble [1 × 2]>
-##  6 Jaime            119524 <tibble [1 × 2]>
-##  7 Kerry             98380 <tibble [1 × 2]>
-##  8 Kendall           97190 <tibble [1 × 2]>
-##  9 Jody              87158 <tibble [1 × 2]>
-## 10 Frankie           76330 <tibble [1 × 2]>
-## 11 Quinn             75474 <tibble [1 × 2]>
-## 12 Harley            67464 <tibble [1 × 2]>
-## 13 Pat               66856 <tibble [1 × 2]>
-## 14 Skyler            66116 <tibble [1 × 2]>
-## 15 Emerson           54625 <tibble [1 × 2]>
+#> # A tibble: 18 × 3
+#>    name    nb_births_total data            
+#>    <chr>             <dbl> <list>          
+#>  1 Jessie           279340 <tibble [1 × 2]>
+#>  2 Riley            221666 <tibble [1 × 2]>
+#>  3 Casey            189515 <tibble [1 × 2]>
+#>  4 Jackie           169612 <tibble [1 × 2]>
+#>  5 Peyton           131004 <tibble [1 × 2]>
+#>  6 Jaime            119524 <tibble [1 × 2]>
+#>  7 Kerry             98380 <tibble [1 × 2]>
+#>  8 Kendall           97190 <tibble [1 × 2]>
+#>  9 Jody              87158 <tibble [1 × 2]>
+#> 10 Frankie           76330 <tibble [1 × 2]>
+#> 11 Quinn             75474 <tibble [1 × 2]>
+#> 12 Harley            67464 <tibble [1 × 2]>
+#> 13 Pat               66856 <tibble [1 × 2]>
+#> 14 Skyler            66116 <tibble [1 × 2]>
+#> 15 Emerson           54625 <tibble [1 × 2]>
+#> 16 Tommie            51859 <tibble [1 × 2]>
+#> 17 Emery             50366 <tibble [1 × 2]>
+#> 18 Rowan             50053 <tibble [1 × 2]>
 ```
 
 While we have broken down the transformations into multiple pieces so we
@@ -261,8 +274,7 @@ tbl_names_unisex <- tbl_names |>
   select(name, nb_births_total, pct_births_M, pct_births_F) |> 
   group_by(name, nb_births_total) |> 
   nest() |> 
-  ungroup() |>
-  head(15)
+  ungroup()
 ```
 
 ### Visualize
@@ -270,8 +282,8 @@ tbl_names_unisex <- tbl_names |>
 We are all set to visualize the data! We can use `ggplot2` to create
 some lovely plots from this data. But, we are going to use another R
 package named `gt` and its companion package `gtExtras` to visualize
-this data as a table. The `gt` package implements a grammar for tables
-and you will see how it can create amazing looking tables, that
+this data as a table. The `gt` package implements a **grammar of
+tables** and you will see how it can create amazing looking tables, that
 sometimes look better than plots.
 
 Let us visualize this data as an html table with a stacked bar chart
@@ -282,9 +294,14 @@ popular names that are used relatively equally for both men and women.
 tbl_names_unisex |>
   # Create an HTML table using the `gt` package
   gt::gt() |> 
-  # Format the values in `nb_births_total` to display with ZERO decimals
+  # Label columns with descriptive names
+  gt::cols_label(
+    name = "Name",
+    nb_births_total = "Number of People"
+  ) |> 
+  # Format the values in `nb_births_total` to display as whole numbers
   fmt_number(nb_births_total, decimals = 0) |> 
-  # Use the `gt_plt_bar_stack` function to add a stacked bar plot column.
+  # Add a table column with a stacked horizontal bar plot
   gtExtras::gt_plt_bar_stack(
     data, 
     width = 65,
@@ -302,24 +319,24 @@ tbl_names_unisex |>
   gtExtras::gt_theme_538()
 ```
 
-<div id="mopmmscrsh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="pzveloiefp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-#mopmmscrsh table {
+#pzveloiefp table {
   font-family: Chivo, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mopmmscrsh thead, #mopmmscrsh tbody, #mopmmscrsh tfoot, #mopmmscrsh tr, #mopmmscrsh td, #mopmmscrsh th {
+#pzveloiefp thead, #pzveloiefp tbody, #pzveloiefp tfoot, #pzveloiefp tr, #pzveloiefp td, #pzveloiefp th {
   border-style: none;
 }
 
-#mopmmscrsh p {
+#pzveloiefp p {
   margin: 0;
   padding: 0;
 }
 
-#mopmmscrsh .gt_table {
+#pzveloiefp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -345,12 +362,12 @@ tbl_names_unisex |>
   border-left-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_caption {
+#pzveloiefp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mopmmscrsh .gt_title {
+#pzveloiefp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -362,7 +379,7 @@ tbl_names_unisex |>
   border-bottom-width: 0;
 }
 
-#mopmmscrsh .gt_subtitle {
+#pzveloiefp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -374,7 +391,7 @@ tbl_names_unisex |>
   border-top-width: 0;
 }
 
-#mopmmscrsh .gt_heading {
+#pzveloiefp .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -386,13 +403,13 @@ tbl_names_unisex |>
   border-right-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_bottom_border {
+#pzveloiefp .gt_bottom_border {
   border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_col_headings {
+#pzveloiefp .gt_col_headings {
   border-top-style: none;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -407,7 +424,7 @@ tbl_names_unisex |>
   border-right-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_col_heading {
+#pzveloiefp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -427,7 +444,7 @@ tbl_names_unisex |>
   overflow-x: hidden;
 }
 
-#mopmmscrsh .gt_column_spanner_outer {
+#pzveloiefp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -439,15 +456,15 @@ tbl_names_unisex |>
   padding-right: 4px;
 }
 
-#mopmmscrsh .gt_column_spanner_outer:first-child {
+#pzveloiefp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mopmmscrsh .gt_column_spanner_outer:last-child {
+#pzveloiefp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mopmmscrsh .gt_column_spanner {
+#pzveloiefp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #000000;
@@ -459,11 +476,11 @@ tbl_names_unisex |>
   width: 100%;
 }
 
-#mopmmscrsh .gt_spanner_row {
+#pzveloiefp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mopmmscrsh .gt_group_heading {
+#pzveloiefp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -489,7 +506,7 @@ tbl_names_unisex |>
   text-align: left;
 }
 
-#mopmmscrsh .gt_empty_group_heading {
+#pzveloiefp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -504,15 +521,15 @@ tbl_names_unisex |>
   vertical-align: middle;
 }
 
-#mopmmscrsh .gt_from_md > :first-child {
+#pzveloiefp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mopmmscrsh .gt_from_md > :last-child {
+#pzveloiefp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mopmmscrsh .gt_row {
+#pzveloiefp .gt_row {
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 5px;
@@ -531,7 +548,7 @@ tbl_names_unisex |>
   overflow-x: hidden;
 }
 
-#mopmmscrsh .gt_stub {
+#pzveloiefp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -544,7 +561,7 @@ tbl_names_unisex |>
   padding-right: 5px;
 }
 
-#mopmmscrsh .gt_stub_row_group {
+#pzveloiefp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -558,15 +575,15 @@ tbl_names_unisex |>
   vertical-align: top;
 }
 
-#mopmmscrsh .gt_row_group_first td {
+#pzveloiefp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mopmmscrsh .gt_row_group_first th {
+#pzveloiefp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mopmmscrsh .gt_summary_row {
+#pzveloiefp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -576,16 +593,16 @@ tbl_names_unisex |>
   padding-right: 5px;
 }
 
-#mopmmscrsh .gt_first_summary_row {
+#pzveloiefp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_first_summary_row.thick {
+#pzveloiefp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mopmmscrsh .gt_last_summary_row {
+#pzveloiefp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -595,7 +612,7 @@ tbl_names_unisex |>
   border-bottom-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_grand_summary_row {
+#pzveloiefp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -605,7 +622,7 @@ tbl_names_unisex |>
   padding-right: 5px;
 }
 
-#mopmmscrsh .gt_first_grand_summary_row {
+#pzveloiefp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -615,7 +632,7 @@ tbl_names_unisex |>
   border-top-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_last_grand_summary_row_top {
+#pzveloiefp .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -625,11 +642,11 @@ tbl_names_unisex |>
   border-bottom-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_striped {
+#pzveloiefp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mopmmscrsh .gt_table_body {
+#pzveloiefp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -638,7 +655,7 @@ tbl_names_unisex |>
   border-bottom-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_footnotes {
+#pzveloiefp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -652,7 +669,7 @@ tbl_names_unisex |>
   border-right-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_footnote {
+#pzveloiefp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -661,7 +678,7 @@ tbl_names_unisex |>
   padding-right: 5px;
 }
 
-#mopmmscrsh .gt_sourcenotes {
+#pzveloiefp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +692,7 @@ tbl_names_unisex |>
   border-right-color: #D3D3D3;
 }
 
-#mopmmscrsh .gt_sourcenote {
+#pzveloiefp .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -683,63 +700,63 @@ tbl_names_unisex |>
   padding-right: 5px;
 }
 
-#mopmmscrsh .gt_left {
+#pzveloiefp .gt_left {
   text-align: left;
 }
 
-#mopmmscrsh .gt_center {
+#pzveloiefp .gt_center {
   text-align: center;
 }
 
-#mopmmscrsh .gt_right {
+#pzveloiefp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mopmmscrsh .gt_font_normal {
+#pzveloiefp .gt_font_normal {
   font-weight: normal;
 }
 
-#mopmmscrsh .gt_font_bold {
+#pzveloiefp .gt_font_bold {
   font-weight: bold;
 }
 
-#mopmmscrsh .gt_font_italic {
+#pzveloiefp .gt_font_italic {
   font-style: italic;
 }
 
-#mopmmscrsh .gt_super {
+#pzveloiefp .gt_super {
   font-size: 65%;
 }
 
-#mopmmscrsh .gt_footnote_marks {
+#pzveloiefp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mopmmscrsh .gt_asterisk {
+#pzveloiefp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mopmmscrsh .gt_indent_1 {
+#pzveloiefp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mopmmscrsh .gt_indent_2 {
+#pzveloiefp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mopmmscrsh .gt_indent_3 {
+#pzveloiefp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mopmmscrsh .gt_indent_4 {
+#pzveloiefp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mopmmscrsh .gt_indent_5 {
+#pzveloiefp .gt_indent_5 {
   text-indent: 25px;
 }
 
@@ -757,8 +774,8 @@ tbody tr:last-child {
     at least one-third were female, through 2021</td>
     </tr>
     <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="name">name</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="nb_births_total">nb_births_total</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="Name">Name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="Number of People">Number of People</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="&lt;span style='color:#2596be'&gt;&lt;b&gt;MALE&lt;/b&gt;&lt;/span&gt;||&lt;span style='color:#f4ba19'&gt;&lt;b&gt;FEMALE&lt;/b&gt;&lt;/span&gt;"><span style='color:#2596be'><b>MALE</b></span>||<span style='color:#f4ba19'><b>FEMALE</b></span></th>
     </tr>
   </thead>
@@ -808,6 +825,15 @@ tbody tr:last-child {
     <tr><td headers="name" class="gt_row gt_left">Emerson</td>
 <td headers="nb_births_total" class="gt_row gt_right">54,625</td>
 <td headers="data" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='95.53' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='95.53' y='0.0000000000000018' width='88.72' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='47.76' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='25.60px' lengthAdjust='spacingAndGlyphs'>51.8%</text><text x='139.89' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='25.60px' lengthAdjust='spacingAndGlyphs'>48.2%</text></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Tommie</td>
+<td headers="nb_births_total" class="gt_row gt_right">51,859</td>
+<td headers="data" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='121.94' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='121.94' y='0.0000000000000018' width='62.32' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='60.97' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>66%</text><text x='153.09' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>34%</text></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Emery</td>
+<td headers="nb_births_total" class="gt_row gt_right">50,366</td>
+<td headers="data" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='69.79' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='69.79' y='0.0000000000000018' width='114.46' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='34.89' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>38%</text><text x='127.02' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>62%</text></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Rowan</td>
+<td headers="nb_births_total" class="gt_row gt_right">50,053</td>
+<td headers="data" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='120.42' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='120.42' y='0.0000000000000018' width='63.83' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='60.21' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>65%</text><text x='152.33' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>35%</text></g></svg></td></tr>
   </tbody>
   
   
@@ -874,20 +900,20 @@ tbl_names_unisex_v2_1 <- tbl_names |>
   summarize(nb_births = sum(nb_births), .groups = 'drop')
   
 tbl_names_unisex_v2_1
-## # A tibble: 112,620 × 3
-##    name      sex   nb_births
-##    <chr>     <chr>     <dbl>
-##  1 Aaban     M           120
-##  2 Aabha     F            51
-##  3 Aabid     M            16
-##  4 Aabidah   F             5
-##  5 Aabir     M            10
-##  6 Aabriella F            51
-##  7 Aada      F            13
-##  8 Aadam     M           320
-##  9 Aadan     M           130
-## 10 Aadarsh   M           233
-## # ℹ 112,610 more rows
+#> # A tibble: 112,620 × 3
+#>    name      sex   nb_births
+#>    <chr>     <chr>     <dbl>
+#>  1 Aaban     M           120
+#>  2 Aabha     F            51
+#>  3 Aabid     M            16
+#>  4 Aabidah   F             5
+#>  5 Aabir     M            10
+#>  6 Aabriella F            51
+#>  7 Aada      F            13
+#>  8 Aadam     M           320
+#>  9 Aadan     M           130
+#> 10 Aadarsh   M           233
+#> # ℹ 112,610 more rows
 ```
 
 #### Step 2
@@ -908,20 +934,20 @@ tbl_names_unisex_v2_2 <- tbl_names_unisex_v2_1 |>
   ungroup()
 
 tbl_names_unisex_v2_2
-## # A tibble: 112,620 × 5
-##    name      sex   nb_births nb_births_total pct_births
-##    <chr>     <chr>     <dbl>           <dbl>      <dbl>
-##  1 Aaban     M           120             120          1
-##  2 Aabha     F            51              51          1
-##  3 Aabid     M            16              16          1
-##  4 Aabidah   F             5               5          1
-##  5 Aabir     M            10              10          1
-##  6 Aabriella F            51              51          1
-##  7 Aada      F            13              13          1
-##  8 Aadam     M           320             320          1
-##  9 Aadan     M           130             130          1
-## 10 Aadarsh   M           233             233          1
-## # ℹ 112,610 more rows
+#> # A tibble: 112,620 × 5
+#>    name      sex   nb_births nb_births_total pct_births
+#>    <chr>     <chr>     <dbl>           <dbl>      <dbl>
+#>  1 Aaban     M           120             120          1
+#>  2 Aabha     F            51              51          1
+#>  3 Aabid     M            16              16          1
+#>  4 Aabidah   F             5               5          1
+#>  5 Aabir     M            10              10          1
+#>  6 Aabriella F            51              51          1
+#>  7 Aada      F            13              13          1
+#>  8 Aadam     M           320             320          1
+#>  9 Aadan     M           130             130          1
+#> 10 Aadarsh   M           233             233          1
+#> # ℹ 112,610 more rows
 ```
 
 #### Step 3
@@ -945,27 +971,27 @@ tbl_names_unisex_v2_3 <- tbl_names_unisex_v2_2 |>
   )
 
 tbl_names_unisex_v2_3
-## # A tibble: 18 × 5
-##    name    sex   nb_births nb_births_total pct_births
-##    <chr>   <chr>     <dbl>           <dbl>      <dbl>
-##  1 Casey   M        112422          189515      0.593
-##  2 Emerson M         28321           54625      0.518
-##  3 Emery   M         19077           50366      0.379
-##  4 Frankie M         41376           76330      0.542
-##  5 Harley  M         39777           67464      0.590
-##  6 Jackie  M         78684          169612      0.464
-##  7 Jaime   M         69610          119524      0.582
-##  8 Jessie  M        110714          279340      0.396
-##  9 Jody    M         31383           87158      0.360
-## 10 Kendall M         34648           97190      0.356
-## 11 Kerry   M         49770           98380      0.506
-## 12 Pat     M         26733           66856      0.400
-## 13 Peyton  M         50509          131004      0.386
-## 14 Quinn   M         34303           75474      0.455
-## 15 Riley   M         98494          221666      0.444
-## 16 Rowan   M         32712           50053      0.654
-## 17 Skyler  M         40372           66116      0.611
-## 18 Tommie  M         34320           51859      0.662
+#> # A tibble: 18 × 5
+#>    name    sex   nb_births nb_births_total pct_births
+#>    <chr>   <chr>     <dbl>           <dbl>      <dbl>
+#>  1 Casey   M        112422          189515      0.593
+#>  2 Emerson M         28321           54625      0.518
+#>  3 Emery   M         19077           50366      0.379
+#>  4 Frankie M         41376           76330      0.542
+#>  5 Harley  M         39777           67464      0.590
+#>  6 Jackie  M         78684          169612      0.464
+#>  7 Jaime   M         69610          119524      0.582
+#>  8 Jessie  M        110714          279340      0.396
+#>  9 Jody    M         31383           87158      0.360
+#> 10 Kendall M         34648           97190      0.356
+#> 11 Kerry   M         49770           98380      0.506
+#> 12 Pat     M         26733           66856      0.400
+#> 13 Peyton  M         50509          131004      0.386
+#> 14 Quinn   M         34303           75474      0.455
+#> 15 Riley   M         98494          221666      0.444
+#> 16 Rowan   M         32712           50053      0.654
+#> 17 Skyler  M         40372           66116      0.611
+#> 18 Tommie  M         34320           51859      0.662
 ```
 
 We can put them together in a single data pipeline.
@@ -1016,21 +1042,21 @@ tbl_names_unisex_trends_1 <- tbl_names |>
   )
 
 tbl_names_unisex_trends_1
-## # A tibble: 3,025 × 6
-## # Groups:   name, year [1,806]
-##     year name    sex   nb_births nb_births_total pct_births
-##    <dbl> <chr>   <chr>     <dbl>           <dbl>      <dbl>
-##  1  1880 Jessie  F           635             789      0.805
-##  2  1880 Frankie F            17              17      1    
-##  3  1880 Jessie  M           154             789      0.195
-##  4  1880 Harley  M            70              70      1    
-##  5  1880 Riley   M            41              41      1    
-##  6  1880 Emerson M            25              25      1    
-##  7  1880 Pat     M            12              12      1    
-##  8  1881 Jessie  F           661             804      0.822
-##  9  1881 Frankie F            24              24      1    
-## 10  1881 Jessie  M           143             804      0.178
-## # ℹ 3,015 more rows
+#> # A tibble: 3,662 × 6
+#> # Groups:   name, year [2,190]
+#>     year name    sex   nb_births nb_births_total pct_births
+#>    <dbl> <chr>   <chr>     <dbl>           <dbl>      <dbl>
+#>  1  1880 Jessie  F           635             789      0.805
+#>  2  1880 Frankie F            17              17      1    
+#>  3  1880 Tommie  F            10              25      0.4  
+#>  4  1880 Jessie  M           154             789      0.195
+#>  5  1880 Harley  M            70              70      1    
+#>  6  1880 Emery   M            52              52      1    
+#>  7  1880 Riley   M            41              41      1    
+#>  8  1880 Emerson M            25              25      1    
+#>  9  1880 Tommie  M            15              25      0.6  
+#> 10  1880 Pat     M            12              12      1    
+#> # ℹ 3,652 more rows
 ```
 
 #### Step 5
@@ -1062,24 +1088,27 @@ tbl_names_unisex_trends_2 <- tbl_names_unisex_trends_1 |>
   ) 
 
 tbl_names_unisex_trends_2
-## # A tibble: 15 × 5
-##    name    nb_births_total pct_births_by_year pct_births_M pct_births_F
-##    <chr>             <dbl> <list>                    <dbl>        <dbl>
-##  1 Casey            189515 <dbl [128]>               0.593        0.407
-##  2 Emerson           54625 <dbl [142]>               0.518        0.482
-##  3 Frankie           75000 <dbl [120]>               0.552        0.448
-##  4 Harley            67464 <dbl [142]>               0.590        0.410
-##  5 Jackie           169496 <dbl [114]>               0.464        0.536
-##  6 Jaime            119524 <dbl [106]>               0.582        0.418
-##  7 Jessie           279340 <dbl [142]>               0.396        0.604
-##  8 Jody              87158 <dbl [104]>               0.360        0.640
-##  9 Kendall           97190 <dbl [115]>               0.356        0.644
-## 10 Kerry             98375 <dbl [101]>               0.506        0.494
-## 11 Pat               66856 <dbl [125]>               0.400        0.600
-## 12 Peyton           131004 <dbl [121]>               0.386        0.614
-## 13 Quinn             75474 <dbl [107]>               0.455        0.545
-## 14 Riley            221666 <dbl [142]>               0.444        0.556
-## 15 Skyler            66116 <dbl [65]>                0.611        0.389
+#> # A tibble: 18 × 5
+#>    name    nb_births_total pct_births_by_year pct_births_M pct_births_F
+#>    <chr>             <dbl> <list>                    <dbl>        <dbl>
+#>  1 Casey            189515 <dbl [128]>               0.593        0.407
+#>  2 Emerson           54625 <dbl [142]>               0.518        0.482
+#>  3 Emery             50366 <dbl [142]>               0.379        0.621
+#>  4 Frankie           75000 <dbl [120]>               0.552        0.448
+#>  5 Harley            67464 <dbl [142]>               0.590        0.410
+#>  6 Jackie           169496 <dbl [114]>               0.464        0.536
+#>  7 Jaime            119524 <dbl [106]>               0.582        0.418
+#>  8 Jessie           279340 <dbl [142]>               0.396        0.604
+#>  9 Jody              87158 <dbl [104]>               0.360        0.640
+#> 10 Kendall           97190 <dbl [115]>               0.356        0.644
+#> 11 Kerry             98375 <dbl [101]>               0.506        0.494
+#> 12 Pat               66856 <dbl [125]>               0.400        0.600
+#> 13 Peyton           131004 <dbl [121]>               0.386        0.614
+#> 14 Quinn             75474 <dbl [107]>               0.455        0.545
+#> 15 Riley            221666 <dbl [142]>               0.444        0.556
+#> 16 Rowan             50053 <dbl [100]>               0.654        0.346
+#> 17 Skyler            66116 <dbl [65]>                0.611        0.389
+#> 18 Tommie            51859 <dbl [142]>               0.662        0.338
 ```
 
 #### Step 6
@@ -1105,24 +1134,27 @@ tbl_names_unisex_trends_3 <- tbl_names_unisex_trends_2 |>
   select(name, nb_births_total, pct_births, pct_births_by_year)
 
 tbl_names_unisex_trends_3
-## # A tibble: 15 × 4
-##    name    nb_births_total pct_births       pct_births_by_year
-##    <chr>             <dbl> <list>           <list>            
-##  1 Jessie           279340 <tibble [1 × 2]> <dbl [142]>       
-##  2 Riley            221666 <tibble [1 × 2]> <dbl [142]>       
-##  3 Casey            189515 <tibble [1 × 2]> <dbl [128]>       
-##  4 Jackie           169496 <tibble [1 × 2]> <dbl [114]>       
-##  5 Peyton           131004 <tibble [1 × 2]> <dbl [121]>       
-##  6 Jaime            119524 <tibble [1 × 2]> <dbl [106]>       
-##  7 Kerry             98375 <tibble [1 × 2]> <dbl [101]>       
-##  8 Kendall           97190 <tibble [1 × 2]> <dbl [115]>       
-##  9 Jody              87158 <tibble [1 × 2]> <dbl [104]>       
-## 10 Quinn             75474 <tibble [1 × 2]> <dbl [107]>       
-## 11 Frankie           75000 <tibble [1 × 2]> <dbl [120]>       
-## 12 Harley            67464 <tibble [1 × 2]> <dbl [142]>       
-## 13 Pat               66856 <tibble [1 × 2]> <dbl [125]>       
-## 14 Skyler            66116 <tibble [1 × 2]> <dbl [65]>        
-## 15 Emerson           54625 <tibble [1 × 2]> <dbl [142]>
+#> # A tibble: 18 × 4
+#>    name    nb_births_total pct_births       pct_births_by_year
+#>    <chr>             <dbl> <list>           <list>            
+#>  1 Jessie           279340 <tibble [1 × 2]> <dbl [142]>       
+#>  2 Riley            221666 <tibble [1 × 2]> <dbl [142]>       
+#>  3 Casey            189515 <tibble [1 × 2]> <dbl [128]>       
+#>  4 Jackie           169496 <tibble [1 × 2]> <dbl [114]>       
+#>  5 Peyton           131004 <tibble [1 × 2]> <dbl [121]>       
+#>  6 Jaime            119524 <tibble [1 × 2]> <dbl [106]>       
+#>  7 Kerry             98375 <tibble [1 × 2]> <dbl [101]>       
+#>  8 Kendall           97190 <tibble [1 × 2]> <dbl [115]>       
+#>  9 Jody              87158 <tibble [1 × 2]> <dbl [104]>       
+#> 10 Quinn             75474 <tibble [1 × 2]> <dbl [107]>       
+#> 11 Frankie           75000 <tibble [1 × 2]> <dbl [120]>       
+#> 12 Harley            67464 <tibble [1 × 2]> <dbl [142]>       
+#> 13 Pat               66856 <tibble [1 × 2]> <dbl [125]>       
+#> 14 Skyler            66116 <tibble [1 × 2]> <dbl [65]>        
+#> 15 Emerson           54625 <tibble [1 × 2]> <dbl [142]>       
+#> 16 Tommie            51859 <tibble [1 × 2]> <dbl [142]>       
+#> 17 Emery             50366 <tibble [1 × 2]> <dbl [142]>       
+#> 18 Rowan             50053 <tibble [1 × 2]> <dbl [100]>
 ```
 
 We can throw all the steps together into a single data pipeline.
@@ -1168,13 +1200,25 @@ tbl_names_unisex_trends <- tbl_names |>
 
 ### Visualize
 
+We can use the `gt` and `gtExtras` package just like we did before. In
+addition to hte stacked bar plot column, we can also add a column of
+sparklines that show trends in the percentage of males with a given
+unisex name across the years. This lets us see some fascinating
+patterns.
+
 ``` r
 tbl_names_unisex_trends |> 
   # Create an HTML table using the `gt` package
   gt::gt() |> 
-  # Format the values in `nb_births_total` to display with ZERO decimals
+  # Label columns with descriptive names
+  gt::cols_label(
+    name = "Name",
+    nb_births_total = "Number of People",
+    pct_births_by_year = "Percent Males by Year"
+  ) |> 
+  # Format the values in `nb_births_total` to display as whole numebrs
   fmt_number(nb_births_total, decimals = 0) |> 
-  # Use the `gt_plt_bar_stack` function to add a stacked bar plot column.
+  # Add a table column with a stacked horizontal bar plot
   gtExtras::gt_plt_bar_stack(
     pct_births,
     width = 65,
@@ -1182,7 +1226,7 @@ tbl_names_unisex_trends |>
     palette= c("#2596be", "#f4ba19"),
     fmt_fn = scales::label_percent()
   ) |> 
-  # Use the `gt_plt_sparkline` function to display a sparkline of trends
+  # Add a column with a sparkline of trends
   gtExtras::gt_plt_sparkline(pct_births_by_year) |> 
   # Add useful title and subtitle in the table header
   gt::tab_header(
@@ -1194,24 +1238,24 @@ tbl_names_unisex_trends |>
   gtExtras::gt_theme_538()
 ```
 
-<div id="iluioroujp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="dbgvzfontn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-#iluioroujp table {
+#dbgvzfontn table {
   font-family: Chivo, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#iluioroujp thead, #iluioroujp tbody, #iluioroujp tfoot, #iluioroujp tr, #iluioroujp td, #iluioroujp th {
+#dbgvzfontn thead, #dbgvzfontn tbody, #dbgvzfontn tfoot, #dbgvzfontn tr, #dbgvzfontn td, #dbgvzfontn th {
   border-style: none;
 }
 
-#iluioroujp p {
+#dbgvzfontn p {
   margin: 0;
   padding: 0;
 }
 
-#iluioroujp .gt_table {
+#dbgvzfontn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1237,12 +1281,12 @@ tbl_names_unisex_trends |>
   border-left-color: #D3D3D3;
 }
 
-#iluioroujp .gt_caption {
+#dbgvzfontn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#iluioroujp .gt_title {
+#dbgvzfontn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1254,7 +1298,7 @@ tbl_names_unisex_trends |>
   border-bottom-width: 0;
 }
 
-#iluioroujp .gt_subtitle {
+#dbgvzfontn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1266,7 +1310,7 @@ tbl_names_unisex_trends |>
   border-top-width: 0;
 }
 
-#iluioroujp .gt_heading {
+#dbgvzfontn .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -1278,13 +1322,13 @@ tbl_names_unisex_trends |>
   border-right-color: #D3D3D3;
 }
 
-#iluioroujp .gt_bottom_border {
+#dbgvzfontn .gt_bottom_border {
   border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#iluioroujp .gt_col_headings {
+#dbgvzfontn .gt_col_headings {
   border-top-style: none;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1299,7 +1343,7 @@ tbl_names_unisex_trends |>
   border-right-color: #D3D3D3;
 }
 
-#iluioroujp .gt_col_heading {
+#dbgvzfontn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -1319,7 +1363,7 @@ tbl_names_unisex_trends |>
   overflow-x: hidden;
 }
 
-#iluioroujp .gt_column_spanner_outer {
+#dbgvzfontn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -1331,15 +1375,15 @@ tbl_names_unisex_trends |>
   padding-right: 4px;
 }
 
-#iluioroujp .gt_column_spanner_outer:first-child {
+#dbgvzfontn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#iluioroujp .gt_column_spanner_outer:last-child {
+#dbgvzfontn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#iluioroujp .gt_column_spanner {
+#dbgvzfontn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #000000;
@@ -1351,11 +1395,11 @@ tbl_names_unisex_trends |>
   width: 100%;
 }
 
-#iluioroujp .gt_spanner_row {
+#dbgvzfontn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#iluioroujp .gt_group_heading {
+#dbgvzfontn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1381,7 +1425,7 @@ tbl_names_unisex_trends |>
   text-align: left;
 }
 
-#iluioroujp .gt_empty_group_heading {
+#dbgvzfontn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1396,15 +1440,15 @@ tbl_names_unisex_trends |>
   vertical-align: middle;
 }
 
-#iluioroujp .gt_from_md > :first-child {
+#dbgvzfontn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#iluioroujp .gt_from_md > :last-child {
+#dbgvzfontn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#iluioroujp .gt_row {
+#dbgvzfontn .gt_row {
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 5px;
@@ -1423,7 +1467,7 @@ tbl_names_unisex_trends |>
   overflow-x: hidden;
 }
 
-#iluioroujp .gt_stub {
+#dbgvzfontn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -1436,7 +1480,7 @@ tbl_names_unisex_trends |>
   padding-right: 5px;
 }
 
-#iluioroujp .gt_stub_row_group {
+#dbgvzfontn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1450,15 +1494,15 @@ tbl_names_unisex_trends |>
   vertical-align: top;
 }
 
-#iluioroujp .gt_row_group_first td {
+#dbgvzfontn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#iluioroujp .gt_row_group_first th {
+#dbgvzfontn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#iluioroujp .gt_summary_row {
+#dbgvzfontn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1468,16 +1512,16 @@ tbl_names_unisex_trends |>
   padding-right: 5px;
 }
 
-#iluioroujp .gt_first_summary_row {
+#dbgvzfontn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#iluioroujp .gt_first_summary_row.thick {
+#dbgvzfontn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#iluioroujp .gt_last_summary_row {
+#dbgvzfontn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1487,7 +1531,7 @@ tbl_names_unisex_trends |>
   border-bottom-color: #D3D3D3;
 }
 
-#iluioroujp .gt_grand_summary_row {
+#dbgvzfontn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1497,7 +1541,7 @@ tbl_names_unisex_trends |>
   padding-right: 5px;
 }
 
-#iluioroujp .gt_first_grand_summary_row {
+#dbgvzfontn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1507,7 +1551,7 @@ tbl_names_unisex_trends |>
   border-top-color: #D3D3D3;
 }
 
-#iluioroujp .gt_last_grand_summary_row_top {
+#dbgvzfontn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1517,11 +1561,11 @@ tbl_names_unisex_trends |>
   border-bottom-color: #D3D3D3;
 }
 
-#iluioroujp .gt_striped {
+#dbgvzfontn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#iluioroujp .gt_table_body {
+#dbgvzfontn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1530,7 +1574,7 @@ tbl_names_unisex_trends |>
   border-bottom-color: #D3D3D3;
 }
 
-#iluioroujp .gt_footnotes {
+#dbgvzfontn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1544,7 +1588,7 @@ tbl_names_unisex_trends |>
   border-right-color: #D3D3D3;
 }
 
-#iluioroujp .gt_footnote {
+#dbgvzfontn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1553,7 +1597,7 @@ tbl_names_unisex_trends |>
   padding-right: 5px;
 }
 
-#iluioroujp .gt_sourcenotes {
+#dbgvzfontn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1567,7 +1611,7 @@ tbl_names_unisex_trends |>
   border-right-color: #D3D3D3;
 }
 
-#iluioroujp .gt_sourcenote {
+#dbgvzfontn .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1575,63 +1619,63 @@ tbl_names_unisex_trends |>
   padding-right: 5px;
 }
 
-#iluioroujp .gt_left {
+#dbgvzfontn .gt_left {
   text-align: left;
 }
 
-#iluioroujp .gt_center {
+#dbgvzfontn .gt_center {
   text-align: center;
 }
 
-#iluioroujp .gt_right {
+#dbgvzfontn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#iluioroujp .gt_font_normal {
+#dbgvzfontn .gt_font_normal {
   font-weight: normal;
 }
 
-#iluioroujp .gt_font_bold {
+#dbgvzfontn .gt_font_bold {
   font-weight: bold;
 }
 
-#iluioroujp .gt_font_italic {
+#dbgvzfontn .gt_font_italic {
   font-style: italic;
 }
 
-#iluioroujp .gt_super {
+#dbgvzfontn .gt_super {
   font-size: 65%;
 }
 
-#iluioroujp .gt_footnote_marks {
+#dbgvzfontn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#iluioroujp .gt_asterisk {
+#dbgvzfontn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#iluioroujp .gt_indent_1 {
+#dbgvzfontn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#iluioroujp .gt_indent_2 {
+#dbgvzfontn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#iluioroujp .gt_indent_3 {
+#dbgvzfontn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#iluioroujp .gt_indent_4 {
+#dbgvzfontn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#iluioroujp .gt_indent_5 {
+#dbgvzfontn .gt_indent_5 {
   text-indent: 25px;
 }
 
@@ -1649,10 +1693,10 @@ tbody tr:last-child {
     at least one-third were female, through 2021</td>
     </tr>
     <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="name">name</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="nb_births_total">nb_births_total</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="Name">Name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="Number of People">Number of People</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="&lt;span style='color:#2596be'&gt;&lt;b&gt;MALE&lt;/b&gt;&lt;/span&gt;||&lt;span style='color:#f4ba19'&gt;&lt;b&gt;FEMALE&lt;/b&gt;&lt;/span&gt;"><span style='color:#2596be'><b>MALE</b></span>||<span style='color:#f4ba19'><b>FEMALE</b></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="pct_births_by_year">pct_births_by_year</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black;" scope="col" id="Percent Males by Year">Percent Males by Year</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -1716,6 +1760,18 @@ tbody tr:last-child {
 <td headers="nb_births_total" class="gt_row gt_right">54,625</td>
 <td headers="pct_births" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='95.53' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='95.53' y='0.0000000000000018' width='88.72' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='47.76' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='25.60px' lengthAdjust='spacingAndGlyphs'>51.8%</text><text x='139.89' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='25.60px' lengthAdjust='spacingAndGlyphs'>48.2%</text></g></svg></td>
 <td headers="pct_births_by_year" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='85.04pt' height='14.17pt' viewBox='0 0 85.04 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3'>    <rect x='0.00' y='0.00' width='85.04' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3)'><text x='68.79' y='9.92' style='font-size: 5.69px; font-weight: 0; font-family: "Courier";' textLength='10.24px' lengthAdjust='spacingAndGlyphs'>0.4</text><polyline points='4.19,1.84 4.63,1.84 5.06,1.84 5.50,1.84 5.94,1.84 6.37,1.84 6.81,1.84 7.25,1.84 7.68,1.84 8.12,1.84 8.55,1.84 8.99,1.84 9.43,1.84 9.86,1.84 10.30,1.84 10.73,1.84 11.17,1.84 11.61,1.84 12.04,1.84 12.48,1.84 12.92,1.84 13.35,1.84 13.79,1.84 14.22,1.84 14.66,1.84 15.10,1.84 15.53,1.84 15.97,1.84 16.40,1.84 16.84,1.84 17.28,1.84 17.71,1.84 18.15,1.84 18.59,1.84 19.02,1.84 19.46,1.84 19.89,1.84 20.33,1.84 20.77,1.84 21.20,1.84 21.64,1.84 22.07,1.84 22.51,1.84 22.95,1.84 23.38,1.84 23.82,1.84 24.26,1.84 24.69,1.84 25.13,1.84 25.56,1.84 26.00,1.84 26.44,1.84 26.87,1.84 27.31,1.84 27.74,1.84 28.18,1.84 28.62,1.84 29.05,1.84 29.49,1.84 29.93,1.84 30.36,1.84 30.80,1.84 31.23,1.84 31.67,1.84 32.11,1.84 32.54,1.84 32.98,1.84 33.41,1.84 33.85,1.84 34.29,1.84 34.72,1.84 35.16,1.84 35.60,1.84 36.03,1.84 36.47,1.84 36.90,1.84 37.34,1.84 37.78,1.84 38.21,1.84 38.65,1.84 39.08,1.84 39.52,1.84 39.96,1.84 40.39,1.84 40.83,1.84 41.27,1.84 41.70,1.84 42.14,1.84 42.57,1.84 43.01,1.84 43.45,1.84 43.88,1.84 44.32,1.84 44.75,1.84 45.19,1.84 45.63,1.84 46.06,1.84 46.50,1.84 46.94,1.84 47.37,1.84 47.81,1.84 48.24,1.84 48.68,1.84 49.12,1.84 49.55,1.84 49.99,1.84 50.42,1.84 50.86,1.84 51.30,1.84 51.73,1.84 52.17,1.84 52.61,1.84 53.04,1.84 53.48,2.69 53.91,3.06 54.35,2.97 54.79,3.07 55.22,3.42 55.66,6.96 56.10,6.89 56.53,6.72 56.97,6.77 57.40,7.96 57.84,7.89 58.28,7.34 58.71,8.85 59.15,9.48 59.58,9.18 60.02,9.15 60.46,8.58 60.89,8.58 61.33,8.54 61.77,8.54 62.20,8.53 62.64,8.59 63.07,8.42 63.51,8.60 63.95,8.42 64.38,8.55 64.82,8.23 65.25,8.25 65.69,8.27 ' style='stroke-width: 1.07; stroke-linecap: butt;' /><circle cx='65.69' cy='8.27' r='0.89' style='stroke-width: 0.71; fill: #000000;' /><circle cx='59.15' cy='9.48' r='0.89' style='stroke-width: 0.71; stroke: #A020F0; fill: #A020F0;' /><circle cx='4.19' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='4.63' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.06' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.50' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.94' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.37' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.81' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='7.25' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='7.68' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.12' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.55' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.99' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.43' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.86' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='10.30' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='10.73' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.17' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.61' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.04' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.48' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.92' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.35' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.79' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.22' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.66' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.10' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.53' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.97' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.40' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.84' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='17.28' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='17.71' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='18.15' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='18.59' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.02' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.46' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.89' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='20.33' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='20.77' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='21.20' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='21.64' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.07' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.51' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.95' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='23.38' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='23.82' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='24.26' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='24.69' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='25.13' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='25.56' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.00' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.44' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.87' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.31' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.74' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='28.18' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='28.62' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.05' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.49' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.93' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.36' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.80' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='31.23' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='31.67' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.11' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.54' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.98' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='33.41' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='33.85' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='34.29' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='34.72' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.16' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.60' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.03' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.47' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.90' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='37.34' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='37.78' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='38.21' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='38.65' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.08' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.52' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.96' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='40.39' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='40.83' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='41.27' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='41.70' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='42.14' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='42.57' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.01' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.45' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.88' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='44.32' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='44.75' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='45.19' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='45.63' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='46.06' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='46.50' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='46.94' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='47.37' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='47.81' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='48.24' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='48.68' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='49.12' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='49.55' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='49.99' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='50.42' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='50.86' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='51.30' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='51.73' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='52.17' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='52.61' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='53.04' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Tommie</td>
+<td headers="nb_births_total" class="gt_row gt_right">51,859</td>
+<td headers="pct_births" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='121.94' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='121.94' y='0.0000000000000018' width='62.32' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='60.97' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>66%</text><text x='153.09' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>34%</text></g></svg></td>
+<td headers="pct_births_by_year" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='85.04pt' height='14.17pt' viewBox='0 0 85.04 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3'>    <rect x='0.00' y='0.00' width='85.04' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3)'><text x='68.79' y='9.76' style='font-size: 5.69px; font-weight: 0; font-family: "Courier";' textLength='10.24px' lengthAdjust='spacingAndGlyphs'>0.4</text><polyline points='4.19,6.23 4.63,6.46 5.06,7.33 5.50,9.28 5.94,5.62 6.37,8.95 6.81,6.46 7.25,7.76 7.68,7.20 8.12,7.06 8.55,7.99 8.99,7.02 9.43,8.85 9.86,7.62 10.30,7.15 10.73,7.33 11.17,6.40 11.61,6.53 12.04,8.10 12.48,8.24 12.92,6.38 13.35,6.84 13.79,6.48 14.22,6.10 14.66,7.24 15.10,7.79 15.53,7.33 15.97,5.98 16.40,6.02 16.84,5.89 17.28,6.14 17.71,5.60 18.15,6.04 18.59,6.09 19.02,5.69 19.46,6.13 19.89,5.77 20.33,5.89 20.77,5.98 21.20,5.80 21.64,5.81 22.07,6.03 22.51,6.26 22.95,5.64 23.38,6.53 23.82,6.17 24.26,6.42 24.69,6.36 25.13,6.51 25.56,6.15 26.00,6.09 26.44,5.73 26.87,6.42 27.31,6.00 27.74,6.37 28.18,6.36 28.62,5.86 29.05,6.11 29.49,5.93 29.93,5.92 30.36,5.49 30.80,5.41 31.23,6.00 31.67,6.24 32.11,6.04 32.54,5.51 32.98,5.44 33.41,5.40 33.85,5.09 34.29,5.37 34.72,5.15 35.16,5.18 35.60,5.07 36.03,4.82 36.47,4.75 36.90,4.97 37.34,4.84 37.78,4.81 38.21,4.62 38.65,4.82 39.08,4.55 39.52,4.83 39.96,4.56 40.39,4.94 40.83,4.46 41.27,4.62 41.70,4.86 42.14,4.91 42.57,4.40 43.01,4.97 43.45,4.83 43.88,4.95 44.32,4.47 44.75,5.02 45.19,4.57 45.63,4.73 46.06,5.22 46.50,5.45 46.94,4.87 47.37,4.52 47.81,4.62 48.24,4.55 48.68,4.02 49.12,4.06 49.55,4.40 49.99,4.05 50.42,4.72 50.86,4.04 51.30,4.09 51.73,4.22 52.17,3.80 52.61,4.15 53.04,3.77 53.48,3.50 53.91,4.48 54.35,4.63 54.79,4.93 55.22,4.84 55.66,4.82 56.10,4.96 56.53,5.28 56.97,5.25 57.40,4.70 57.84,4.65 58.28,5.26 58.71,5.53 59.15,5.55 59.58,4.62 60.02,4.48 60.46,4.58 60.89,3.59 61.33,4.30 61.77,5.38 62.20,5.44 62.64,3.32 63.07,5.98 63.51,6.36 63.95,7.07 64.38,7.61 64.82,6.71 65.25,8.20 65.69,8.12 ' style='stroke-width: 1.07; stroke-linecap: butt;' /><circle cx='65.69' cy='8.12' r='0.89' style='stroke-width: 0.71; fill: #000000;' /><circle cx='5.50' cy='9.28' r='0.89' style='stroke-width: 0.71; stroke: #A020F0; fill: #A020F0;' /><circle cx='62.64' cy='3.32' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Emery</td>
+<td headers="nb_births_total" class="gt_row gt_right">50,366</td>
+<td headers="pct_births" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='69.79' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='69.79' y='0.0000000000000018' width='114.46' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='34.89' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>38%</text><text x='127.02' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>62%</text></g></svg></td>
+<td headers="pct_births_by_year" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='85.04pt' height='14.17pt' viewBox='0 0 85.04 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3'>    <rect x='0.00' y='0.00' width='85.04' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3)'><text x='68.79' y='13.37' style='font-size: 5.69px; font-weight: 0; font-family: "Courier";' textLength='10.24px' lengthAdjust='spacingAndGlyphs'>0.1</text><polyline points='4.19,1.84 4.63,1.84 5.06,1.84 5.50,1.84 5.94,1.84 6.37,1.84 6.81,1.84 7.25,1.84 7.68,1.84 8.12,1.84 8.55,1.84 8.99,1.84 9.43,1.84 9.86,1.84 10.30,1.84 10.73,1.84 11.17,1.84 11.61,1.84 12.04,1.84 12.48,1.84 12.92,1.84 13.35,1.84 13.79,1.84 14.22,1.84 14.66,1.84 15.10,1.84 15.53,3.25 15.97,1.84 16.40,1.84 16.84,1.84 17.28,1.84 17.71,1.84 18.15,1.84 18.59,1.84 19.02,1.84 19.46,1.84 19.89,1.84 20.33,2.03 20.77,2.07 21.20,1.84 21.64,2.03 22.07,1.84 22.51,2.07 22.95,2.14 23.38,1.84 23.82,2.05 24.26,2.12 24.69,2.13 25.13,2.07 25.56,2.15 26.00,1.84 26.44,1.84 26.87,1.84 27.31,1.84 27.74,1.84 28.18,1.84 28.62,1.84 29.05,1.84 29.49,2.24 29.93,2.23 30.36,1.84 30.80,1.84 31.23,2.17 31.67,1.84 32.11,1.84 32.54,1.84 32.98,1.84 33.41,1.84 33.85,1.84 34.29,2.22 34.72,1.84 35.16,1.84 35.60,1.84 36.03,1.84 36.47,1.84 36.90,1.84 37.34,1.84 37.78,2.56 38.21,1.84 38.65,2.34 39.08,2.34 39.52,1.84 39.96,2.20 40.39,1.84 40.83,1.84 41.27,1.84 41.70,1.84 42.14,1.84 42.57,1.84 43.01,1.84 43.45,1.84 43.88,1.84 44.32,2.55 44.75,1.84 45.19,3.82 45.63,2.64 46.06,1.84 46.50,3.06 46.94,3.45 47.37,3.02 47.81,3.03 48.24,3.14 48.68,3.24 49.12,4.13 49.55,4.06 49.99,4.04 50.42,4.17 50.86,3.91 51.30,3.82 51.73,4.58 52.17,4.93 52.61,4.64 53.04,5.50 53.48,5.63 53.91,5.24 54.35,5.90 54.79,7.56 55.22,7.01 55.66,7.69 56.10,8.21 56.53,7.89 56.97,7.84 57.40,8.22 57.84,7.99 58.28,8.82 58.71,9.01 59.15,9.11 59.58,9.73 60.02,9.45 60.46,10.29 60.89,10.27 61.33,10.46 61.77,10.65 62.20,11.08 62.64,11.16 63.07,11.53 63.51,11.47 63.95,11.72 64.38,11.83 64.82,11.75 65.25,11.74 65.69,11.73 ' style='stroke-width: 1.07; stroke-linecap: butt;' /><circle cx='65.69' cy='11.73' r='0.89' style='stroke-width: 0.71; fill: #000000;' /><circle cx='64.38' cy='11.83' r='0.89' style='stroke-width: 0.71; stroke: #A020F0; fill: #A020F0;' /><circle cx='4.19' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='4.63' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.06' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.50' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.94' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.37' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.81' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='7.25' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='7.68' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.12' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.55' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.99' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.43' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.86' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='10.30' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='10.73' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.17' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.61' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.04' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.48' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.92' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.35' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.79' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.22' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.66' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.10' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.97' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.40' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.84' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='17.28' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='17.71' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='18.15' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='18.59' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.02' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.46' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.89' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='21.20' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.07' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='23.38' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.00' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.44' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.87' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.31' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.74' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='28.18' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='28.62' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.05' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.36' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.80' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='31.67' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.11' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.54' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.98' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='33.41' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='33.85' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='34.72' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.16' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.60' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.03' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.47' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.90' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='37.34' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='38.21' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.52' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='40.39' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='40.83' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='41.27' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='41.70' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='42.14' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='42.57' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.01' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.45' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='43.88' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='44.75' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='46.06' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /></g></svg></td></tr>
+    <tr><td headers="name" class="gt_row gt_left">Rowan</td>
+<td headers="nb_births_total" class="gt_row gt_right">50,053</td>
+<td headers="pct_births" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='184.25pt' height='14.17pt' viewBox='0 0 184.25 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw=='>    <rect x='0.00' y='0.00' width='184.25' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHwxODQuMjV8MC4wMHwxNC4xNw==)'><rect x='0.00' y='0.0000000000000018' width='120.42' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2596BE;' /><rect x='120.42' y='0.0000000000000018' width='63.83' height='14.17' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4BA19;' /><text x='60.21' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>65%</text><text x='152.33' y='9.56' text-anchor='middle' style='font-size: 8.54px; font-weight: 0;fill: #FFFFFF; font-family: "Courier";' textLength='15.36px' lengthAdjust='spacingAndGlyphs'>35%</text></g></svg></td>
+<td headers="pct_births_by_year" class="gt_row gt_center"><?xml version='1.0' encoding='UTF-8' ?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='85.04pt' height='14.17pt' viewBox='0 0 85.04 14.17'><defs>  <style type='text/css'><![CDATA[    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {      fill: none;      stroke: #000000;      stroke-linecap: round;      stroke-linejoin: round;      stroke-miterlimit: 10.00;    }    .svglite text {      white-space: pre;    }  ]]></style></defs><rect width='100%' height='100%' style='stroke: none; fill: none;'/><defs>  <clipPath id='cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3'>    <rect x='0.00' y='0.00' width='85.04' height='14.17' />  </clipPath></defs><g clip-path='url(#cpMC4wMHw4NS4wNHwwLjAwfDE0LjE3)'><text x='68.78' y='6.31' style='font-size: 5.69px; font-weight: 0; font-family: "Courier";' textLength='10.24px' lengthAdjust='spacingAndGlyphs'>0.7</text><polyline points='4.33,1.84 4.95,1.84 5.57,1.84 6.19,1.84 6.81,1.84 7.43,1.84 8.05,1.84 8.67,1.84 9.29,1.84 9.91,1.84 10.53,1.84 11.15,1.84 11.77,1.84 12.39,1.84 13.01,1.84 13.63,1.84 14.25,1.84 14.87,1.84 15.48,1.84 16.10,1.84 16.72,1.84 17.34,1.84 17.96,8.25 18.58,1.84 19.20,1.84 19.82,1.84 20.44,1.84 21.06,1.84 21.68,1.84 22.30,1.84 22.92,1.84 23.54,1.84 24.16,1.84 24.78,1.84 25.40,1.84 26.02,1.84 26.64,1.84 27.26,1.84 27.88,1.84 28.50,1.84 29.12,1.84 29.74,1.84 30.36,1.84 30.98,1.84 31.60,1.84 32.22,1.84 32.84,1.84 33.46,1.84 34.08,1.84 34.70,1.84 35.32,1.84 35.94,1.84 36.55,1.84 37.17,1.84 37.79,6.23 38.41,1.84 39.03,1.84 39.65,1.84 40.27,6.11 40.89,4.37 41.51,5.91 42.13,7.04 42.75,6.23 43.37,4.04 43.99,5.74 44.61,5.50 45.23,4.66 45.85,5.41 46.47,3.45 47.09,6.62 47.71,6.67 48.33,8.65 48.95,8.84 49.57,8.69 50.19,8.67 50.81,8.49 51.43,8.28 52.05,7.27 52.67,7.39 53.29,6.99 53.91,7.36 54.53,6.54 55.15,6.42 55.77,5.85 56.39,6.25 57.01,6.78 57.63,6.34 58.24,6.14 58.86,6.11 59.48,5.60 60.10,5.94 60.72,5.95 61.34,5.50 61.96,5.71 62.58,6.02 63.20,5.54 63.82,5.40 64.44,5.09 65.06,4.76 65.68,4.66 ' style='stroke-width: 1.07; stroke-linecap: butt;' /><circle cx='65.68' cy='4.66' r='0.89' style='stroke-width: 0.71; fill: #000000;' /><circle cx='48.95' cy='8.84' r='0.89' style='stroke-width: 0.71; stroke: #A020F0; fill: #A020F0;' /><circle cx='4.33' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='4.95' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='5.57' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.19' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='6.81' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='7.43' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.05' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='8.67' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.29' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='9.91' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='10.53' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.15' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='11.77' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='12.39' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.01' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='13.63' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.25' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='14.87' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='15.48' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.10' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='16.72' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='17.34' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='18.58' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.20' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='19.82' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='20.44' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='21.06' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='21.68' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.30' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='22.92' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='23.54' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='24.16' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='24.78' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='25.40' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.02' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='26.64' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.26' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='27.88' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='28.50' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.12' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='29.74' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.36' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='30.98' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='31.60' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.22' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='32.84' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='33.46' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='34.08' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='34.70' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.32' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='35.94' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='36.55' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='37.17' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='38.41' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.03' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /><circle cx='39.65' cy='1.84' r='0.89' style='stroke-width: 0.71; stroke: #00FF00; fill: #00FF00;' /></g></svg></td></tr>
   </tbody>
   
   
