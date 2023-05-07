@@ -12,6 +12,7 @@ Imports:
     here,
     hexbin,
     Hmisc,
+    janitor,
     leaflet,
     markdown,
     plotly,
@@ -19,4 +20,5 @@ Imports:
     svglite,
     statebins,
     xaringanExtra,
-    xaringanthemer
+    xaringanthemer,
+    zoo
