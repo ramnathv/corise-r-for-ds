@@ -148,10 +148,15 @@ Looking at the plot, we gather that a male born in 1950 has almost a 50%
 chance of being alive in 2022. Notice that `tbl_lifetable` only has
 entries for every decade. In order to figure out the distribution of
 people alive, we need the probabilities for every year. One way to fill
-up the gaps in the data is to use some kind of interpolation. We will
-extend the lifetable by adding the full sequence of years for every
-`sex` and `age` combination, and then extrapolating the data to compute
-`lx` for the newly added combinations.
+up the gaps in the data is to use some kind of interpolation, a method
+of approximating unknown values by using nearby known values. We will
+extend the lifetable by adding the full sequence of years for every sex
+and age combination, and then extrapolating the data to compute lx for
+the newly added combinations. If you’re unfamiliar with interpolation or
+would like to learn more about other ways to handle missing data, you
+can check out this [10-minute Youtube
+video](https://www.youtube.com/watch?v=RpxoN9-i7Jc&ab_channel=JeffreyChasnov)
+by Jeffrey Chasnov on interpolation for further information.
 
 ### Transform Data
 
