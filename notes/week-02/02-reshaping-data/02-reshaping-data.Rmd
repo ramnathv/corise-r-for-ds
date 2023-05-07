@@ -5,6 +5,13 @@ output: github_document
 
 __Reshaping__ data is a fundamental task in data analysis, and the `tidyverse` ecosystem provides several powerful tools for this purpose. The `tidyr` package, which is part of the `tidyverse`, offers a wide range of functions for transforming data between different shapes. In this lesson, we will explore different reshaping operations.
 
+```{r echo = FALSE, out.width = "100%"}
+knitr::include_graphics(
+  path = "https://i.imgur.com/gjk7geY.png"
+)
+```
+
+
 
 ```{r setup, message = FALSE}
 # Load packages and common utility functions

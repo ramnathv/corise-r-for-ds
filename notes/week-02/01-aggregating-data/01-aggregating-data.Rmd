@@ -5,6 +5,13 @@ output: github_document
 
 __Aggregating__ data involves summarizing the data at a higher level than the original data, such as computing the `mean`, `sum`, or `count` of values for different `groups` of data. The two primary functions that you will use to aggregate data are:
 
+```{r mindmap-aggregate-data, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(
+  path = "https://i.imgur.com/BMjwi2P.png"
+)
+```
+
+
 - `group_by()`: This function is used to group data by one or more variables. The result is a `grouped_df` object, which can then be used with other `dplyr` functions to aggregate the data.
 
 - `summarize()` or `summarise()`: These functions are used to compute summary statistics for each group of data. For example, you can compute the mean, median, sum, or count of values in each group.

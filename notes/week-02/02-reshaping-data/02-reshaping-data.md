@@ -7,6 +7,8 @@ The `tidyr` package, which is part of the `tidyverse`, offers a wide
 range of functions for transforming data between different shapes. In
 this lesson, we will explore different reshaping operations.
 
+<img src="https://i.imgur.com/gjk7geY.png" width="100%" />
+
 ``` r
 # Load packages and common utility functions
 library(tidyverse)

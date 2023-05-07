@@ -6,6 +6,8 @@ than the original data, such as computing the `mean`, `sum`, or `count`
 of values for different `groups` of data. The two primary functions that
 you will use to aggregate data are:
 
+<img src="https://i.imgur.com/BMjwi2P.png" width="100%" />
+
 - `group_by()`: This function is used to group data by one or more
   variables. The result is a `grouped_df` object, which can then be used
   with other `dplyr` functions to aggregate the data.
@@ -22,6 +24,7 @@ Let us load the `tidyverse` and read the babynames data so we can use it
 to explore data aggregation.
 
 ``` r
+# Load packages and common utility functions
 library(tidyverse)
 source(here::here("_common.R"))
 ```
