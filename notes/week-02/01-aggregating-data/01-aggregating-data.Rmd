@@ -1,36 +1,44 @@
 ---
 output: github_document
 ---
-
-
-```{r setup, include = FALSE, message = FALSE}
-library(tidyverse)
-knitr::opts_chunk$set(comment = "#>")
-```
-
 ## Aggregating Data
 
-Let us read the `babynames` data frame first so we can use it to explore data aggregation.
+__Aggregating__ data involves summarizing the data at a higher level than the original data, such as computing the `mean`, `sum`, or `count` of values for different `groups` of data. The two primary functions that you will use to aggregate data are:
+
+- `group_by()`: This function is used to group data by one or more variables. The result is a `grouped_df` object, which can then be used with other `dplyr` functions to aggregate the data.
+
+- `summarize()` or `summarise()`: These functions are used to compute summary statistics for each group of data. For example, you can compute the mean, median, sum, or count of values in each group.
+
+Additionally, the grammar of data manipulation provided by `tidyverse` allows us to utilize the full power of data manipulation operations like `mutate()`, `filter()`, `arrange()` etc. to grouped data as well.
+
+
+Let us load the `tidyverse` and read the babynames data so we can use it to explore data aggregation.
+
+
+```{r setup, message = FALSE}
+library(tidyverse)
+source(here::here("_common.R"))
+```
 
 ```{r read-babynames}
-NAMES_FILE <- here::here("data/names.csv.gz")
-babynames <- readr::read_csv(NAMES_FILE, show_col_types = FALSE)
-babynames
+file_name_names <- here::here("data/names.csv.gz")
+tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
+tbl_names
 ```
 
 ### `group_by`: Group by one or more variables
 
 The `group_by()` function lets you group a table by one or more columns. Applying the `group_by` function to a table does not change its appearance, except for adding some metadata on the grouping variables.
 
-```{r}
+```{r group-by-one-column}
 # Group by ONE column
-babynames |> 
+tbl_names |> 
   group_by(sex)
 ```
 
-```{r}
+```{r group-by-multiple-columns}
 # Group by multiple columns
-babynames |> 
+tbl_names |> 
   group_by(sex, name)
 ```
 
@@ -41,8 +49,8 @@ The reason we group a table by columns is to be able to manipulate it by group. 
 
 You can use any arbitrary function inside `summarize` as long as it collapses multiple values into a single value. For example, we can summarize the `babynames` dataset for each `sex` in terms of the total number of births and number of distinct names.
 
-```{r}
-babynames |> 
+```{r summarize-by-sex}
+tbl_names |> 
   group_by(sex) |> 
   summarize(
     nb_births = sum(nb_births),
@@ -52,8 +60,8 @@ babynames |>
 
 How about we try grouping by multiple variables? Let us compute the same summaries, but grouping by `sex` and `year` this time.
 
-```{r}
-babynames |> 
+```{r summarize-by-sex-year}
+tbl_names |> 
   group_by(sex, year) |> 
   summarize(
     nb_births = sum(nb_births),
@@ -72,8 +80,8 @@ When you group by multiple variables, each summarize operation removes only the 
 
 My recommendation would be to override this default behavior and always drop all grouping after a summarize operation. This might add some overhead especially if you are going to group it again. But doing that explicitly will save you a lot of pain.
 
-```{r}
-babynames |> 
+```{r summarize-by-sex-year-drop}
+tbl_names |> 
   group_by(sex, year) |> 
   summarize(
     nb_births = sum(nb_births),
@@ -82,4 +90,45 @@ babynames |>
   )
 ```
 
+While, you can apply any of the data manipulation verbs in the `tidyverse` to a grouped data frame, there are some that are going to be used more than the others.
+
+### `mutate()`: Create, modify, and delete columns
+
+A grouped data frame is just like a normal data frame EXCEPT that any operation you do on it is applied to each group separately. For example, suppose you want to compute the percentage of births in a year by `sex` and `name`. You can group by `sex` and `name` and use the `mutate()` function to add a column for the total number of births for each group, and then use that to compute the percentages. 
+
+Let us now `ungroup()` the data, `filter()` for names with more than 50,000 births and `arrange()` them in descending order of births, so we can see how some names have a lion's share of births happening in a few years. For example, 40% of all Luna's were born in the years 2019, 2020, and 2021
+
+
+```{r mutate-nb-births}
+tbl_names |> 
+  group_by(sex, name) |> 
+  mutate(
+    nb_births_total = sum(nb_births),
+    pct_births_in_year = nb_births / nb_births_total
+  ) |> 
+  ungroup() |> 
+  filter(nb_births_total > 50000) |> 
+  arrange(desc(pct_births_in_year))
+```
+
+Note that it is very important to ungroup the data using `ungroup()` before applying any data frame wide operations. It is more efficient to operate on whole data frames and grouped operations are always going to be slower.
+
+### `across()`: Apply a function across multiple columns
+
+Finally, there are situations where you might want to apply a function across multiple columns. This is where the `across()` function comes very handy. You can use different selector functions available to summarize a group of columns without having to write multiple lines of code. Shown below are two examples, where we summarize the mean of a number of columns of the data by `cut`.
+
+- In the first example, we select the columns to summarize across by name
+- In the second example, we select the columns to summarize across by their data type.
+
+```{r across}
+# Summarize multiple columns by name
+diamonds |> 
+  group_by(cut) |> 
+  summarize(across(c(carat, price), mean))
+
+# Summarize multiple columns by data type
+diamonds |> 
+  group_by(cut) |> 
+  summarize(across(where(is.numeric), mean))
+```
 
