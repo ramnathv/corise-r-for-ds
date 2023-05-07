@@ -5,18 +5,15 @@ output: github_document
 
 The __Grammar of Graphics__ is a framework for creating visualizations that was introduced by Leland Wilkinson in his [book](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448) of the same name. It is based on the idea that a plot can be thought of as a set of layers, each representing different components of the data. The Grammar of Graphics provides a set of rules for how these layers should be combined to create a coherent and informative visualization.
 
-[`ggplot2`](https://ggplot2.tidyverse.org) is an R package that implements the Grammar of Graphics. It provides a powerful and flexible system for creating a wide variety of plots, including scatterplots, line plots, bar charts, histograms, and more. The ggplot2 syntax is designed to be intuitive and easy to use, allowing users to quickly create complex visualizations with just a few lines of code.
-
-
-```{r grammar-of-graphics-pyramid, echo = FALSE, out.width = "100%"}
+```{r grammar-of-graphics-mindmap, echo = FALSE, out.width = "100%"}
 knitr::include_graphics(
-  path = "https://carpentries-incubator.github.io/open-science-with-r/img/pyramid-grammar-graphics.png"
+  path = "https://i.imgur.com/ml4PGon.png"
 )
 ```
 
+[`ggplot2`](https://ggplot2.tidyverse.org) is an R package that implements the __Grammar of Graphics__. It provides a powerful and flexible system for creating a wide variety of plots, including scatterplots, line plots, bar charts, histograms, and more. The ggplot2 syntax is designed to be intuitive and easy to use, allowing users to quickly create complex visualizations with just a few lines of code.
+
 The key components of a `ggplot2` plot are the `data`, the `aesthetic` mappings, the `layers` consisting of `geometric` objects and `statistical` transformations, the `scales`, the `coordinates`, the `facets` and `theme`.
-
-
 
 - __Data__ The set of observations being plotted.
 - __Aesthetic__ mappings specify how the data should be mapped to visual properties such as color, shape, and size.
@@ -34,6 +31,8 @@ Together, these components allow users to create a wide range of visualizations 
 library(tidyverse)
 source(here::here("_common.R"))
 ```
+
+In this lesson, we will explore the grammar of graphics to understand its true powers.
 
 ### Data
 

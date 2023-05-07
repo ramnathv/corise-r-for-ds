@@ -1,9 +1,9 @@
 
 ## Combining Data
 
-Data is often spread across multiple tables, and **combining** them is a
-common operation. This is where the `join` and `bind` functions in
-`dplyr` comes into play.
+**Combining** data spread across multiple tables is a common operation.
+This is where the `join` and `bind` functions in `dplyr` comes into
+play.
 
 <img src="https://i.imgur.com/qfpUdFQ.png" width="100%" />
 

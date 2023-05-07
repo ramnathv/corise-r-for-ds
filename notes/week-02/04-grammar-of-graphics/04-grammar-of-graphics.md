@@ -9,14 +9,14 @@ as a set of layers, each representing different components of the data.
 The Grammar of Graphics provides a set of rules for how these layers
 should be combined to create a coherent and informative visualization.
 
-[`ggplot2`](https://ggplot2.tidyverse.org) is an R package that
-implements the Grammar of Graphics. It provides a powerful and flexible
-system for creating a wide variety of plots, including scatterplots,
-line plots, bar charts, histograms, and more. The ggplot2 syntax is
-designed to be intuitive and easy to use, allowing users to quickly
-create complex visualizations with just a few lines of code.
+<img src="https://i.imgur.com/ml4PGon.png" width="100%" />
 
-<img src="https://carpentries-incubator.github.io/open-science-with-r/img/pyramid-grammar-graphics.png" width="100%" />
+[`ggplot2`](https://ggplot2.tidyverse.org) is an R package that
+implements the **Grammar of Graphics**. It provides a powerful and
+flexible system for creating a wide variety of plots, including
+scatterplots, line plots, bar charts, histograms, and more. The ggplot2
+syntax is designed to be intuitive and easy to use, allowing users to
+quickly create complex visualizations with just a few lines of code.
 
 The key components of a `ggplot2` plot are the `data`, the `aesthetic`
 mappings, the `layers` consisting of `geometric` objects and
@@ -46,6 +46,9 @@ code.
 library(tidyverse)
 source(here::here("_common.R"))
 ```
+
+In this lesson, we will explore the grammar of graphics to understand
+its true powers.
 
 ### Data
 

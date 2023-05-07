@@ -3,7 +3,7 @@ output: github_document
 ---
 ## Combining Data
 
-Data is often spread across multiple tables, and __combining__ them is a common operation. This is where the `join` and `bind` functions in `dplyr` comes into play. 
+__Combining__ data spread across multiple tables is a common operation. This is where the `join` and `bind` functions in `dplyr` comes into play. 
 
 
 ```{r mindmap-combining-data, echo = FALSE, out.width = "100%"}

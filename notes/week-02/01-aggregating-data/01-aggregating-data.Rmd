@@ -14,7 +14,7 @@ knitr::include_graphics(
 
 - `group_by()`: This function is used to group data by one or more variables. The result is a `grouped_df` object, which can then be used with other `dplyr` functions to aggregate the data.
 
-- `summarize()` or `summarise()`: These functions are used to compute summary statistics for each group of data. For example, you can compute the mean, median, sum, or count of values in each group.
+- `summarize()` or `summarise()`: These functions are used to compute summary statistics for each group of data. For example, you can compute the `mean()`, `median()`, `sum()`, or `count()` of values in each group.
 
 Additionally, the grammar of data manipulation provided by `tidyverse` allows us to utilize the full power of data manipulation operations like `mutate()`, `filter()`, `arrange()` etc. to grouped data as well.
 

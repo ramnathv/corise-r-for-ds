@@ -14,7 +14,8 @@ you will use to aggregate data are:
 
 - `summarize()` or `summarise()`: These functions are used to compute
   summary statistics for each group of data. For example, you can
-  compute the mean, median, sum, or count of values in each group.
+  compute the `mean()`, `median()`, `sum()`, or `count()` of values in
+  each group.
 
 Additionally, the grammar of data manipulation provided by `tidyverse`
 allows us to utilize the full power of data manipulation operations like
