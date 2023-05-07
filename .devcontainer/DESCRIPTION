@@ -16,5 +16,7 @@ Imports:
     markdown,
     plotly,
     shiny,
+    svglite,
     statebins,
+    xaringanExtra,
     xaringanthemer
