@@ -16,6 +16,7 @@ Let us load the `tidyverse` and read the babynames data so we can use it to expl
 
 
 ```{r setup, message = FALSE}
+# Load packages and common utility functions
 library(tidyverse)
 source(here::here("_common.R"))
 ```

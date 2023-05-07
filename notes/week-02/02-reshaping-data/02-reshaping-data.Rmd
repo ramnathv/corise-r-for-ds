@@ -1,29 +1,200 @@
 ---
 output: github_document
 ---
-
 ## Reshaping Data
+
+__Reshaping__ data is a fundamental task in data analysis, and the `tidyverse` ecosystem provides several powerful tools for this purpose. The `tidyr` package, which is part of the `tidyverse`, offers a wide range of functions for transforming data between different shapes. In this lesson, we will explore different reshaping operations.
+
+
+```{r setup, message = FALSE}
+# Load packages and common utility functions
+library(tidyverse)
+source(here::here("_common.R"))
+```
 
 ### Pivot
 
-#### `pivot_longer`
+Pivoting data is a common task in data analysis where data is transformed from one shape to another to facilitate analysis. In general, this involves changing the layout of the data from a __long__ format, where each observation is represented in a separate row, to a __wide__ format, where each observation is represented in a separate column. Alternatively, it may involve changing from a wide format to a long format. 
 
-#### `pivot_wider`
+The `tidyr` package in the `tidyverse` provides several functions for pivoting data, including `pivot_wider()` and `pivot_longer()`, which can be used to transform data between wide and long formats.
+
+We will use the `billboard` data that ships with `tidyr` to explore these functions. This dataset is in the __wide__ format and provides the weekly rankings of the top 100 tracks.
+
+```{r pivot-data-billboard}
+head(billboard)
+```
+
+#### `pivot_longer`: Pivot data from wide to long
+
+Let us start by reshaping this data to the long form. Note that the long form is usually a lot easier to analyze and visualize and is preferred by most data scientists using the `tidyverse`.
+
+```{r pivot-longer}
+billboard_long <- billboard |> 
+  pivot_longer(
+    cols = starts_with('wk'),
+    names_to = 'week',
+    values_to = 'rank'
+  )
+
+billboard_long
+```
+
+`pivot_longer()` takes as input a dataset and a set of arguments that specify the columns to pivot and the new column names to create. In this case, the `cols` argument is set to `starts_with('wk')`, which specifies that any columns that start with the string "wk" should be pivoted. These columns correspond to the weekly ranking of songs on the Billboard charts.
+
+The `names_to` argument specifies the name of the new column that will contain the column names that were pivoted. In this case, it is set to `'week'`, which will create a new column called "week" that contains the week number for each observation.
+
+The `values_to` argument specifies the name of the new column that will contain the values that were pivoted. In this case, it is set to `'rank'`, which will create a new column called "rank" that contains the ranking of each song for each week.
+
+
+#### `pivot_wider`: Pivot data from wide to long
+
+Let us reshape `billboard_long` back to the wide format using the `pivot_wider()` function.
+
+```{r pivot-wider}
+billboard_long |> 
+  pivot_wider(
+    names_from = week,
+    values_from = rank
+  )
+```
+
+The `pivot_wider()` function takes as input a dataset and a set of arguments that specify the columns to pivot and the new column names to create. In this case, the `names_from` argument is set to `week`, which specifies that the new column names should be based on the values in the "week" column of the `billboard_long` dataset. The `values_from` argument is set to `rank`, which specifies that the values in the "rank" column of the `billboard_long` dataset should be used as the values in the new columns.
+
+
+__Nesting__ and __Unnesting__ are two useful data transformation techniques that allow us to group and ungroup data in various ways and are supported by the `tidyr` package of the tidyverse. We will use the baby names dataset to illustrate these operations.
+
+```{r read-tbl-names}
+# Read tbl_names from `data/names.csv.gz`
+tbl_names <- readr::read_csv(
+  file = here::here("data/names.csv.gz"),
+  show_col_types = FALSE
+)
+```
 
 ### Nest
 
-#### `nest`
+#### `nest`: Nest rows into a list-column of data frames
 
-#### `unnest`
+ __Nesting__ involves taking a set of variables and collapsing them into a single column that contains a nested data structure, such as a list or a data frame. This can be useful when we want to perform operations on subsets of our data, or when we have data with a hierarchical structure that we want to preserve.
 
-#### `unnest_longer`
+```{r nest}
+# Nest the
+tbl_names_nested <- tbl_names |> 
+  group_by(sex, name) |> 
+  nest(nb_births_by_year = c(year, nb_births))
 
-#### `unnest_wider`
+head(tbl_names_nested)
+```
+
+The column `nb_births_by_year` is a list column, where each element of the list is a data frame with columns `nb_births` and `year`. We can print the first six rows of `nb_births_by_year` for the first row of this nested data frame.
+
+```{r}
+head(tbl_names_nested$nb_births_by_year[[1]])
+```
+
+#### `unnest`: Unnest a list-column of data frames
+
+__Unnesting__, on the other hand, involves taking data that is nested in a column and spreading it out into separate columns. This can be useful when we want to perform analyses on individual components of our data that are currently grouped together. 
+
+```{r unnest}
+tbl_names_nested |> 
+  unnest(nb_births_by_year)
+```
+
+#### `unnest_longer`: Unnest a list-column into rows
+
+There are three other `unnesting` functions supported by the `tidyr` package. To illustrate their usage, let us take the `starwars` data and focus on the `name` and `films` columns.
+
+```{r data-starwars}
+starwars_name_films <- starwars |> 
+  select(name, films)
+
+head(starwars_name_films)
+```
+Note how the `films` column is a list of vectors, where each item is a vector of films that included the character.
+ 
+```{r}
+starwars_name_films$films[[1]]
+```
+
+We can use `unnest_longer()` to unnest this column along the length of the data frame such that every film gets its own row.
+
+```{r unnest-longer}
+starwars |> 
+  select(name, films) |> 
+  unnest_longer(films)
+```
+#### `unnest_wider`: Unnest a list-column into columns
+
+Alternately, we could also unnest it wider so that each `name` still has only one `row`, but each film gets its own column.
+
+```{r unnest-wider}
+starwars |> 
+  select(name, films) |> 
+  unnest_wider(films, names_sep = "_")
+```
+
+Note that the length of `films` for each `name` is not equal and so there are NAs in the data.
+
+#### `unnest_auto`
+
+Finally, we have the `unnest_auto()` function which automatically uses `unnest_longer()` or `unnest_wider()` based on which one is more appropriate. It displays a message on which function it chose and some reasoning behind it.
+
+```{r unnest-auto}
+starwars |> 
+  select(name, films) |> 
+  unnest_auto(films)
+```
 
 ### Expand
 
-#### `expand`
+#### `expand`: Expand to include all combinations of values
 
-#### `complete`
+The `expand()` function can be used to generate all combinations of variables in a data frame. For example, take this data frame of fruits.
 
-#### `separate_rows`
+```{r}
+fruits <- tibble(
+  type = c("apple", "orange", "apple", "orange", "orange", "orange"),
+  year = c(2010, 2010, 2012, 2010, 2011, 2012),
+  size = factor(
+    c("XS", "S", "M", "S", "S", "M"),
+    levels = c("XS", "S", "M", "L")
+  ),
+  weights = rnorm(6, as.numeric(size) + 2)
+)
+fruits
+```
+
+We can use `expand()` to generate all combinations of `type` and `size`.
+
+```{r expand-data}
+fruits |> 
+  expand(type, size)
+```
+#### `complete`: Complete with missing combinations
+
+The `complete()` function extends what the `expand()` function does and also adds the remaining columns of the data, and fills them with NAs where the values are missing.
+
+```{r complete-data}
+fruits |> 
+  complete(type, size)
+```
+
+#### `separate_rows`: Separate a collapsed column into multiple rows
+
+Let us go back to the `starwars` data and look at the `skin_color` column. Note values like `white, blue` which are essentially the result of collapsing the vector `c("white", "blue")` into a single comma separated string.
+
+```{r separate_rows}
+starwars |> 
+  filter(str_detect(skin_color, ",")) |> 
+  select(name, skin_color)
+```
+
+We can use the `separate_rows()` function to separate this collapsed column into multiple rows.
+
+```{r separate-rows}
+starwars |> 
+  select(name, skin_color) |> 
+  separate_rows(skin_color)
+```
+
