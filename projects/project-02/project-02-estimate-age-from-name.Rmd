@@ -146,7 +146,7 @@ tbl_lifetables |>
   theme(plot.title.position = 'plot')
 ```
 
-Looking at the plot, we gather that a male born in 1950 has almost a 50% chance of being alive in 2022. Notice that `tbl_lifetable` only has entries for every decade. In order to figure out the distribution of people alive, we need the probabilities for every year. One way to fill up the gaps in the data is to use some kind of interpolation. We will extend the lifetable by adding the full sequence of years for every `sex` and `age` combination, and then extrapolating the data to compute `lx` for the newly added combinations. 
+Looking at the plot, we gather that a male born in 1950 has almost a 50% chance of being alive in 2022. Notice that `tbl_lifetable` only has entries for every decade. In order to figure out the distribution of people alive, we need the survival probabilities for each year. One way to fill up the gaps in the data is to use some kind of interpolation. We will extend the lifetable by adding a full sequence of years for every `sex` and `age` combination, and then extrapolate the data to compute `lx` for the newly added combinations. 
 
 ### Transform Data
 
