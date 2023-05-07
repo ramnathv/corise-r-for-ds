@@ -64,6 +64,11 @@ make it easy to scrape data from the web programmatically and bring them
 into R as a table. This goes beyond the scope of this course and so I
 have simply included the code I used to scrape this data.
 
+The code below defining two functions, `read_lifetable()` and
+`read_lifetables()`, which read life tables from the Social Security
+Administration’s website and processes the data into a more usable
+format.
+
 ``` r
 read_lifetable <- function(year) {
   url <- glue::glue(
