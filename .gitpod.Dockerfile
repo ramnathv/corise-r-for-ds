@@ -1,5 +1,5 @@
 FROM rocker/verse:4.3.0
-LABEL version=10
+LABEL version=11
 
 # Install 
 RUN apt-get update && \
