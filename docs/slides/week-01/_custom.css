@@ -1,0 +1,81 @@
+/*
+.hljs-github .hljs {
+  background-color: #F3F3F1;
+}
+*/
+
+.inverse:not(.title-slide) {
+  background-color: #333539;
+  border-top: 0;
+}
+
+.inverse:not(.title-slide) h1 {
+  color: #fcd34d;
+}
+
+div[class^='panel3'] {
+  color: blue;
+  position: absolute;
+  top: 70px;
+}
+
+div[class^='panel1-md']{
+  width: 40%;
+}
+
+div[class^='panel1-md'] .remark-code {
+  font-size: 100%;
+}
+
+div[class^='panel2-md']{
+  width: 40%;
+}
+
+.remark-slide-number {
+  position: absolute;
+  left: 20px;
+}
+
+.remark-code-line-highlighted {
+  background-color: #fde9a6;
+  font-weight: normal;
+}
+
+.remark-slide-content:not(.title-slide):not(.inverse) {
+  background-color: #FAFAFA;
+  border-top: 80px solid #333539;
+}
+
+h1 {
+  color: #fcd34d;
+}
+
+.xaringan-extra-logo {
+  border-radius: 10px;
+}
+
+.title-slide .inverse .remark-slide-content {
+  background-color: #FAFAFA;
+  border-top: 0px;
+}
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.left-code {
+  color: #777;
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}

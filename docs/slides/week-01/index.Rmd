@@ -1,0 +1,355 @@
+---
+title: R for Data Science
+subtitle: Week 1
+author: Ramnath Vaidyanathan
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, _custom.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+---
+class: inverse, center, middle
+
+
+```{r setup, include = FALSE}
+# Load utilities
+source("../_common.R")
+
+# Read data
+file_name_names <- here::here("data/names.csv.gz")
+tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
+
+# Load xaringan extras
+xaringanExtra::use_xaringan_extra(c("tile_view"))
+# xaringanExtra::use_freezeframe()
+# xaringanExtra::use_scribble()
+```
+
+
+```{r xaringan-logo, echo = FALSE}
+xaringanExtra::use_logo(
+  image_url = "https://corise.com/_next/static/media/corise.8b7af086.png",
+  position = css_position(bottom = "0.5em", right = "0.5em"),
+  width = 90*1.2,
+  height = 47.1*1.2,
+)
+```
+
+# R in a Nutshell
+
+---
+
+# Everything that exists is an object
+
+--
+
+```{r}
+# Vector <Character>
+baby_names <- c("John", "Marie", "Elizabeth")
+baby_names
+```
+
+--
+
+```{r}
+# Vector <Boolean>
+baby_is_male <- c(TRUE, FALSE, FALSE)
+baby_is_male
+```
+
+--
+
+```{r}
+# Vector <Integer>
+baby_nb_births <- c(120L, 30L, 60L)
+baby_nb_births
+```
+
+---
+
+# Everything that happens is the result of a function call
+
+--
+
+```{r function-call, fig.width = 8, fig.height = 3.5}
+# Create a numeric vector of 1000 random normal variables
+x <- rnorm(n = 1000)
+# Plot a histogram of the distribution
+hist(x)
+```
+
+---
+
+# Embrace the Pipe > Multiline Code
+
+--
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+--
+
+.left-code[
+```{r sequential, eval = FALSE}
+# 1. Extract the first letter from each name.
+first_letters <- substr(state.name, 1, 1)
+
+# 2. Count the frequency of each letter
+first_letters_counts <- table(first_letters)
+
+# 3. Create a bar plot of the frequency counts
+barplot(first_letters_counts)
+```
+]
+
+.right-plot[
+```{r sequential-eval, ref.label="sequential", echo = FALSE}
+```
+]
+
+---
+
+# Embrace the Pipe > Oneline Code
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+.left-code[
+```{r oneline, eval = FALSE}
+barplot(table(substr(state.name, 1, 1)))
+```
+]
+
+.right-plot[
+```{r sequential-oneline, ref.label="oneline", echo = FALSE}
+```
+]
+
+---
+
+# Embrace the Pipe > Piped Code
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+.left-code[
+```{r piped, eval = FALSE}
+# Take state.name, then
+state.name |> 
+  # Extract the first letter, then
+  substr(1, 1) |> 
+  # Tabulate the frequencies, then
+  table() |>  
+  # Create a bar plot.
+  barplot()      
+```
+]
+
+.right-plot[
+```{r sequential-piped, ref.label="piped", echo = FALSE}
+```
+]
+
+---
+
+# Embrace the Tidyverse
+
+.font140[
+
+[Tidyverse](https://tidyverse.org)  is a collection of R packages that share a common underlying grammar and philosophy and are designed to work together to execute the data science workflow, and make data manipulation and analysis easier and more efficient. The core packages in Tidyverse include:
+
+- [dplyr](https://dplyr.tidyverse.org): for data manipulation
+- [ggplot2](https://ggplot2.tidyverse.org): for data visualization
+- [tidyr](https://tidyr.tidyverse.org): for data tidying
+- [readr](https://readr.tidyverse.org): for reading data into R
+- [purrr](https://purrr.tidyverse.org): for functional programming
+- [stringr](https://stringr.tidyverse.org): for working with strings
+
+]
+
+---
+class: inverse center middle
+
+# Doing Data Science
+
+---
+
+# Data Science Workflow
+
+<img src="https://i.imgur.com/jiBlLaM.png" title="Data Science Workflow" caption="Data Science Workflow" width="100%">
+
+---
+# Import
+
+.left-code[
+```{r import-data, eval = FALSE}
+tbl_names <- "data/names.csv.gz" |> 
+  # Get absolute path to csv file
+  here::here() |> 
+  # Read csv file
+  readr::read_csv(show_col_types = FALSE)
+
+tbl_names
+```
+]
+
+.right-plot[
+```{r import-data-out, ref.label = "import-data", echo = FALSE}
+
+```
+]
+
+---
+class: code120
+
+```{r echo = FALSE}
+code_comments <- c(
+  "# Transform > Step 1", 
+  "#### Start with tbl_names data",
+  "#### Keep ONLY Female names",
+  "#### Group by name",
+  "#### Summarize total number of births by name",
+  "#### Slice the top 100 names by number of births"
+)
+```
+
+
+`r chunk_reveal_md("md-transform-data-1", code_comments)`
+
+```{r md-transform-data-1, include = FALSE}
+tbl_names_top_100_female <- tbl_names |>  
+  filter(sex == "F") |> 
+  group_by(name)  |>  
+  summarize(
+    nb_births = sum(nb_births), 
+    .groups = "drop"
+  ) |> 
+  slice_max(nb_births, n = 100)
+```
+
+---
+
+```{r echo = FALSE}
+code_comments <- c(
+  "# Transform > Step 2", 
+  "#### Start with tbl_names",
+  "#### Keep ONLY female names in the top 100",
+  "#### Group by year",
+  "#### Add rank for number of births",
+  "#### Keep ONLY the top 20 ranks"
+)
+```
+
+
+`r chunk_reveal_md("md-transform-data-2", code_comments)`
+
+```{r md-transform-data-2, include = FALSE}
+tbl_names_trends <- tbl_names |> 
+  semi_join(
+    tbl_names_top_100_female, 
+    by = "name"
+  ) |> 
+  group_by(year) |> 
+  mutate(rank = dense_rank(desc(nb_births))) |> 
+  filter(rank <= 20)
+```
+
+---
+
+
+```{r echo = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 5, 
+  fig.height = 6,
+  fig.retina = 2,
+  dev = 'png',
+  dev.args = list(type = "cairo-png")
+)
+code_comments <- c(
+  "# Visualize",
+  "#### Start with top 100 female name trends",
+  "#### Filter for year > 2000",
+  "#### Initialize a ggplot",
+  "#### Map aesthetic x to nb_births",
+  "#### Map aesthetic y to the reverse order of rank",
+  "#### Map aesthtic fill to name",
+  "#### Add a column layer with NO legend",
+  "#### Remove the extra padding along x-axes",
+  "#### Add a title",
+  "#### Add a label for x-axis",
+  "#### Add a label for y-axis",
+  "#### Reposition the plot title",
+  "#### Remove tickmarks",
+  "#### Remove labels from y-axis",
+  "#### Map aesthetic label to name",
+  "#### Add a text layer",
+  "#### Group by name",
+  "#### Add subtitle to display year",
+  "#### Transition by year"
+)
+```
+
+`r chunk_reveal_md("md-visualize-data", code_comments, FALSE)`
+
+```{r md-visualize-data, include = FALSE}
+tbl_names_trends %>%
+  filter(year > 2000) %>%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+  aes(label = name) +
+  geom_text(x = 0, hjust = 0, size = 5) +
+  aes(group = name) +
+  labs(subtitle = "Year: {round(frame_time)}") +
+  transition_time(year)
+```
+
+---
+class: inverse center middle
+
+# How to Learn?
+
+---
+class: center middle inverse
+background-image: url("https://static.designboom.com/wp-content/uploads/2021/05/LEGO-friends-set-designboom-001.jpg")
+background-size: cover
+# Start with the big picture
+
+
+---
+class: center middle inverse
+background-image: url("https://3docean.img.customer.envatousercontent.com/files/273770896/Preview.png?auto=compress%2Cformat&fit=crop&crop=top&w=590&h=590&s=813092675332862a82ff4d46bb40b76d")
+background-size: cover
+
+# Focus on the building blocks
+
+---
+class: center middle inverse
+background-image: url("https://s3.amazonaws.com/production.cdn.playcore.com/uploads/news/_articleDetailDesktop1x/boy-playing-with-toys.jpg")
+background-size: cover
+
+# Tinker, tinker, tinker
+
+--- 
+# Data Science Roadmap
+
+```{r echo = FALSE, eval = TRUE}
+htmltools::tags$iframe(
+  src = "../ds-workflow-mindmap.html",
+  width = "100%",
+  height = 550,
+  frameBorder = "0"
+)
+```
+
+
+
+

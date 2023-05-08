@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>R for Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Ramnath Vaidyanathan" />
+    <script src="index_files/header-attrs-2.21/header-attrs.js"></script>
+    <link href="index_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="index_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="index_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="index_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="index_files/tile-view-0.2.6/tile-view.js"></script>
+    <link rel="stylesheet" href="_custom.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# R for Data Science
+]
+.subtitle[
+## Week 1
+]
+.author[
+### Ramnath Vaidyanathan
+]
+
+---
+
+class: inverse, center, middle
+
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 108px;
+height: 56.52px;
+z-index: 0;
+background-image: url(https://corise.com/_next/static/media/corise.8b7af086.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+right:0.5em;bottom:0.5em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+# R in a Nutshell
+
+---
+
+# Everything that exists is an object
+
+--
+
+
+```r
+# Vector &lt;Character&gt;
+baby_names &lt;- c("John", "Marie", "Elizabeth")
+baby_names
+```
+
+```
+[1] "John"      "Marie"     "Elizabeth"
+```
+
+--
+
+
+```r
+# Vector &lt;Boolean&gt;
+baby_is_male &lt;- c(TRUE, FALSE, FALSE)
+baby_is_male
+```
+
+```
+[1]  TRUE FALSE FALSE
+```
+
+--
+
+
+```r
+# Vector &lt;Integer&gt;
+baby_nb_births &lt;- c(120L, 30L, 60L)
+baby_nb_births
+```
+
+```
+[1] 120  30  60
+```
+
+---
+
+# Everything that happens is the result of a function call
+
+--
+
+
+```r
+# Create a numeric vector of 1000 random normal variables
+x &lt;- rnorm(n = 1000)
+# Plot a histogram of the distribution
+hist(x)
+```
+
+&lt;img src="index_files/figure-html/function-call-1.png" width="100%" /&gt;
+
+---
+
+# Embrace the Pipe &gt; Multiline Code
+
+--
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+--
+
+.left-code[
+
+```r
+# 1. Extract the first letter from each name.
+first_letters &lt;- substr(state.name, 1, 1)
+
+# 2. Count the frequency of each letter
+first_letters_counts &lt;- table(first_letters)
+
+# 3. Create a bar plot of the frequency counts
+barplot(first_letters_counts)
+```
+]
+
+.right-plot[
+&lt;img src="index_files/figure-html/sequential-eval-1.png" width="100%" /&gt;
+]
+
+---
+
+# Embrace the Pipe &gt; Oneline Code
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+.left-code[
+
+```r
+barplot(table(substr(state.name, 1, 1)))
+```
+]
+
+.right-plot[
+&lt;img src="index_files/figure-html/sequential-oneline-1.png" width="100%" /&gt;
+]
+
+---
+
+# Embrace the Pipe &gt; Piped Code
+
+.font120[Create a bar plot that shows the frequency distribution of the first letters of US state names.]
+
+.left-code[
+
+```r
+# Take state.name, then
+state.name |&gt; 
+  # Extract the first letter, then
+  substr(1, 1) |&gt; 
+  # Tabulate the frequencies, then
+  table() |&gt;  
+  # Create a bar plot.
+  barplot()      
+```
+]
+
+.right-plot[
+&lt;img src="index_files/figure-html/sequential-piped-1.png" width="100%" /&gt;
+]
+
+---
+
+# Embrace the Tidyverse
+
+.font140[
+
+[Tidyverse](https://tidyverse.org)  is a collection of R packages that share a common underlying grammar and philosophy and are designed to work together to execute the data science workflow, and make data manipulation and analysis easier and more efficient. The core packages in Tidyverse include:
+
+- [dplyr](https://dplyr.tidyverse.org): for data manipulation
+- [ggplot2](https://ggplot2.tidyverse.org): for data visualization
+- [tidyr](https://tidyr.tidyverse.org): for data tidying
+- [readr](https://readr.tidyverse.org): for reading data into R
+- [purrr](https://purrr.tidyverse.org): for functional programming
+- [stringr](https://stringr.tidyverse.org): for working with strings
+
+]
+
+---
+class: inverse center middle
+
+# Doing Data Science
+
+---
+
+# Data Science Workflow
+
+&lt;img src="https://i.imgur.com/jiBlLaM.png" title="Data Science Workflow" caption="Data Science Workflow" width="100%"&gt;
+
+---
+# Import
+
+.left-code[
+
+```r
+tbl_names &lt;- "data/names.csv.gz" |&gt; 
+  # Get absolute path to csv file
+  here::here() |&gt; 
+  # Read csv file
+  readr::read_csv(show_col_types = FALSE)
+
+tbl_names
+```
+]
+
+.right-plot[
+
+```
+# A tibble: 2,052,781 × 4
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Minnie    F          1746
+ 6  1880 Margaret  F          1578
+ 7  1880 Ida       F          1472
+ 8  1880 Alice     F          1414
+ 9  1880 Bertha    F          1320
+10  1880 Sarah     F          1288
+# ℹ 2,052,771 more rows
+```
+]
+
+---
+class: code120
+
+
+
+
+count: false
+ 
+# Transform &gt; Step 1
+.panel1-md-transform-data-1-auto[
+
+```r
+*tbl_names_top_100_female &lt;- tbl_names
+
+tbl_names_top_100_female
+```
+]
+ 
+.panel2-md-transform-data-1-auto[
+
+```
+# A tibble: 2,052,781 × 4
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Minnie    F          1746
+ 6  1880 Margaret  F          1578
+ 7  1880 Ida       F          1472
+ 8  1880 Alice     F          1414
+ 9  1880 Bertha    F          1320
+10  1880 Sarah     F          1288
+# ℹ 2,052,771 more rows
+```
+]
+ 
+.panel3-md-transform-data-1-auto[
+#### Start with tbl_names data
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 1
+.panel1-md-transform-data-1-auto[
+
+```r
+tbl_names_top_100_female &lt;- tbl_names |&gt;
+* filter(sex == "F")
+
+tbl_names_top_100_female
+```
+]
+ 
+.panel2-md-transform-data-1-auto[
+
+```
+# A tibble: 1,209,866 × 4
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Minnie    F          1746
+ 6  1880 Margaret  F          1578
+ 7  1880 Ida       F          1472
+ 8  1880 Alice     F          1414
+ 9  1880 Bertha    F          1320
+10  1880 Sarah     F          1288
+# ℹ 1,209,856 more rows
+```
+]
+ 
+.panel3-md-transform-data-1-auto[
+#### Keep ONLY Female names
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 1
+.panel1-md-transform-data-1-auto[
+
+```r
+tbl_names_top_100_female &lt;- tbl_names |&gt;
+  filter(sex == "F") |&gt;
+* group_by(name)
+
+tbl_names_top_100_female
+```
+]
+ 
+.panel2-md-transform-data-1-auto[
+
+```
+# A tibble: 1,209,866 × 4
+# Groups:   name [69,527]
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Minnie    F          1746
+ 6  1880 Margaret  F          1578
+ 7  1880 Ida       F          1472
+ 8  1880 Alice     F          1414
+ 9  1880 Bertha    F          1320
+10  1880 Sarah     F          1288
+# ℹ 1,209,856 more rows
+```
+]
+ 
+.panel3-md-transform-data-1-auto[
+#### Group by name
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 1
+.panel1-md-transform-data-1-auto[
+
+```r
+tbl_names_top_100_female &lt;- tbl_names |&gt;
+  filter(sex == "F") |&gt;
+  group_by(name)  |&gt;
+* summarize(
+*   nb_births = sum(nb_births),
+*   .groups = "drop"
+* )
+
+tbl_names_top_100_female
+```
+]
+ 
+.panel2-md-transform-data-1-auto[
+
+```
+# A tibble: 69,527 × 2
+   name      nb_births
+   &lt;chr&gt;         &lt;dbl&gt;
+ 1 Aabha            51
+ 2 Aabidah           5
+ 3 Aabriella        51
+ 4 Aada             13
+ 5 Aadaya            9
+ 6 Aaden             5
+ 7 Aadhini           7
+ 8 Aadhira         200
+ 9 Aadhirai          5
+10 Aadhvika         31
+# ℹ 69,517 more rows
+```
+]
+ 
+.panel3-md-transform-data-1-auto[
+#### Summarize total number of births by name
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 1
+.panel1-md-transform-data-1-auto[
+
+```r
+tbl_names_top_100_female &lt;- tbl_names |&gt;
+  filter(sex == "F") |&gt;
+  group_by(name)  |&gt;
+  summarize(
+    nb_births = sum(nb_births),
+    .groups = "drop"
+  ) |&gt;
+* slice_max(nb_births, n = 100)
+
+tbl_names_top_100_female
+```
+]
+ 
+.panel2-md-transform-data-1-auto[
+
+```
+# A tibble: 100 × 2
+   name      nb_births
+   &lt;chr&gt;         &lt;dbl&gt;
+ 1 Mary        4132497
+ 2 Elizabeth   1661030
+ 3 Patricia    1572795
+ 4 Jennifer    1469379
+ 5 Linda       1453755
+ 6 Barbara     1435386
+ 7 Margaret    1255686
+ 8 Susan       1122518
+ 9 Dorothy     1109423
+10 Sarah       1087196
+# ℹ 90 more rows
+```
+]
+ 
+.panel3-md-transform-data-1-auto[
+#### Slice the top 100 names by number of births
+]
+
+&lt;style&gt;
+.panel1-md-transform-data-1-auto {
+  color: black;
+  width: 28.7040816326531%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-md-transform-data-1-auto {
+  color: black;
+  width: 38.6020408163265%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-md-transform-data-1-auto {
+  color: black;
+  width: 29.6938775510204%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+
+
+
+
+count: false
+ 
+# Transform &gt; Step 2
+.panel1-md-transform-data-2-auto[
+
+```r
+*tbl_names_trends &lt;- tbl_names
+
+tbl_names_trends
+```
+]
+ 
+.panel2-md-transform-data-2-auto[
+
+```
+# A tibble: 2,052,781 × 4
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Minnie    F          1746
+ 6  1880 Margaret  F          1578
+ 7  1880 Ida       F          1472
+ 8  1880 Alice     F          1414
+ 9  1880 Bertha    F          1320
+10  1880 Sarah     F          1288
+# ℹ 2,052,771 more rows
+```
+]
+ 
+.panel3-md-transform-data-2-auto[
+#### Start with tbl_names
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 2
+.panel1-md-transform-data-2-auto[
+
+```r
+tbl_names_trends &lt;- tbl_names |&gt;
+* semi_join(
+*   tbl_names_top_100_female,
+*   by = "name"
+* )
+
+tbl_names_trends
+```
+]
+ 
+.panel2-md-transform-data-2-auto[
+
+```
+# A tibble: 21,469 × 4
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Margaret  F          1578
+ 6  1880 Alice     F          1414
+ 7  1880 Sarah     F          1288
+ 8  1880 Martha    F          1040
+ 9  1880 Laura     F          1012
+10  1880 Grace     F           982
+# ℹ 21,459 more rows
+```
+]
+ 
+.panel3-md-transform-data-2-auto[
+#### Keep ONLY female names in the top 100
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 2
+.panel1-md-transform-data-2-auto[
+
+```r
+tbl_names_trends &lt;- tbl_names |&gt;
+  semi_join(
+    tbl_names_top_100_female,
+    by = "name"
+  ) |&gt;
+* group_by(year)
+
+tbl_names_trends
+```
+]
+ 
+.panel2-md-transform-data-2-auto[
+
+```
+# A tibble: 21,469 × 4
+# Groups:   year [142]
+    year name      sex   nb_births
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+ 1  1880 Mary      F          7065
+ 2  1880 Anna      F          2604
+ 3  1880 Emma      F          2003
+ 4  1880 Elizabeth F          1939
+ 5  1880 Margaret  F          1578
+ 6  1880 Alice     F          1414
+ 7  1880 Sarah     F          1288
+ 8  1880 Martha    F          1040
+ 9  1880 Laura     F          1012
+10  1880 Grace     F           982
+# ℹ 21,459 more rows
+```
+]
+ 
+.panel3-md-transform-data-2-auto[
+#### Group by year
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 2
+.panel1-md-transform-data-2-auto[
+
+```r
+tbl_names_trends &lt;- tbl_names |&gt;
+  semi_join(
+    tbl_names_top_100_female,
+    by = "name"
+  ) |&gt;
+  group_by(year) |&gt;
+* mutate(rank = dense_rank(desc(nb_births)))
+
+tbl_names_trends
+```
+]
+ 
+.panel2-md-transform-data-2-auto[
+
+```
+# A tibble: 21,469 × 5
+# Groups:   year [142]
+    year name      sex   nb_births  rank
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;int&gt;
+ 1  1880 Mary      F          7065     1
+ 2  1880 Anna      F          2604     2
+ 3  1880 Emma      F          2003     3
+ 4  1880 Elizabeth F          1939     4
+ 5  1880 Margaret  F          1578     5
+ 6  1880 Alice     F          1414     6
+ 7  1880 Sarah     F          1288     7
+ 8  1880 Martha    F          1040     8
+ 9  1880 Laura     F          1012     9
+10  1880 Grace     F           982    10
+# ℹ 21,459 more rows
+```
+]
+ 
+.panel3-md-transform-data-2-auto[
+#### Add rank for number of births
+]
+
+---
+count: false
+ 
+# Transform &gt; Step 2
+.panel1-md-transform-data-2-auto[
+
+```r
+tbl_names_trends &lt;- tbl_names |&gt;
+  semi_join(
+    tbl_names_top_100_female,
+    by = "name"
+  ) |&gt;
+  group_by(year) |&gt;
+  mutate(rank = dense_rank(desc(nb_births))) |&gt;
+* filter(rank &lt;= 20)
+
+tbl_names_trends
+```
+]
+ 
+.panel2-md-transform-data-2-auto[
+
+```
+# A tibble: 2,843 × 5
+# Groups:   year [142]
+    year name      sex   nb_births  rank
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;int&gt;
+ 1  1880 Mary      F          7065     1
+ 2  1880 Anna      F          2604     2
+ 3  1880 Emma      F          2003     3
+ 4  1880 Elizabeth F          1939     4
+ 5  1880 Margaret  F          1578     5
+ 6  1880 Alice     F          1414     6
+ 7  1880 Sarah     F          1288     7
+ 8  1880 Martha    F          1040     8
+ 9  1880 Laura     F          1012     9
+10  1880 Grace     F           982    10
+# ℹ 2,833 more rows
+```
+]
+ 
+.panel3-md-transform-data-2-auto[
+#### Keep ONLY the top 20 ranks
+]
+
+&lt;style&gt;
+.panel1-md-transform-data-2-auto {
+  color: black;
+  width: 28.7040816326531%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-md-transform-data-2-auto {
+  color: black;
+  width: 38.6020408163265%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-md-transform-data-2-auto {
+  color: black;
+  width: 29.6938775510204%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+
+
+
+
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+*tbl_names_trends
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+
+```
+# A tibble: 2,843 × 5
+# Groups:   year [142]
+    year name      sex   nb_births  rank
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;int&gt;
+ 1  1880 Mary      F          7065     1
+ 2  1880 Anna      F          2604     2
+ 3  1880 Emma      F          2003     3
+ 4  1880 Elizabeth F          1939     4
+ 5  1880 Margaret  F          1578     5
+ 6  1880 Alice     F          1414     6
+ 7  1880 Sarah     F          1288     7
+ 8  1880 Martha    F          1040     8
+ 9  1880 Laura     F          1012     9
+10  1880 Grace     F           982    10
+# ℹ 2,833 more rows
+```
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Start with top 100 female name trends
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+* filter(year &gt; 2000)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+
+```
+# A tibble: 420 × 5
+# Groups:   year [21]
+    year name      sex   nb_births  rank
+   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;int&gt;
+ 1  2001 Emily     F         25058     1
+ 2  2001 Madison   F         22166     2
+ 3  2001 Hannah    F         20719     3
+ 4  2001 Ashley    F         16529     4
+ 5  2001 Sarah     F         15915     5
+ 6  2001 Samantha  F         15866     6
+ 7  2001 Abigail   F         14807     7
+ 8  2001 Elizabeth F         14790     8
+ 9  2001 Olivia    F         13977     9
+10  2001 Jessica   F         13923    10
+# ℹ 410 more rows
+```
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Filter for year &gt; 2000
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+* ggplot()
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_03_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Initialize a ggplot
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+* aes(x = nb_births)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_04_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Map aesthetic x to nb_births
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+* aes(y = fct_rev(factor(rank)))
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_05_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Map aesthetic y to the reverse order of rank
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+* aes(fill = name)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_06_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Map aesthtic fill to name
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+* geom_col(show.legend = FALSE)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_07_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add a column layer with NO legend
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+* scale_x_continuous(expand = c(0, 0))
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_08_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Remove the extra padding along x-axes
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+* labs(title = 'Animated Barchart of Top Female Babynames')
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_09_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add a title
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+* labs(x = '# Births')
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_10_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add a label for x-axis
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+* labs(y = NULL)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_11_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add a label for y-axis
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+* theme(plot.title.position = 'plot')
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_12_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Reposition the plot title
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+* theme(axis.ticks = element_blank())
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_13_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Remove tickmarks
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+* theme(axis.text.y = element_blank())
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_14_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Remove labels from y-axis
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+* aes(label = name)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_15_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Map aesthetic label to name
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+  aes(label = name) +
+* geom_text(x = 0, hjust = 0, size = 5)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_16_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add a text layer
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+  aes(label = name) +
+  geom_text(x = 0, hjust = 0, size = 5) +
+* aes(group = name)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_17_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Group by name
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+  aes(label = name) +
+  geom_text(x = 0, hjust = 0, size = 5) +
+  aes(group = name) +
+* labs(subtitle = "Year: {round(frame_time)}")
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_18_output-1.png" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Add subtitle to display year
+]
+
+---
+count: false
+ 
+# Visualize
+.panel1-md-visualize-data-auto[
+
+```r
+tbl_names_trends %&gt;%
+  filter(year &gt; 2000) %&gt;%
+  ggplot() +
+  aes(x = nb_births) +
+  aes(y = fct_rev(factor(rank))) +
+  aes(fill = name) +
+  geom_col(show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(title = 'Animated Barchart of Top Female Babynames') +
+  labs(x = '# Births') +
+  labs(y = NULL) +
+  theme(plot.title.position = 'plot') +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text.y = element_blank()) +
+  aes(label = name) +
+  geom_text(x = 0, hjust = 0, size = 5) +
+  aes(group = name) +
+  labs(subtitle = "Year: {round(frame_time)}") +
+* transition_time(year)
+```
+]
+ 
+.panel2-md-visualize-data-auto[
+&lt;img src="index_files/figure-html/md-visualize-data_auto_19_output-1.gif" width="100%" /&gt;
+]
+ 
+.panel3-md-visualize-data-auto[
+#### Transition by year
+]
+
+&lt;style&gt;
+.panel1-md-visualize-data-auto {
+  color: black;
+  width: 28.7040816326531%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-md-visualize-data-auto {
+  color: black;
+  width: 38.6020408163265%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-md-visualize-data-auto {
+  color: black;
+  width: 29.6938775510204%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: inverse center middle
+
+# How to Learn?
+
+---
+class: center middle inverse
+background-image: url("https://static.designboom.com/wp-content/uploads/2021/05/LEGO-friends-set-designboom-001.jpg")
+background-size: cover
+# Start with the big picture
+
+
+---
+class: center middle inverse
+background-image: url("https://3docean.img.customer.envatousercontent.com/files/273770896/Preview.png?auto=compress%2Cformat&amp;fit=crop&amp;crop=top&amp;w=590&amp;h=590&amp;s=813092675332862a82ff4d46bb40b76d")
+background-size: cover
+
+# Focus on the building blocks
+
+---
+class: center middle inverse
+background-image: url("https://s3.amazonaws.com/production.cdn.playcore.com/uploads/news/_articleDetailDesktop1x/boy-playing-with-toys.jpg")
+background-size: cover
+
+# Tinker, tinker, tinker
+
+--- 
+# Data Science Roadmap
+
+<iframe src="../ds-workflow-mindmap.html" width="100%" height="550" frameBorder="0"></iframe>
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
