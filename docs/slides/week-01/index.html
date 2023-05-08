@@ -10,6 +10,10 @@
     <link href="index_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <link href="index_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="index_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="index_files/fabric-4.3.1/fabric.min.js"></script>
+    <link href="index_files/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="index_files/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
     <link rel="stylesheet" href="custom.css" type="text/css" />
   </head>
   <body>
@@ -792,7 +796,7 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
+tbl_names_trends |&gt;
 * filter(year &gt; 2000)
 ```
 ]
@@ -829,8 +833,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
 * ggplot()
 ```
 ]
@@ -850,8 +854,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
 * aes(x = nb_births)
 ```
@@ -872,8 +876,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
 * aes(y = fct_rev(factor(rank)))
@@ -895,8 +899,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -919,8 +923,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -944,8 +948,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -970,8 +974,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -997,8 +1001,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1025,8 +1029,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1054,8 +1058,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1084,8 +1088,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1115,8 +1119,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1147,8 +1151,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1180,8 +1184,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1214,8 +1218,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1249,8 +1253,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1285,8 +1289,8 @@ count: false
 .panel1-md-visualize-data-auto[
 
 ```r
-tbl_names_trends %&gt;%
-  filter(year &gt; 2000) %&gt;%
+tbl_names_trends |&gt;
+  filter(year &gt; 2000) |&gt;
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -1371,15 +1375,6 @@ background-image: url("https://s3.amazonaws.com/production.cdn.playcore.com/uplo
 background-size: cover
 
 # Tinker, tinker, tinker
-
---- 
-# Data Science Roadmap
-
-<iframe src="../ds-workflow-mindmap.html" width="100%" height="550" frameBorder="0"></iframe>
-
-
-
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

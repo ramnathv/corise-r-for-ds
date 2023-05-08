@@ -14,9 +14,12 @@
 }
 
 div[class^='panel3'] {
-  color: blue;
   position: absolute;
   top: 70px;
+}
+
+div[class^='panel3'] h4{
+  color: #ff8e26;
 }
 
 div[class^='panel1-md']{

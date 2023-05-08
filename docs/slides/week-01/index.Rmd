@@ -23,8 +23,8 @@ tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
 
 # Load xaringan extras
 xaringanExtra::use_xaringan_extra(c("tile_view"))
+xaringanExtra::use_scribble()
 # xaringanExtra::use_freezeframe()
-# xaringanExtra::use_scribble()
 ```
 
 
@@ -291,8 +291,8 @@ code_comments <- c(
 `r chunk_reveal_md("md-visualize-data", code_comments, FALSE)`
 
 ```{r md-visualize-data, include = FALSE}
-tbl_names_trends %>%
-  filter(year > 2000) %>%
+tbl_names_trends |> 
+  filter(year > 2000) |> 
   ggplot() +
   aes(x = nb_births) +
   aes(y = fct_rev(factor(rank))) +
@@ -337,19 +337,3 @@ background-image: url("https://s3.amazonaws.com/production.cdn.playcore.com/uplo
 background-size: cover
 
 # Tinker, tinker, tinker
-
---- 
-# Data Science Roadmap
-
-```{r echo = FALSE, eval = TRUE}
-htmltools::tags$iframe(
-  src = "../ds-workflow-mindmap.html",
-  width = "100%",
-  height = 550,
-  frameBorder = "0"
-)
-```
-
-
-
-
