@@ -156,7 +156,7 @@ tbl_names |>
 
 It is very important to pay attention to the message that gets printed.
 
-    #> `summarise()` has grouped output by 'sex'. You can override using the `.groups`
+    #> `summarize()` has grouped output by 'sex'. You can override using the `.groups`
     #> argument.
 
 When you group by multiple variables, each summarize operation removes
