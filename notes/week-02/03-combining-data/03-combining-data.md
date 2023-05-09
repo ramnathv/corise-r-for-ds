@@ -1,9 +1,8 @@
 
 ## Combining Data
 
-**Combining** data spread across multiple tables is a common operation.
-This is where the `join` and `bind` functions in `dplyr` comes into
-play.
+**Combining** data spread across multiple tables is a common task. This
+is where the `join` and `bind` functions in `dplyr` comes into play.
 
 <img src="https://i.imgur.com/qfpUdFQ.png" width="100%" />
 
@@ -21,7 +20,7 @@ of another based on common columns. In `dplyr`, you can use the
 functions to perform different types of joins.
 
 Let us take two datasets `band_instruments` and `band_members` which
-contains information on the instruments that different members play and
+contain information on the instruments that different members play and
 the bands that they belong to. Note that not everyone plays an
 instrument, and not everyone is in a band.
 
@@ -113,7 +112,7 @@ full_join(band_instruments, band_members, by = "name")
 
 The `cross_join()` function is a cartesian join that matches every row
 in one table with every row in another table WITHOUT consideration for
-any matchin columns. As a result, we end up with a table with number of
+any matching columns. As a result, we end up with a table with number of
 rows equaling the product of number of rows of the two tables.
 
 ``` r
