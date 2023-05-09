@@ -19,7 +19,7 @@ knitr::include_graphics(
 )
 ```
 
-Wouldn't it be cool if we redid the same analysis, but with more data! Let us dive into the data and figure out what are the most popular unisex names. Let us assume that a name is considered unisex if there are more than 33% males and 33% females with that name. We can tweak these thresholds subsequently to see if it reveals a different set of names!
+Wouldn't it be cool if we redid the same analysis, but with more data! Let us dive into the data and figure out the most popular unisex names. Let's assume that a name is considered unisex if more than 33% males and 33% females have that name. We can tweak these thresholds subsequently to see if it reveals a different set of names!
 
 
 Let us load some R packages that we will need to accomplish this task.
@@ -35,7 +35,7 @@ source(here::here("_common.R"))
 
 ### Import
 
-As always, we start by importing the data from `data/names.csv.gz`.
+As always, let's start by importing the data from `data/names.csv.gz`.
 
 ```{r import-data}
 file_name_names <- here::here('data/names.csv.gz')
@@ -169,7 +169,7 @@ tbl_names_unisex <- tbl_names |>
 
 ### Visualize
 
-We are all set to visualize the data! We can use `ggplot2` to create some lovely plots from this data. But, we are going to use another R package named `gt` and its companion package `gtExtras` to visualize this data as a table. The `gt` package implements a __grammar of tables__ and you will see how it can create amazing looking tables, that sometimes look better than plots.
+We are all set to visualize the data! We can use `ggplot2` to create some lovely plots from this data. But, we are going to use another R package named `gt` and its companion package `gtExtras` to visualize this data as a table. The `gt` package implements a __grammar of tables__ and you will see how it can create amazing looking tables that sometimes look better than plots.
 
 Let us visualize this data as an html table with a stacked bar chart that summarizes information about unisex names, and can help identify popular names that are used relatively equally for both men and women.
 
