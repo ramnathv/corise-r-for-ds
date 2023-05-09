@@ -101,7 +101,7 @@ contain the values that were pivoted. In this case, it is set to
 `'rank'`, which will create a new column called “rank” that contains the
 ranking of each song for each week.
 
-#### `pivot_wider`: Pivot data from wide to long
+#### `pivot_wider`: Pivot data from long to wide
 
 Let us reshape `billboard_long` back to the wide format using the
 `pivot_wider()` function.
@@ -167,7 +167,7 @@ subsets of our data, or when we have data with a hierarchical structure
 that we want to preserve.
 
 ``` r
-# Nest the
+# Nest the year and nb_births columns into a list-column named nb_births_by_year
 tbl_names_nested <- tbl_names |> 
   group_by(sex, name) |> 
   nest(nb_births_by_year = c(year, nb_births))
