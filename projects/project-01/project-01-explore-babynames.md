@@ -503,9 +503,20 @@ This will render the document to a markdown file with the same name.
 
 **Commit both Rmd and md documents to github**
 
+Navigate to the **git** tab, check both the `Rmd` and `md` files for the
+project, and click on the **Commit** button.
+
 ![commit-1](https://i.imgur.com/5TCYP7H.png)
 
+Add a meaningful commit message and click on the **Commit** button to
+push your changes to your github repository.
+
 ![commit-2](https://i.imgur.com/8Z6f9C3.png)
+
+You will need to make sure that you give gitpod permissions to
+read/write to your github repository. Instructions on how to this can be
+found on the [Corise
+platform](https://corise.com/course/r-for-data-science/v2/enrollment/enrollment_clfikeubz00hv128jeidi8otg/module/week-0-gitpod-setup-for-projects-sob7h#corise_clhgabmuz00083b75onymkcnt)
 
 **Share the link to your md document with your reviewer**
 
