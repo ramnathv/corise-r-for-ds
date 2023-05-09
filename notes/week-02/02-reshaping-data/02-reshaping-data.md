@@ -167,7 +167,7 @@ subsets of our data, or when we have data with a hierarchical structure
 that we want to preserve.
 
 ``` r
-# Nest the
+# Nest the year and nb_births columns into a list-column named nb_births_by_year
 tbl_names_nested <- tbl_names |> 
   group_by(sex, name) |> 
   nest(nb_births_by_year = c(year, nb_births))

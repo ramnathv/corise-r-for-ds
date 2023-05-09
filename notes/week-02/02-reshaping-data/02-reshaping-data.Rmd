@@ -85,7 +85,7 @@ tbl_names <- readr::read_csv(
  __Nesting__ involves taking a set of variables and collapsing them into a single column that contains a nested data structure, such as a list or a data frame. This can be useful when we want to perform operations on subsets of our data, or when we have data with a hierarchical structure that we want to preserve.
 
 ```{r nest}
-# Nest the
+# Nest the year and nb_births columns into a list-column named nb_births_by_year
 tbl_names_nested <- tbl_names |> 
   group_by(sex, name) |> 
   nest(nb_births_by_year = c(year, nb_births))
