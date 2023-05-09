@@ -478,15 +478,15 @@ tbl_names_vowel_consonant |>
 
 ------------------------------------------------------------------------
 
-The fct_reorder() function is a useful tool for reordering the levels of
-a factor based on the values of another variable. This function can be
-particularly helpful when creating visualizations, as it allows you to
-display data in a more organized and informative manner. In this
-exercise, fct_reorder() is used to reorder the levels of the first_last
-factor according to the median of the pct_births variable. By doing so,
-the resulting plot will show the trends in vowels and consonants usage
-in a more structured way, making it easier to identify and interpret the
-patterns.
+The `fct_reorder()` function is a useful tool for reordering the levels
+of a factor based on the values of another variable. This function can
+be particularly helpful when creating visualizations, as it allows you
+to display data in a more organized and informative manner. In this
+exercise, `fct_reorder()` is used to reorder the levels of the
+first_last factor according to the median of the `pct_births` variable.
+By doing so, the resulting plot will show the trends in vowels and
+consonants usage in a more structured way, making it easier to identify
+and interpret the patterns.
 
 ------------------------------------------------------------------------
 
