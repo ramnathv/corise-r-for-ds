@@ -476,10 +476,42 @@ tbl_names_vowel_consonant |>
   )
 ```
 
-|                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Note**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| The fct_reorder() function is a useful tool for reordering the levels of a factor based on the values of another variable. This function can be particularly helpful when creating visualizations, as it allows you to display data in a more organized and informative manner. In this exercise, fct_reorder() is used to reorder the levels of the first_last factor according to the median of the pct_births variable. By doing so, the resulting plot will show the trends in vowels and consonants usage in a more structured way, making it easier to identify and interpret the patterns. |
+------------------------------------------------------------------------
+
+The fct_reorder() function is a useful tool for reordering the levels of
+a factor based on the values of another variable. This function can be
+particularly helpful when creating visualizations, as it allows you to
+display data in a more organized and informative manner. In this
+exercise, fct_reorder() is used to reorder the levels of the first_last
+factor according to the median of the pct_births variable. By doing so,
+the resulting plot will show the trends in vowels and consonants usage
+in a more structured way, making it easier to identify and interpret the
+patterns.
+
+------------------------------------------------------------------------
+
+Congratulations 🥳🎉 on completing your first project. Follow the
+instructions below to submit it for review.
+
+### Submission Guidelines
+
+**Click on the Knit button in the menu on top**
+
+![knit-document](https://i.imgur.com/yiiClHU.png)
+
+This will render the document to a markdown file with the same name.
+
+**Commit both Rmd and md documents to github**
+
+![commit-1](https://i.imgur.com/5TCYP7H.png)
+
+![commit-2](https://i.imgur.com/8Z6f9C3.png)
+
+**Share the link to your md document with your reviewer**
+
+Replace your username in the link below and share it with your reviewer.
+
+<https://github.com/ramnathv/corise-r-for-ds/blob/main/projects/project-01/project-01-explore-babynames.md>
 
 ## MORE BONUS
 
