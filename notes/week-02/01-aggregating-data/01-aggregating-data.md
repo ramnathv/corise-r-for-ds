@@ -50,7 +50,7 @@ tbl_names
 #> # ℹ 2,052,771 more rows
 ```
 
-### `group_by`: Group by one or more variables
+### `group_by()`: Group by one or more variables
 
 The `group_by()` function lets you group a table by one or more columns.
 Applying the `group_by` function to a table does not change its
@@ -98,7 +98,7 @@ tbl_names |>
 #> # ℹ 2,052,771 more rows
 ```
 
-### `summarize`: Summarize each group down to one row
+### `summarize()`: Summarize each group down to one row
 
 The reason we group a table by columns is to be able to manipulate it by
 group. While the `group_by` function can be used in tandem with several
