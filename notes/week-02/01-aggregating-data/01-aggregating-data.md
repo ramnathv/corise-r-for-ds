@@ -211,7 +211,7 @@ and then use that to compute the percentages.
 Let us now `ungroup()` the data, `filter()` for names with more than
 50,000 births and `arrange()` them in descending order of births, so we
 can see how some names have a lion’s share of births happening in a few
-years. For example, 40% of all Luna’s were born in the years 2019, 2020,
+years. For example, 40% of all Lunas were born in the years 2019, 2020,
 and 2021
 
 ``` r
