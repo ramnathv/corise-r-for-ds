@@ -305,7 +305,7 @@ diamonds |>
   )
 ```
 
-<img src="img/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="img/stat-diamonds-3-1.png" width="100%" style="display: block; margin: auto;" />
 Mastering the different **`geom`** and **`stat`** layer functions will
 let you create sophisticated data visualizations with ease as you can
 build your plot up layer by layer.

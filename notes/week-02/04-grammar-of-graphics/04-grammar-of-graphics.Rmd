@@ -199,7 +199,7 @@ diamonds |>
 
 We can rewrite this code in terms of geometric objects directly and passing the statistic as an argument. In other words, the `geom_***` and `stat_***` functions can be used interchangeably. Every `geom` object has a default `stat` and every `stat` has a default `geom` object.
 
-```{r}
+```{r stat-diamonds-3}
 diamonds |> 
   ggplot(aes(
     x = clarity, 
