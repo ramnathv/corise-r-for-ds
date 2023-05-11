@@ -34,7 +34,7 @@ tbl_names <- readr::read_csv(file_name_names, show_col_types = FALSE)
 tbl_names
 ```
 
-### `group_by`: Group by one or more variables
+### `group_by()`: Group by one or more variables
 
 The `group_by()` function lets you group a table by one or more columns. Applying the `group_by` function to a table does not change its appearance, except for adding some metadata on the grouping variables.
 
@@ -51,7 +51,7 @@ tbl_names |>
 ```
 
 
-### `summarize`: Summarize each group down to one row
+### `summarize()`: Summarize each group down to one row
 
 The reason we group a table by columns is to be able to manipulate it by group. While the `group_by` function can be used in tandem with several other manipulation functions, the most common function used is the `summarize` function. It aggregates the data for each group such that there is only ONE row per group.
 
@@ -80,7 +80,7 @@ tbl_names |>
 It is very important to pay attention to the message that gets printed.
 
 ```
-#> `summarise()` has grouped output by 'sex'. You can override using the `.groups`
+#> `summarize()` has grouped output by 'sex'. You can override using the `.groups`
 #> argument.
 ```
 
@@ -104,7 +104,7 @@ While, you can apply any of the data manipulation verbs in the `tidyverse` to a 
 
 A grouped data frame is just like a normal data frame EXCEPT that any operation you do on it is applied to each group separately. For example, suppose you want to compute the percentage of births in a year by `sex` and `name`. You can group by `sex` and `name` and use the `mutate()` function to add a column for the total number of births for each group, and then use that to compute the percentages. 
 
-Let us now `ungroup()` the data, `filter()` for names with more than 50,000 births and `arrange()` them in descending order of births, so we can see how some names have a lion's share of births happening in a few years. For example, 40% of all Luna's were born in the years 2019, 2020, and 2021
+Let us now `ungroup()` the data, `filter()` for names with more than 50,000 births and `arrange()` them in descending order of births, so we can see how some names have a lion's share of births happening in a few years. For example, 40% of all Lunas were born in the years 2019, 2020, and 2021
 
 
 ```{r mutate-nb-births}

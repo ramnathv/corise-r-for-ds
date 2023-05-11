@@ -53,7 +53,7 @@ head(billboard)
 #> #   wk43 <dbl>, wk44 <dbl>, wk45 <dbl>, wk46 <dbl>, wk47 <dbl>, wk48 <dbl>, …
 ```
 
-#### `pivot_longer`: Pivot data from wide to long
+#### `pivot_longer()`: Pivot data from wide to long
 
 Let us start by reshaping this data to the long form. Note that the long
 form is usually a lot easier to analyze and visualize and is preferred
@@ -101,7 +101,7 @@ contain the values that were pivoted. In this case, it is set to
 `'rank'`, which will create a new column called “rank” that contains the
 ranking of each song for each week.
 
-#### `pivot_wider`: Pivot data from wide to long
+#### `pivot_wider()`: Pivot data from long to wide
 
 Let us reshape `billboard_long` back to the wide format using the
 `pivot_wider()` function.
@@ -158,7 +158,7 @@ tbl_names <- readr::read_csv(
 
 ### Nest
 
-#### `nest`: Nest rows into a list-column of data frames
+#### `nest()`: Nest rows into a list-column of data frames
 
 **Nesting** involves taking a set of variables and collapsing them into
 a single column that contains a nested data structure, such as a list or
@@ -167,7 +167,7 @@ subsets of our data, or when we have data with a hierarchical structure
 that we want to preserve.
 
 ``` r
-# Nest the
+# Nest the year and nb_births columns into a list-column named nb_births_by_year
 tbl_names_nested <- tbl_names |> 
   group_by(sex, name) |> 
   nest(nb_births_by_year = c(year, nb_births))
@@ -203,7 +203,7 @@ head(tbl_names_nested$nb_births_by_year[[1]])
 #> 6  1885      9128
 ```
 
-#### `unnest`: Unnest a list-column of data frames
+#### `unnest()`: Unnest a list-column of data frames
 
 **Unnesting**, on the other hand, involves taking data that is nested in
 a column and spreading it out into separate columns. This can be useful
@@ -230,7 +230,7 @@ tbl_names_nested |>
 #> # ℹ 2,052,771 more rows
 ```
 
-#### `unnest_longer`: Unnest a list-column into rows
+#### `unnest_longer()`: Unnest a list-column into rows
 
 There are three other `unnesting` functions supported by the `tidyr`
 package. To illustrate their usage, let us take the `starwars` data and
@@ -285,7 +285,7 @@ starwars |>
 #> # ℹ 163 more rows
 ```
 
-#### `unnest_wider`: Unnest a list-column into columns
+#### `unnest_wider()`: Unnest a list-column into columns
 
 Alternately, we could also unnest it wider so that each `name` still has
 only one `row`, but each film gets its own column.
@@ -313,7 +313,7 @@ starwars |>
 Note that the length of `films` for each `name` is not equal and so
 there are NAs in the data.
 
-#### `unnest_auto`
+#### `unnest_auto()`: Unnest a list-column automatically
 
 Finally, we have the `unnest_auto()` function which automatically uses
 `unnest_longer()` or `unnest_wider()` based on which one is more
@@ -343,7 +343,7 @@ starwars |>
 
 ### Expand
 
-#### `expand`: Expand to include all combinations of values
+#### `expand()`: Expand to include all combinations of values
 
 The `expand()` function can be used to generate all combinations of
 variables in a data frame. For example, take this data frame of fruits.
@@ -388,7 +388,7 @@ fruits |>
 #> 8 orange L
 ```
 
-#### `complete`: Complete with missing combinations
+#### `complete()`: Complete with missing combinations
 
 The `complete()` function extends what the `expand()` function does and
 also adds the remaining columns of the data, and fills them with NAs
@@ -412,7 +412,7 @@ fruits |>
 #> 10 orange L        NA   NA
 ```
 
-#### `separate_rows`: Separate a collapsed column into multiple rows
+#### `separate_rows()`: Separate a collapsed column into multiple rows
 
 Let us go back to the `starwars` data and look at the `skin_color`
 column. Note values like `white, blue` which are essentially the result

@@ -68,6 +68,7 @@ Let us create a scatterplot using four different aesthetic mappings. Note that w
 
 ```{r plot-diamonds, warning = FALSE}
 diamonds |> 
+  # Randomly select 10% of the rows from the dataframe for this example
   sample_frac(0.10) |> 
   ggplot(aes(
     x = carat,
@@ -167,9 +168,9 @@ diamonds |>
   ))
 ```
 
-Transforming the data prior to plotting always works for every plot. However, `ggplot2` provides another mechanism to carry out statistical transformations out of the box. You already saw it in action when you used `geom_boxplot` and `geom_violin`. Both these functions automatically carried out  statistical transformations on the data before plotting them.
+Transforming the data prior to plotting always works for every plot. However, `ggplot2` provides another mechanism to carry out statistical transformations out of the box. You already saw it in action when you used `geom_boxplot` and `geom_violin`. Both these functions automatically carry out statistical transformations on the data before plotting them.
 
-`ggplot2` ships with several statistical transformations out of the box, that allow you to create sophistical statistical plots without having to pre-compute values. In this example, we can use the simplest of stat functions in `ggplot2`, `stat_summary`, which applies a user defined function on the data before plotting it.
+`ggplot2` ships with several statistical transformations out of the box, that allow you to create sophisticated statistical plots without having to pre-compute values. In this example, we can use the simplest of stat functions in `ggplot2`, `stat_summary`, which applies a user defined function on the data before plotting it.
 
 1. First, we use `stat_summary` with the `mean()` function to get the avg price per carat and plot it using a `point` geometric object. 
 
@@ -198,7 +199,7 @@ diamonds |>
 
 We can rewrite this code in terms of geometric objects directly and passing the statistic as an argument. In other words, the `geom_***` and `stat_***` functions can be used interchangeably. Every `geom` object has a default `stat` and every `stat` has a default `geom` object.
 
-```{r}
+```{r stat-diamonds-3}
 diamonds |> 
   ggplot(aes(
     x = clarity, 

@@ -100,6 +100,7 @@ this is not a representation of best practice.
 
 ``` r
 diamonds |> 
+  # Randomly select 10% of the rows from the dataframe for this example
   sample_frac(0.10) |> 
   ggplot(aes(
     x = carat,
@@ -241,12 +242,12 @@ Transforming the data prior to plotting always works for every plot.
 However, `ggplot2` provides another mechanism to carry out statistical
 transformations out of the box. You already saw it in action when you
 used `geom_boxplot` and `geom_violin`. Both these functions
-automatically carried out statistical transformations on the data before
+automatically carry out statistical transformations on the data before
 plotting them.
 
 `ggplot2` ships with several statistical transformations out of the box,
-that allow you to create sophistical statistical plots without having to
-pre-compute values. In this example, we can use the simplest of stat
+that allow you to create sophisticated statistical plots without having
+to pre-compute values. In this example, we can use the simplest of stat
 functions in `ggplot2`, `stat_summary`, which applies a user defined
 function on the data before plotting it.
 
@@ -304,7 +305,7 @@ diamonds |>
   )
 ```
 
-<img src="img/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="img/stat-diamonds-3-1.png" width="100%" style="display: block; margin: auto;" />
 Mastering the different **`geom`** and **`stat`** layer functions will
 let you create sophisticated data visualizations with ease as you can
 build your plot up layer by layer.

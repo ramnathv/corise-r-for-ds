@@ -50,7 +50,7 @@ tbl_names
 #> # ℹ 2,052,771 more rows
 ```
 
-### `group_by`: Group by one or more variables
+### `group_by()`: Group by one or more variables
 
 The `group_by()` function lets you group a table by one or more columns.
 Applying the `group_by` function to a table does not change its
@@ -98,7 +98,7 @@ tbl_names |>
 #> # ℹ 2,052,771 more rows
 ```
 
-### `summarize`: Summarize each group down to one row
+### `summarize()`: Summarize each group down to one row
 
 The reason we group a table by columns is to be able to manipulate it by
 group. While the `group_by` function can be used in tandem with several
@@ -156,7 +156,7 @@ tbl_names |>
 
 It is very important to pay attention to the message that gets printed.
 
-    #> `summarise()` has grouped output by 'sex'. You can override using the `.groups`
+    #> `summarize()` has grouped output by 'sex'. You can override using the `.groups`
     #> argument.
 
 When you group by multiple variables, each summarize operation removes
@@ -211,7 +211,7 @@ and then use that to compute the percentages.
 Let us now `ungroup()` the data, `filter()` for names with more than
 50,000 births and `arrange()` them in descending order of births, so we
 can see how some names have a lion’s share of births happening in a few
-years. For example, 40% of all Luna’s were born in the years 2019, 2020,
+years. For example, 40% of all Lunas were born in the years 2019, 2020,
 and 2021
 
 ``` r
