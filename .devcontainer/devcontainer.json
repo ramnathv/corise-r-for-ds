@@ -38,7 +38,7 @@
 		"8787": {
 			"label": "Rstudio",
 			"requireLocalPort": true,
-			"onAutoForward": "ignore"
+			"onAutoForward": "notify"
 		},
 		"8888": {
 			"label": "Jupyter",
