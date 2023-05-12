@@ -1,0 +1,50 @@
+---
+output: github_document
+---
+## Working with Gitpod and Github
+
+This is a short guide on how to work with Gitpod and Github while you are doing this course. I have broken it down into sections so you can dive straight into the one that answers your question.
+
+![gitpod-github-sync](https://i.imgur.com/uRaj78q.png)
+
+### Sync Changes from Course Repository to Forked Repository
+
+When you __forked__ the course repository, you created a __copy__ of it as it existed at that point in time. It is common for updates to be pushed to a course as the course progresses. This allows the instructor to make changes based on the constant feedback received. Hence, it is always useful to sync your fork with the course repository.
+
+If you navigate to your forked repository on github, you will see a banner on top that looks like this. It shows you if your fork is not up-to-date, and allows you to sync changes with a single click. Click on the __Sync Fork__ dropdown and then click __Update Branch__ to pull in changes from the course repository into your forked copy.
+
+
+![sync-fork](https://i.imgur.com/PB0td8q.png)
+
+This should work for the most part if any changes you saved to your fork are NOT in conflict with the changes made to the original. If you see conflicts, reach out to us on the slack channel so we can help you sync it.
+
+### Pull Changes from Forked Repository to Gitpod
+
+Once you have synced changes from the __course repository__ to your __fork__, it is important that you __pull__ these changes into your Gitpod Workspace.
+
+In order to pull/push changes between __Gitpod__ and __Github__, you will first need to give Gitpod permissions to write to your Github repository. Here are the steps to accomplish this:
+
+1. Visit the url https://gitpod.io/user/integrations
+2. Click on __Edit Permissions__ against the row named github
+3. Check the `user:email` and `public_repo` checkboxes
+4. Click on the __Update Permissions__ button.
+
+Once you have given permissions, you can click on the __Pull__ button found on the __Git__ tab on the bottom left panel of RStudio. This will pull changes from your forked repository to your Gitpod Workspace.
+
+### Push Changes from Gitpod to Forked Repository
+
+When you opened your forked github repository in Github, you created a copy of your forked repository on Gitpod. Any changes you make to the files here are saved by Gitpod and these changes are retained. So if you close the workspace and return to it later, these changes will still persist.
+
+However, it is always useful to push your changes back to your forked repository on Github. Whenever you make changes and want to save them back to Github, here are the steps you follow:
+
+1. Navigate to the __git__ tab on the bottom left panel of RStudio
+2. Check the files you want to __push__ to Github.
+3. Click on the __Commit__ button.
+4. Add an informative message of the changes you have made to the textbox.
+5. Click on the __Commit__ button.
+6. Click on the __Push__ button.
+
+
+In case you were wondering what these steps do, __committing__ your changes saves them to your local git repository, whereas __pushing__ them saves your committed changes to your repository on Github. That is why you need two steps.
+
+
