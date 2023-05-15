@@ -76,8 +76,8 @@ We can now pivot this data to the wide format so we can have ONE row per name.
 tbl_names_unisex_2 <- tbl_names_unisex_1 |> 
   pivot_wider(
     names_from = sex, 
+    values_from = nb_births,
     names_prefix = 'nb_births_',
-    values_from = nb_births, 
     values_fill = 0
   )
 
@@ -107,8 +107,8 @@ We defined a unisex name as one where the percentage of males and percentage of 
 ```{r tbl-names-unisex-4}
 tbl_names_unisex_4 <- tbl_names_unisex_3 |> 
   filter(
-    pct_births_M > 0.33,
-    pct_births_F > 0.33,
+    pct_births_M > 0.3,
+    pct_births_F > 0.3,
     nb_births_total > 50000
   ) |> 
   arrange(desc(nb_births_total))
@@ -128,6 +128,10 @@ tbl_names_unisex_5 <- tbl_names_unisex_4 |>
   ungroup()
 
 tbl_names_unisex_5
+```
+
+```{r}
+tbl_names_unisex_5$data[[1]]
 ```
 
 While we have broken down the transformations into multiple pieces so we could focus on each piece separately, it is often better to write the transformations as a single pipeline as it makes it easier to add, remove, and update steps without having to go back and forth.
@@ -187,7 +191,7 @@ tbl_names_unisex |>
   fmt_number(nb_births_total, decimals = 0) |> 
   # Add a table column with a stacked horizontal bar plot
   gtExtras::gt_plt_bar_stack(
-    data, 
+    data,
     width = 65,
     labels = c("MALE", "FEMALE"),
     palette= c("#2596be", "#f4ba19"),
@@ -261,6 +265,48 @@ tbl_names_unisex_v2_2 <- tbl_names_unisex_v2_1 |>
 tbl_names_unisex_v2_2
 ```
 
+__Understanding the Difference between Mutate and Summarize__
+
+Note that you can use `mutate()` as well as `summarize()` after a `group_by()`.
+The key difference is that `summarize()` will collapse the data into ONE row
+per group, whereas `mutate()` will keep the number of rows unchanged.
+
+Let us understand the impact of using `summarize()` vs using `mutate()`. We filter
+the data for a specific name so it is easier to look at the output and understand
+its impact.
+
+When we use summarize, the data is collapsed into ONE row. In this example, we
+have a new column `nb_births_total` that summarizes the total number of births
+having the name "Casey".
+
+Note that the only columns that survived were the grouping column and the columns
+explicitly defined inside the `summarize()`.
+
+```{r}
+tbl_names_unisex_v2_1 |> 
+  filter(name == "Casey") |> 
+  # Group by name
+  group_by(name) |> 
+  # For each name, add NEW columns with number and pct of births
+  summarize(
+    nb_births_total = sum(nb_births)
+  )
+```
+
+On the other hand, when we use `mutate()`, the all existing rows and columns
+are preserved, and `nb_births_total` is added as a new column.
+
+```{r}
+tbl_names_unisex_v2_1 |> 
+  filter(name == "Casey") |> 
+  # Group by name
+  group_by(name) |> 
+  # For each name, add NEW columns with number and pct of births
+  mutate(
+    nb_births_total = sum(nb_births)
+  )
+```
+
 #### Step 3
 
 We filter the data to only keep rows
@@ -271,7 +317,7 @@ We filter the data to only keep rows
     
 ```{r tbl-names-unisex-v2-3}
 tbl_names_unisex_v2_3 <- tbl_names_unisex_v2_2 |> 
-  filter(sex == "M") |> 
+  filter(sex == "F") |> 
   # Keep only names with more than 50,000 births and pct between 0.33 and 0.67
   filter(
     # Filter for pct_births between 0.33 and 0.67
@@ -329,6 +375,15 @@ tbl_names_unisex_trends_1 <- tbl_names |>
   )
 
 tbl_names_unisex_trends_1
+```
+
+You can filter the data for a particular name and arrange it by year to 
+see what the transformations are doing.
+
+```{r}
+tbl_names_unisex_trends_1 |> 
+  filter(name == "Casey") |> 
+  arrange(year)
 ```
 
 #### Step 5
