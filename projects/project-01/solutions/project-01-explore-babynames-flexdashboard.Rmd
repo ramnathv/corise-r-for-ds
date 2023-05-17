@@ -1,0 +1,204 @@
+---
+title: "Project 1: Exploring 100+ Years of US Baby Names"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    source: embed
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(flexdashboard)
+FILE_NAME <- here::here("data/names.csv.gz")
+tbl_names <- readr::read_csv(FILE_NAME, show_col_types = FALSE)
+knitr::opts_chunk$set(
+  fig.path = "img/",
+  fig.retina = 2,
+  fig.width = 6,
+  fig.asp = 9/16,
+  fig.pos = "t",
+  fig.align = "center",
+  # dpi = if (knitr::is_latex_output()) 72 else 150,
+  out.width = "100%",
+  # dev = "svg",
+  dev.args = list(png = list(type = "cairo-png")),
+  optipng = "-o1 -quiet"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 8))
+```
+
+### Header 1
+
+```{r results = "hide"}
+# PASTE BELOW >> CODE FROM question-1-transform
+tbl_names_popular = tbl_names |> 
+  # Keep ROWS for year > 2010 and <= 2020
+  filter(year > 2010, year <= 2020) |> 
+  # Group by sex and name
+  group_by(sex, name) |> 
+  # Summarize the number of births
+  summarize(
+    nb_births = sum(nb_births),
+    .groups = "drop"
+  ) |> 
+  # Group by sex 
+  group_by(sex) |>  
+  # For each sex, keep the top 5 rows by number of births
+  slice_max(nb_births, n = 5)
+
+tbl_names_popular
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-1-plot BELOW
+tbl_names_popular |> 
+  # Reorder the names by number of births
+  mutate(name = fct_reorder(name, nb_births)) |>
+  # Initialize a ggplot for name vs. nb_births
+  ggplot(aes(x = nb_births, y = name)) +
+  # Add a column plot layer
+  geom_col() +
+  # Facet the plots by sex
+  facet_wrap(~ sex, scales = "free_y") +
+  # Add labels (title, subtitle, caption, x, y)
+  labs(
+    title = 'Most Popular Names of the Decade',
+    subtitle = 'Emma and Noah are the most popular names of the decade',
+    caption = 'Source: SSA',
+    x = '# Births',
+    y = NULL
+  ) +
+  # Fix the x-axis scale 
+  scale_x_continuous(
+    labels = scales::unit_format(scale = 1e-3, unit = "K"),
+    expand = c(0, 0),
+  ) +
+  # Move the plot title to top left
+  theme(
+    plot.title.position = 'plot'
+  )
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
+
+### Header 2
+
+```{r results = "hide"}
+# PASTE BELOW >> CODE FROM question-2-transform 
+tbl_names_popular_trendy = tbl_names |> 
+  # Group by sex and name
+  group_by(sex, name) |> 
+  # Summarize total number of births and max births in a year
+  summarize(
+    nb_births_total = sum(nb_births),
+    nb_births_max = max(nb_births),
+    .groups = "drop"
+  ) |> 
+  # Filter for names with at least 10000 births
+  filter(nb_births_total > 1000) |> 
+  # Add a column for trendiness computed as ratio of max to total
+  mutate(trendiness = nb_births_max / nb_births_total) |> 
+  # Group by sex
+  group_by(sex) |> 
+  # Slice top 5 rows by trendiness for each group
+  slice_max(trendiness, n = 5)
+
+tbl_names_popular_trendy
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-2-visuliaze
+plot_trends_in_name <- function(my_name) {
+  tbl_names |> 
+    # Filter for name = my_name
+    filter(name == my_name) |> 
+    # Initialize a ggplot of `nb_births` vs. `year` colored by `sex`
+    ggplot(aes(x = year, y = nb_births, color = sex)) +
+    # Add a line layer
+    geom_line() +
+    # Add labels (title, x, y)
+    labs(
+      title = glue::glue("Babies named {my_name} across the years!"),
+      x = 'Number of Births',
+      y = 'Birth Year'
+    ) +
+    # Update plot theme
+    theme(plot.title.position = "plot")
+}
+plot_trends_in_name("Steve")
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
+### Header 3
+
+```{r results = "hide"}
+# PASTE BELOW >> CODE FROM question-3-transform-1 and question-3-transform-2
+tbl_names = tbl_names |> 
+  # Add NEW column first_letter by extracting `first_letter` from name using `str_sub`
+  mutate(first_letter = str_sub(name, 1, 1)) |>  
+  # Add NEW column last_letter by extracting `last_letter` from name using `str_sub`
+  mutate(last_letter = str_sub(name, -1, -1)) |> 
+  # UPDATE column `last_letter` to upper case using `str_to_upper`
+  mutate(last_letter = str_to_upper(last_letter))
+
+tbl_names
+
+tbl_names_by_letter = tbl_names |> 
+  # Group by year, sex and first_letter
+  group_by(year, sex, first_letter) |> 
+  # Summarize total number of births, drop the grouping
+  summarize(nb_births = sum(nb_births), .groups = "drop") |> 
+  # Group by year and sex
+  group_by(year, sex) |> 
+  # Add NEW column pct_births by dividing nb_births by sum(nb_births)
+  mutate(pct_births = nb_births / sum(nb_births))
+  
+tbl_names_by_letter
+```
+
+
+```{r}
+# PASTE BELOW >> CODE FROM question-3-visuliaze-1
+tbl_names_by_letter |> 
+  # Filter for the year 2020
+  filter(year == 2020) |> 
+  # Initialize a ggplot of pct_births vs. first_letter
+  ggplot(aes(x = first_letter, y = pct_births)) +
+  # Add a column layer using `geom_col()`
+  geom_col() +
+  # Facet wrap plot by sex
+  facet_wrap(~ sex) +
+  # Add labels (title, x, y)
+  labs(
+    title = 'Distribution of Names by First Letter',
+    subtitle = 'A is the most popular first letter for Females',
+    x = '% Births',
+    y = 'First Letter',
+    
+  ) +
+  # Fix scales of y axis
+  scale_y_continuous(
+    expand = c(0, 0),
+    labels = scales::percent_format(accuracy = 1L)
+  ) +
+  # Update plotting theme
+  theme(
+    plot.title.position = "plot",
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
+```
+
+***
+
+<!-- Add a note to be included in the sidebar -->
+
