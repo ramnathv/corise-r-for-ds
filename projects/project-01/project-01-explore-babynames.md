@@ -523,7 +523,7 @@ platform](https://corise.com/course/r-for-data-science/v2/enrollment/enrollment_
 Replace <username> in the link below with your actual username and share
 it with your reviewer.
 
-<https://github.com/><username>/corise-r-for-ds/blob/main/projects/project-01/project-01-explore-babynames.md
+<https://github.com/<username>/corise-r-for-ds/blob/main/projects/project-01/project-01-explore-babynames.md
 
 For example, my username is ramnathv, so my link would be:
 
