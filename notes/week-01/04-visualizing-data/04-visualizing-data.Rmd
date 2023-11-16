@@ -5,9 +5,7 @@ output: github_document
 
 Data visualization is a powerful tool in the field of data science that helps to communicate complex data insights in an intuitive and easy-to-understand way. R is a popular programming language and environment for statistical computing and graphics that provides a wide range of tools and packages for creating high-quality visualizations.
 
-```{r workflow-visualizing-data, out.width = "100%", echo = FALSE}
-knitr::include_graphics("https://i.imgur.com/X960Ag4.png")
-```
+<img src="https://i.imgur.com/X960Ag4.png" />
 
 R offers several different approaches to data visualization, each with its own strengths and weaknesses. Here are some of the most common approaches:
 
@@ -27,8 +25,6 @@ library(tidyverse)
 source(here::here("_common.R"))
 ```
 
-
-
 ### Tidy Data - Diamonds
 
 The journey of every visualization begins with tidy data. We will use the `diamonds` dataset that ships with the `ggplot2` package to explore the amazing world of data visualization!
@@ -40,8 +36,11 @@ Let us start by printing the data to take a look at what it holds.
 
 ```{r data-diamonds, message = FALSE}
 # We filter out large diamonds so the plots look nicer!
-diamonds <- diamonds |> filter(carat <= 3)
-diamonds
+diamonds <- diamonds |> 
+  filter(carat <= 3) |> 
+  slice_sample(prop = 0.2)
+
+head(diamonds)
 ```
 
 The `diamonds` dataset is a table where each row represents a diamond, and each column characterizes a certain property of the diamond. For example, the very first row records a diamond that weighs 0.23 `carat`, has an Ideal `cut`, and SI2 `clarity`. This dataset is a good example of what we would call tidy data. A dataset is said to be tidy if it satisfies the following three conditions.
@@ -407,8 +406,4 @@ diamonds |>
 The `ggplot2` package provides a really powerful abstraction of the grammar of graphics. We will dive deeper into this grammar in Week 2.
 
 
-
-```{r grammar-of-graphics, out.width = "100%", echo = FALSE}
-knitr::include_graphics("https://i.imgur.com/6fpIXUi.png")
-```
-
+<img src="https://i.imgur.com/6fpIXUi.png" />
